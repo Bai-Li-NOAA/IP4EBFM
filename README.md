@@ -12,16 +12,16 @@ climate-ready, ecosystem-based, sustainable fisheries management.
 ## Repository structure
 
 -   We have project meeting once a month and we keep meeting agenda and
-    notes in our `Meeting Notes` folder.
+    notes in our `Meeting_Notes` folder.
 -   We keep all of our technical work in the repository up-to-date.
 
 The structure of the repository is as follow:
 
-| Folder                                              | Description                            |
-|-----------------------------------------------------|----------------------------------------|
-| [Meeting Notes](Meeting%20Notes/)                   | Links to all meeting agenda and notes  |
-| [Proposal/Project Plans](Proposal/Project%20Plans/) | Links to project white paper and tasks |
-| [Presentations](Presentations/)                     | Links to all slides                    |
+| Folder                                                                            | Description                            |
+|-----------------------------------------------------------------------------------|----------------------------------------|
+| [Meeting\_Notes](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Meeting_Notes) | Links to all meeting agenda and notes  |
+| [Project\_Plans](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Project_Plans) | Links to project white paper and tasks |
+| [Presentations](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Presentations)  | Links to all slides                    |
 
 ## Disclaimer
 
