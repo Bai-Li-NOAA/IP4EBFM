@@ -1,0 +1,20 @@
+---
+title: Presentations
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The folder contains links to all presentations (yyyymmdd_topic). 
+
+- [20210603_IntroductoryCall](https://docs.google.com/presentation/d/1FvaFvlI3Fst6dvQuSHjnIxXoeJbjc9cxUxTMwsMJXro/edit?usp=sharing)
+- [20210505_CFI Connections](https://docs.google.com/presentation/d/1bdE0By0TRivmzpVwJxvLglU8pQCT3BPKdVg3Uciab8w/edit?usp=sharing)
+
+
