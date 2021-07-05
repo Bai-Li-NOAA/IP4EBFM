@@ -1,0 +1,58 @@
+---
+title: "Forecasting review (general information)"
+output: 
+  html_document
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## 1. Potential review fields (Please feel free to suggest adding or deleting fields)
+
+- Forest ecosystem
+- Health management
+- Weather forecasting
+- Marine ecosystem
+
+## 2. Potential review topics (Please feel free to suggest adding or deleting topics)
+
+- Data
+  - Repeated measurements
+  - Interoperability
+  - Latency
+- Theory and methods
+  - Technical advancements
+  - Predictability and uncertainty
+  - Model-data assimilation
+  - Workflow 
+- Devops infrastructure 
+  - Transparency
+  - Reproducibility
+  - Accessibility
+- Training, culture, and institutions
+- Decision support
+  - Partnership
+  - Management
+  
+## Example
+
+- Participants 
+  - A (Coordinator), B, C, D, E
+- What are the key lessons we can learn from this field? 
+  - Methods; Devops infrastructure; Training, culture, and institutions; Decision support 
+- Do we have a contact person for an interview? 
+  - F
+- Plan (who's doing what) 
+  - Review devops infrastructure (A, B)
+  - Review forecasting methods (C, E)
+  - Interview F (D, E)
+- Milestones and timeline
+  - Review presentation/discussion in August 2021
+
+- References
+  - Predictive Ecosystem Analyzer ([PEcAn Project](https://flux.aos.wisc.edu/projects/2018/6/19/pecan); [PEcAn Book](https://pecanproject.github.io/pecan-documentation/master/project-overview.html)): Integrated informatics toolbox for ecosystem modeling
+  - LeBauer D, et al. (2013) Facilitating feedbacks between field measurements and ecosystem models. Ecol Monogr 83:133–154

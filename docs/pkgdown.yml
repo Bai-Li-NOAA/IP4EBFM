@@ -1,6 +1,8 @@
 pandoc: 2.11.4
 pkgdown: 1.6.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2021-07-04T21:21Z
+articles:
+  01_litreview/01_001_ForecastingReviewGeneralInformation: 01_001_ForecastingReviewGeneralInformation.html
+  01_litreview/01_002_ForecastingReviewWorkingDocument: 01_002_ForecastingReviewWorkingDocument.html
+last_built: 2021-07-05T21:59Z
 

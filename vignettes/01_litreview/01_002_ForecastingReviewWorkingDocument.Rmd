@@ -1,0 +1,114 @@
+---
+title: 'Forecasting review working document'
+output:
+  word_document: default
+  html_document: default
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## 1. Forest ecosystem
+- Participants 
+  - xxx
+  - xxx
+
+- What are the key lessons we can learn from this field? 
+  - xxx
+  - xxx
+
+- Do we have a contact person for an interview? 
+  - xxx
+  - xxx
+
+- Plan (who's doing what) 
+  - xxx
+  - xxx
+
+- Milestones and timeline
+  - xxx
+  - xxx
+
+- References
+  - xxx
+  - xxx
+
+## 2. Health management 
+- Participants 
+  - xxx
+  - xxx
+
+- What are the key lessons we can learn from this field? 
+  - xxx
+  - xxx
+
+- Do we have a contact person for an interview? 
+  - xxx
+  - xxx
+
+- Plan (who's doing what) 
+  - xxx
+  - xxx
+
+- Milestones and timeline
+  - xxx
+  - xxx
+
+- References
+  - xxx
+  - xxx
+
+## 3. Weather forecasting
+- Participants 
+  - xxx
+  - xxx
+
+- What are the key lessons we can learn from this field? 
+  - xxx
+  - xxx
+
+- Do we have a contact person for an interview? 
+  - xxx
+  - xxx
+
+- Plan (who's doing what) 
+  - xxx
+  - xxx
+
+- Milestones and timeline
+  - xxx
+  - xxx
+
+- References
+  - xxx
+  - xxx
+  
+## 4. Marine ecosystem
+- Participants 
+  - xxx
+  - xxx
+
+- What are the key lessons we can learn from this field? 
+  - xxx
+  - xxx
+
+- Do we have a contact person for an interview? 
+  - xxx
+  - xxx
+
+- Plan (who's doing what) 
+  - xxx
+  - xxx
+
+- Milestones and timeline
+  - xxx
+  - xxx
+
+- References
+  - xxx
+  - xxx
