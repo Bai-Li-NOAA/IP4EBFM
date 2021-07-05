@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 ```
 
 
-## 1. Forest ecosystem
+## 1. Forest ecosystem forecasting
 - Participants 
   - xxx
   - xxx
@@ -38,7 +38,7 @@ knitr::opts_chunk$set(
   - xxx
   - xxx
 
-## 2. Health management 
+## 2. Health forecasting 
 - Participants 
   - xxx
   - xxx
@@ -88,7 +88,7 @@ knitr::opts_chunk$set(
   - xxx
   - xxx
   
-## 4. Marine ecosystem
+## 4. Marine ecosystem forecasting
 - Participants 
   - xxx
   - xxx
