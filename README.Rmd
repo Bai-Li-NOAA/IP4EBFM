@@ -14,11 +14,11 @@ knitr::opts_chunk$set(
 # IFA4EBFM
 ## Interdisciplinary Forecasting Approach for Ecosystem-Based Fisheries Management  
 
-IFA4EBFM is a GitHub repository for a fisheries forecasting project. The project aims to use interdisciplinary forecasting approach to achieve climate-ready, ecosystem-based, sustainable fisheries management. 
+IFA4EBFM is a GitHub repository for a fisheries forecasting project. The project aims to use an interdisciplinary forecasting approach to achieve climate-ready, ecosystem-based, sustainable fisheries management. 
 
 ## Repository structure
 
-- We have project meeting once a month and we keep meeting agenda and notes in our `Meeting_Notes` folder.
+- We have a project meeting once a month and we keep meeting agenda and notes in our `Meeting_Notes` folder.
 - We keep all of our technical work in the repository up-to-date. 
 
 The structure of the repository is as follow:
