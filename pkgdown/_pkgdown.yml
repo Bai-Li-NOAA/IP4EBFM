@@ -35,3 +35,5 @@ navbar:
         href: articles/01_litreview/01_001_ForecastingReviewGeneralInformation.html
       - text: Forecasting review working document
         href: articles/01_litreview/01_002_ForecastingReviewWorkingDocument.html
+      - text: Forecasting review bibliography
+        href: articles/01_litreview/01_003_Bibliography.html
