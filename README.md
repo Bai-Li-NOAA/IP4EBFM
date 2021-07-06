@@ -38,7 +38,3 @@ endorsement, recommendation or favoring by the Department of Commerce.
 The Department of Commerce seal and logo, or the seal and logo of a DOC
 bureau, shall not be used in any manner to imply endorsement of any
 commercial product or activity by DOC or the United States Government.”
-
--   This project code is made available through GitHub but is managed by
-    NOAA at
-    <https://vlab.ncep.noaa.gov/redmine/projects/integrated-fisheries-toolbox/files>
