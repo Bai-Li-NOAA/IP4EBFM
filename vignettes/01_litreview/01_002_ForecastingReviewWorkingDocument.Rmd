@@ -1,7 +1,6 @@
 ---
 title: 'Forecasting review working document'
 output:
-  word_document: default
   html_document: default
 ---
 
@@ -13,102 +12,233 @@ knitr::opts_chunk$set(
 ```
 
 
-## 1. Forest ecosystem forecasting
-- Participants 
-  - xxx
-  - xxx
+## **1. Ecological forecasting**
 
-- What are the key lessons we can learn from this field? 
-  - xxx
-  - xxx
+* Participants
 
-- Do we have a contact person for an interview? 
-  - xxx
-  - xxx
+    * xxx
 
-- Plan (who's doing what) 
-  - xxx
-  - xxx
+    * xxx
 
-- Milestones and timeline
-  - xxx
-  - xxx
+* What are the key lessons we can learn from this field?
 
-- References
-  - xxx
-  - xxx
+    * xxx
 
-## 2. Health forecasting 
-- Participants 
-  - xxx
-  - xxx
+    * xxx
 
-- What are the key lessons we can learn from this field? 
-  - xxx
-  - xxx
+* Do we have a contact person for an interview?
 
-- Do we have a contact person for an interview? 
-  - xxx
-  - xxx
+    * xxx
 
-- Plan (who's doing what) 
-  - xxx
-  - xxx
+    * xxx
 
-- Milestones and timeline
-  - xxx
-  - xxx
+* Plan (who’s doing what)
 
-- References
-  - xxx
-  - xxx
+    * xxx
 
-## 3. Weather forecasting
-- Participants 
-  - xxx
-  - xxx
+    * xxx
 
-- What are the key lessons we can learn from this field? 
-  - xxx
-  - xxx
+* Milestones and timeline
 
-- Do we have a contact person for an interview? 
-  - xxx
-  - xxx
+    * xxx
 
-- Plan (who's doing what) 
-  - xxx
-  - xxx
+    * xxx
 
-- Milestones and timeline
-  - xxx
-  - xxx
+* References
 
-- References
-  - xxx
-  - xxx
-  
-## 4. Marine ecosystem forecasting
-- Participants 
-  - xxx
-  - xxx
+    * [Ecological forecasting bibliographies](http://people.bu.edu/dietze/manuscripts/EcologicalForecasting2018OxfordBibliographies.pdf) from Dietze et al., 2018
 
-- What are the key lessons we can learn from this field? 
-  - xxx
-  - xxx
+    * xxx
 
-- Do we have a contact person for an interview? 
-  - xxx
-  - xxx
+    * xxx
 
-- Plan (who's doing what) 
-  - xxx
-  - xxx
+## **2. Meteorology forecasting**
 
-- Milestones and timeline
-  - xxx
-  - xxx
+* Participants
 
-- References
-  - xxx
-  - xxx
+    * xxx
+
+    * xxx
+
+* What are the key lessons we can learn from this field?
+
+    * xxx
+
+    * xxx
+
+* Do we have a contact person for an interview?
+
+    * xxx
+
+    * xxx
+
+* Plan (who’s doing what)
+
+    * xxx
+
+    * xxx
+
+* Milestones and timeline
+
+    * xxx
+
+    * xxx
+
+* References
+
+    * xxx
+
+    * xxx
+
+## **3. Health forecasting**
+
+* Participants
+
+    * xxx
+
+    * xxx
+
+* What are the key lessons we can learn from this field?
+
+    * xxx
+
+    * xxx
+
+* Do we have a contact person for an interview?
+
+    * xxx
+
+    * xxx
+
+* Plan (who’s doing what)
+
+    * xxx
+
+    * xxx
+
+* Milestones and timeline
+
+    * xxx
+
+    * xxx
+
+* References
+
+    * xxx
+
+    * xxx
+
+## **4. Financial forecasting**
+
+* Participants
+
+    * xxx
+
+    * xxx
+
+* What are the key lessons we can learn from this field?
+
+    * xxx
+
+    * xxx
+
+* Do we have a contact person for an interview?
+
+    * xxx
+
+    * xxx
+
+* Plan (who’s doing what)
+
+    * xxx
+
+    * xxx
+
+* Milestones and timeline
+
+    * xxx
+
+    * xxx
+
+* References
+
+    * xxx
+
+    * xxx
+
+## **5. Energy forecasting**
+
+* Participants
+
+    * xxx
+
+    * xxx
+
+* What are the key lessons we can learn from this field?
+
+    * xxx
+
+    * xxx
+
+* Do we have a contact person for an interview?
+
+    * xxx
+
+    * xxx
+
+* Plan (who’s doing what)
+
+    * xxx
+
+    * xxx
+
+* Milestones and timeline
+
+    * xxx
+
+    * xxx
+
+* References
+
+    * xxx
+
+    * xxx
+
+## **6. Political/elections forecasting and sports forecasting**
+
+* Participants
+
+    * xxx
+
+    * xxx
+
+* What are the key lessons we can learn from this field?
+
+    * xxx
+
+    * xxx
+
+* Do we have a contact person for an interview?
+
+    * xxx
+
+    * xxx
+
+* Plan (who’s doing what)
+
+    * xxx
+
+    * xxx
+
+* Milestones and timeline
+
+    * xxx
+
+    * xxx
+
+* References
+
+    * xxx
+
+    * xxx
+
