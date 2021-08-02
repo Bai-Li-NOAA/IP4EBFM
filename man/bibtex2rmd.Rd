@@ -4,7 +4,14 @@
 \alias{bibtex2rmd}
 \title{Read bibtex to an Rmd file.}
 \usage{
-bibtex2rmd(bibfile, outfold, outfile, abstract = FALSE, overwrite = FALSE)
+bibtex2rmd(
+  bibfile,
+  outfold,
+  outfile,
+  abstract = FALSE,
+  overwrite = FALSE,
+  section_title
+)
 }
 \arguments{
 \item{bibfile}{.bib file path}

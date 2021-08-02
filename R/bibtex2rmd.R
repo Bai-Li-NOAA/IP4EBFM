@@ -12,17 +12,14 @@ bibtex2rmd <- function(bibfile,
                        outfold,
                        outfile,
                        abstract = FALSE,
-                       overwrite = FALSE) {
+                       overwrite = FALSE,
+                       section_title) {
 
 
   require(RefManageR)
   require(dplyr)
   require(stringr)
   require(anytime)
-
-  # Import the bibtex file and convert to data.frame
-  mypubs <- ReadBib(bibfile, check = "warn", .Encoding = "UTF-8") %>%
-    as.data.frame()
 
   filename <- outfile
 
@@ -44,6 +41,21 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```
             ", fileConn)
 
+  }
+
+  fileConn <- file.path(outfold, filename)
+
+  write(paste0(
+    "## ",
+    section_title
+  ), fileConn, append = T)
+
+
+  if (!is.null(bibfile)) {
+    # Import the bibtex file and convert to data.frame
+    mypubs <- ReadBib(bibfile, check = "warn", .Encoding = "UTF-8") %>%
+      as.data.frame()
+
     for (i in 1:nrow(mypubs)) {
       x <- mypubs[i, ]
 
@@ -55,14 +67,16 @@ knitr::opts_chunk$set(collapse = TRUE)
         ". ",
         x[["year"]],
         ". ",
+        "**",
         x[["title"]],
+        "**",
         ". ",
         x[["journal"]],
         ". ",
-        ifelse(!is.na(x[["volume"]]), paste0(x[["volume"]]), ""),
+        ifelse(!is.na(x[["volume"]]), paste0(x[["volume"]], ", "), ""),
         ifelse(!is.na(x[["number"]]), paste0("(", x[["number"]], "), "), ""),
         ifelse(!is.na(x[["pages"]]), paste0(x[["pages"]], ", "), ""),
-        ifelse(!is.na(x[["doi"]]), paste0(x[["doi"]]), "")
+        ifelse(!is.na(x[["doi"]]), paste0("https://doi.org/", x[["doi"]]), "")
       ),
 
       fileConn,
