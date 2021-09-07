@@ -19,3 +19,8 @@ The folder contains links to project white paper and project plans.
 
 -   [Forecasting review working
     document](https://docs.google.com/document/d/1LyjH9weXCmQYUcLBcFsBjzvFyoHi19yzqnKLbzWQga0/edit?usp=sharing)
+
+### Task 2: Discuss forecasting approaches
+
+-   [Project experimental
+    design](https://docs.google.com/document/d/18rye1HAM-uqekJB2_noHI8iNBGb5oIPr/edit?usp=sharing&ouid=108654539371382020272&rtpof=true&sd=true)
