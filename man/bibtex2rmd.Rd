@@ -23,6 +23,8 @@ bibtex2rmd(
 \item{abstract}{print abstract or not}
 
 \item{overwrite}{overwite the .Rmd file or not}
+
+\item{section_title}{title for each section}
 }
 \description{
 Read bibtex to an Rmd file.
