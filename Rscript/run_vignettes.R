@@ -15,7 +15,7 @@ require(bibtex) # remotes::install_github("ROpenSci/bibtex")
 
 my_bibfile <- here::here("vignettes", "01_litreview", "EcologicalForecasting.bib")
 my_outfold   <- here::here("vignettes", "01_litreview")
-my_outfile <- "01_003_Bibliography.Rmd"
+my_outfile <- "01_001_Bibliography.Rmd"
 section_title <- "Ecological Forecasting"
 
 bibtex2rmd(bibfile = my_bibfile,
@@ -50,7 +50,7 @@ for (i in seq_along(section_titles)){
 
 
 
-my_outfile <- "01_003_Bibliography_noabstract.Rmd"
+my_outfile <- "01_001_Bibliography_noabstract.Rmd"
 bibtex2rmd(bibfile = my_bibfile,
            outfold = my_outfold,
            outfile = my_outfile,
