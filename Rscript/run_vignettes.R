@@ -1,6 +1,14 @@
-devtools::load_all()
+# devtools::load_all()
+library(IFA4EBFM)
 library(rmarkdown)
 library(here)
+
+require(RefManageR)
+require(dplyr)
+require(stringr)
+require(anytime)
+require(bibtex) # remotes::install_github("ROpenSci/bibtex")
+
 
 
 # Create bibliography .Rmd -----------------------------------------------------
@@ -17,18 +25,24 @@ bibtex2rmd(bibfile = my_bibfile,
            overwrite = TRUE,
            section_title = section_title)
 
+bib_path <- here::here("vignettes", "01_litreview")
+bib_files <- c("Meteorology.bib",
+               "Energy.bib",
+               "Agriculture.bib",
+               "Others.bib")
+
+
 section_titles <- c("Meteorology Forecasting  ",
-                    "Health Forecasting  ",
-                    "Financial Forecasting  ",
                     "Energy Forecasting  ",
-                    "Political/Elections Forecasting and Sports Forecasting  ",
-                    "Commodity Production Forecasting  ")
+                    "Commodity Production Forecasting  ",
+                    "Others  "
+                    )
 
 for (i in seq_along(section_titles)){
-  bibtex2rmd(bibfile = NULL,
+  bibtex2rmd(bibfile = file.path(bib_path, bib_files[i]),
              outfold = my_outfold,
              outfile = my_outfile,
-             abstract = FALSE,
+             abstract = TRUE,
              overwrite = FALSE,
              section_title = section_titles[i])
 }
