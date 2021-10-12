@@ -1,13 +1,19 @@
 Package: IFA4EBFM
-Title: Interdisciplinary Forecasting Approach for
-    Ecosystem-Based Fisheries Management
+
+Title: Interdisciplinary Forecasting Approach for Ecosystem-Based Fisheries Management
+
 Version: 0.0.0.9000
-Maintainer: Bai Li 
-Description: IFA4EBFM aims to use interdisciplinary
-    forecasting approach to achieve climate-ready, ecosystem-based,
-    sustainable fisheries management
+
+Maintainer: Bai Li  
+
+Description: IFA4EBFM aims to use interdisciplinary forecasting approach to achieve climate-ready, ecosystem-based, sustainable fisheries management
+
 License: GPL-3 | file LICENSE
+
 Encoding: UTF-8
+
 LazyData: true
+
 Roxygen: list(markdown = TRUE)
+
 RoxygenNote: 7.1.1
