@@ -31,9 +31,5 @@ navbar:
       text: Articles
       icon: fas fa-file-contract fa-lg
       menu:
-      - text: Forecasting review (general information)
-        href: articles/01_litreview/01_001_ForecastingReviewGeneralInformation.html
-      - text: Forecasting review working document
-        href: articles/01_litreview/01_002_ForecastingReviewWorkingDocument.html
       - text: Forecasting review bibliography
-        href: articles/01_litreview/01_003_Bibliography.html
+        href: articles/01_litreview/01_001_Bibliography.html
