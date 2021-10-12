@@ -5,6 +5,7 @@
 #' @param outfile character string naming a file, should end in \dQuote{.Rmd}.
 #' @param abstract print abstract or not
 #' @param overwrite overwite the .Rmd file or not
+#' @param section_title title for each section
 #'
 #' @export
 
@@ -14,12 +15,6 @@ bibtex2rmd <- function(bibfile,
                        abstract = FALSE,
                        overwrite = FALSE,
                        section_title) {
-
-
-  require(RefManageR)
-  require(dplyr)
-  require(stringr)
-  require(anytime)
 
   filename <- outfile
 
