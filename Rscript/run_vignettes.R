@@ -71,6 +71,12 @@ for (i in seq_along(rmd_file)){
   rmarkdown::render(input = here::here("Vignettes", "01_litreview", rmd_file[i]), c("html_document", "word_document"))
 }
 
+rmd_file <- list.files(here::here("Vignettes"), pattern=".Rmd")
+
+for (i in seq_along(rmd_file)){
+  rmarkdown::render(input = here::here("Vignettes", rmd_file[i]), c("html_document"))
+}
+
 # Update pkgdown YAML file and build the website ------------------------------------------------
 pkgdown::template_navbar()
 
