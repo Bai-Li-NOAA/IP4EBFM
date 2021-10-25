@@ -1,0 +1,116 @@
+
+---
+title: 'Ecosystem models review'
+output:
+  html_document: default
+---
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+            
+## 1. Ecopath with Ecosim (EwE) models
+
+- Recommendation from Desiree Tommasi: Laura Koehn's [2016 paper](https://doi.org/10.1016/j.ecolmodel.2016.05.010) and [project GitHub repository](https://github.com/koehnl/CalCurFoodWebModelECOMOD)
+
+  - The authors developed a food web model with high taxonomic resolution of forage fish and their predators in the **California Current**
+  
+  - The study comprehensively described trophic linkages involving forage fish and examine the ecological role of forage fish in the ecosystem
+  
+  - The authors used Ecopath model with 92 living functional groups and used a Monte Carlo approach to characterize parameter uncertainty
+  
+  - The model can be used to support generalized equilibrium trade-off analysis or dynamic modeling to identify specific predators that would be of conservation concern under conditions of future forage fish depletion
+  
+- Other available EwE models from [EcoBase: a database of Ecopath with Ecosim models](http://ecobase.ecopath.org/#docs)
+
+  - model.country is "United States", "united States of America", or "United States of America"
+  
+  - model.ecosim is TRUE or NA
+  
+  - model.fisheries is TRUE or NA
+
+```{r, echo = FALSE, message=FALSE}
+# To get a list of available EwE models and to get the input and output values for selected models
+# The source code is from the EcoBase (a database of Ecopath with Ecosim models) website: http://ecobase.ecopath.org/#docs
+
+library(RCurl)
+library(XML)
+library(plyr)
+
+# To get a list of available EwE models -----------------------------------
+
+call_back_function <- basicTextGatherer()
+invisible(curlPerform(url = "http://sirs.agrocampus-ouest.fr/EcoBase/php/webser/soap-client_3.php", writefunction = call_back_function$update))
+
+data <- xmlTreeParse(call_back_function$value(), useInternalNodes = TRUE)
+model_list <- ldply(xmlToList(data), data.frame)
+model_info <- data.frame(matrix(unlist(model_list), ncol=length(model_list), byrow=FALSE))
+names(model_info) <- names(model_list)
+
+# Model information -------------------------------------------------------
+# names(model_info)
+# model_info$model.model_name
+# 
+# sort(unique(model_info$model.country)) # "United States", "united States of America", "United States of America"
+# 
+# unique(model_info$model.ecosim) # "false", "true",  NA
+# 
+# unique(model_info$model.fisheries) # "false", "true",  NA
+
+# model numbers: U.S. models, use EcoSim, model fisheries
+model_id <- (model_info$model.country %in% c("United States", "united States of America", "United States of America")) &
+  (model_info$model.ecosim %in% c("true", NA)) &
+  (model_info$model.fisheries %in% c("true", NA))
+
+us_model <- model_info[model_id, ]
+
+model_number <- as.numeric(us_model$model.model_number)
+
+# General ecosystem information table
+col_names <- c("model.model_number", "model.model_name", "model.country", "model.ecosystem_type", "model.num_group", "model.model_year", "model.model_period")
+knitr::kable(us_model[, col_names], caption = "Table 1. Ecosystem information of available EwE models.", row.names = FALSE)
+
+# General model information table
+col_names <- c("model.model_number", "model.model_name", "model.ecosim", "model.ecospace", "model.whole_food_web", "model.fisheries", "model.aquaculture", "model.environment_variability", "model.ecosyst_functioning", "model.pollution", "model.dissemination_allow", "model.is_fitted", "model.other_impact_assessment")
+knitr::kable(us_model[, col_names], caption = "Table 2. Model information of available EwE models.", row.names = FALSE)
+
+# General contact information table
+col_names <- c("model.model_number", "model.model_name", "model.author", "model.contact", "model.reference", "model.url", "model.doi")
+knitr::kable(us_model[, col_names], caption = "Table 3. Conatact information of available EwE models.", row.names = FALSE)
+
+# us_model$model.model_name
+# To get input and output values for selected models ---------------------------------
+# model_io <- list()
+# 
+# for (i in seq_along(model_number)){
+#   call_back_function <- basicTextGatherer()
+# 
+#   curlPerform(url = paste("http://sirs.agrocampus-ouest.fr/EcoBase/php/webser/soap-client.php?no_model=", model_number[i], sep = ""), writefunction = call_back_function$update, verbose = TRUE)
+# 
+#   model_data <- xmlTreeParse(call_back_function$value(), useInternalNodes = TRUE)
+# 
+#   model_io[[i]] <- list(
+#     input = xpathSApply(model_data, "//group", function(x) xmlToList(x)),
+#     output = xpathSApply(model_data,'//group',function(x) xmlToList(x))
+#   )
+# }
+
+```
+
+  - Relevant GitHub repositories
+  
+    - Food web model software - Rpath: [https://github.com/NOAA-EDAB/Rpath](https://github.com/NOAA-EDAB/Rpath)
+    
+## 2. Atlantis models
+
+- Atlantis NEUS: [https://github.com/NOAA-EDAB/neus-atlantis](https://github.com/NOAA-EDAB/neus-atlantis)
+
+  - The developers have parameterized Atlantis for the **Northeast United States Continental Shelf (NEUS)**
+  
+  - The model includes the major functional groups from an ecosystem perspective, physiographic dynamics of the ecosystem, and most important fleets
+  
+  - The models creates biomass, catch, and effort trends in the NEUS from 1964 to the mid 2000s
+  
+  - relevant publications: [Link et al. 2010](https://doi.org/10.1016/j.pocean.2010.09.020) and [Olsen et al. 2016](https://doi.org/10.1371/journal.pone.0146467)
+
+- Tools for data generation from Atlantis - Atlantisom: [https://github.com/r4atlantis/atlantisom](https://github.com/r4atlantis/atlantisom)
