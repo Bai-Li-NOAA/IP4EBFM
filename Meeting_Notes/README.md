@@ -8,6 +8,9 @@ from meetings of the forecasting project (yyyy-mm-topic). The project
 team meets once a month to discuss the forecasting project. The project
 meeting started June, 2021.
 
+-   [2021-11 meeting agenda and
+    notes](https://docs.google.com/document/d/1dXawieUTLCUHz-_9dPKCFpqHfDVLUXPu8I71nyMsvn8/edit?usp=sharing)
+
 -   [2021-10 meeting agenda and
     notes](https://docs.google.com/document/d/140kF7zw1rGiXE8xIk7SWDjYVeTvo4g1g9jTOmz33saw/edit?usp=sharing)
 
