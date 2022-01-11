@@ -188,10 +188,11 @@ for (i in 1:nrow(Lagecomp_true)) {
   legend("topright",
          c("EwE_true", "BAM", "EwE_obs_err"),
          title = ewe_years[i],
-         lty = c(1, NA, 1),
+         lty = c(1, NA, 2),
          pch = c(NA, 1, NA),
          bty = "n",
-         cex = 0.8
+         cex = 0.8, 
+         col = c("black", "black", "blue")
   )
 }
 
