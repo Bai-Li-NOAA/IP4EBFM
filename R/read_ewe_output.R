@@ -15,8 +15,8 @@ read_ewe_output <- function(file_path,
                             file_names,
                             skip_nrows = 8,
                             plot = FALSE,
-                            figure_titles,
-                            figure_legends,
+                            figure_titles=NULL,
+                            figure_legends=NULL,
                             figure_colors = rainbow(12)) {
   data <- vector(mode = "list", length = length(file_names))
 
