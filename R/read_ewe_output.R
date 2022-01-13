@@ -13,7 +13,7 @@
 
 read_ewe_output <- function(file_path,
                             file_names,
-                            skip_nrows = 9,
+                            skip_nrows = 8,
                             plot = FALSE,
                             figure_titles,
                             figure_legends,
