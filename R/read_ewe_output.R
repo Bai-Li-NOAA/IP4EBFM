@@ -5,18 +5,18 @@
 #' @param file_path a character string shows path to the working folder where EwE output csv files are located.
 #' @param file_names a vector of csv file names.
 #' @param skip_nrows interger: the number of lines of the data file to skip before reading data.
+#' #' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
 #' @param plot logical: if `TRUE` then make figures for all output data files.
 #' @param figure_titles a character vector of strings describes the names of each figure.
-#' @param figure_legends a character string describes the column of the data matrix, which is functional groups in EwE case.
 #' @param figure_colors a vector of colors.
 #' @export
 
 read_ewe_output <- function(file_path,
                             file_names,
                             skip_nrows = 8,
+                            functional_groups,
                             plot = FALSE,
                             figure_titles=NULL,
-                            figure_legends=NULL,
                             figure_colors = rainbow(12)) {
   data <- vector(mode = "list", length = length(file_names))
 
@@ -26,7 +26,7 @@ read_ewe_output <- function(file_path,
     data[[file_id]] <- read.table(
       text = as.character(data[[file_id]]),
       sep = ",",
-      col.names = c("Year", figure_legends)
+      col.names = c("Year", functional_groups)
     )
   }
 
@@ -45,7 +45,7 @@ read_ewe_output <- function(file_path,
         ylim = range(data[[figure_id]][, 2:ncol(data[[figure_id]])])
       )
 
-      for (group_id in 1:length(figure_legends)) {
+      for (group_id in 1:length(functional_groups)) {
         lines(data[[figure_id]]$Year, data[[figure_id]][, 1 + group_id],
           col = figure_colors[group_id],
           pch = group_id,
@@ -57,10 +57,10 @@ read_ewe_output <- function(file_path,
 
       legend("topright",
         inset = c(-0.45, 0),
-        legend = figure_legends,
+        legend = functional_groups,
         col = figure_colors,
-        lty = 1:length(figure_legends),
-        pch = 1:length(figure_legends),
+        lty = 1:length(functional_groups),
+        pch = 1:length(functional_groups),
         title = "Functional Groups",
         cex=0.7
       )

@@ -63,6 +63,6 @@ ewe_output <- read_ewe_output(
     "Biomass", "Catch", "Consumption_Biomass",
     "Feeding_Time", "Mortality", "Trophic_Level", "Average_Weight"
   ),
-  figure_legends = functional_groups$group_name,
+  functional_groups = functional_groups$group_name,
   figure_colors = rainbow(length(functional_groups$group_name))
 )
