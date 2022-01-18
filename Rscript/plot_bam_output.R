@@ -59,7 +59,7 @@ F.time.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype,
              F.references=list(a="F40",b=c("Fmsy","F50")))
 
 Landings.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype,
-               L.units=c("1000 lb gutted","1000 lb gutted","1000 fish","1000 fish"), D.units="1000 dead fish", L.obs.pre=FALSE)
+               L.units=c(menhaden$info$units.landings, menhaden$info$units.landings,"1000 fish","1000 fish"), D.units="1000 dead fish", L.obs.pre=FALSE)
 
 Growth.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype, plot.all = TRUE)
 
@@ -71,7 +71,7 @@ Eq.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype,
          F.references=list("Fmsy", "F40"))
 
 StockRec.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype,
-               draw.lowess = FALSE, start.drop = 10, units.rec="number age-1 fish")
+               draw.lowess = FALSE, start.drop = 10, units.rec="number age-0 fish")
 
 #windows(width = 6, height = 4, record = TRUE, xpos = 10, ypos = 10)
 Selectivity.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype, plot.points=T)
@@ -80,7 +80,7 @@ NFZ.age.plots(menhaden,draft=dtype, use.color=ctype, graphics.type=ptype,
               user.plots="N.age.mdyr", start.drop=10)
 
 CLD.total.plots(menhaden, draft=dtype, use.color=ctype, graphics.type=ptype, first.year = "1965",
-                units.CLD.w="1000 lb gutted", CLD.w.references=list(NULL,"msy.klb", NULL),
+                units.CLD.w=menhaden$info$units.landings, CLD.w.references=list(NULL,"msy.klb", NULL),
                 plot.proportion = TRUE)
 
 #windows(width = 8, height = 8, record = TRUE)
@@ -89,5 +89,8 @@ Phase.plots(menhaden, start.drop=10, draft=dtype, use.color=ctype, graphics.type
 Parm.plots(menhaden, graphics.type=ptype)
 
 Bound.vec.plots(menhaden, draft=dtype, graphics.type=ptype)
+
+source(here::here("data", "AtlanticMenhadenSA", "projection", "Proj-menhaden-constant landings NLTS rec.r"))
+
 dev.off()
 graphics.off()
