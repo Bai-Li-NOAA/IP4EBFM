@@ -17,11 +17,12 @@ climate-ready, ecosystem-based, sustainable fisheries management.
 
 The structure of the repository is as follow:
 
-| Folder                                                                            | Description                            |
-|-----------------------------------------------------------------------------------|----------------------------------------|
-| [Meeting\_Notes](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Meeting_Notes) | Links to all meeting agenda and notes  |
-| [Project\_Plans](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Project_Plans) | Links to project white paper and tasks |
-| [Presentations](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Presentations)  | Links to all slides                    |
+| Folder                                                                                       | Description                            |
+|----------------------------------------------------------------------------------------------|----------------------------------------|
+| [Meeting\_Notes](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Meeting_Notes)            | Links to all meeting agenda and notes  |
+| [Project\_Plans](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Project_Plans)            | Links to project white paper and tasks |
+| [Presentations](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Presentations)             | Links to all slides                    |
+| [Data](https://drive.google.com/drive/folders/1qUWzhGxSJ0MdQ1v94_W0U2Qbb1c4aTLK?usp=sharing) | Google Drive folder with data          |
 
 ## Disclaimer
 
