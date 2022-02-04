@@ -60,6 +60,13 @@ staticB
 staticZ
 staticM
 
+# Reproduce EwE adult total mortality
+testthat::expect_equal(
+  object = weighted.mean(sa_data$a.series$M[2:7], sa_data$N.age.mdyr["1985",2:7]) + sum(sa_data$L.age.pred.mt["1985", 2:7])/sum(sa_data$B.mdyr.age["1985", 2:7]),
+  expected = 1.454,
+  tolerance = 0.001
+)
+
 # Update relative biomass acculation rate BA/B: (B1986/B1985)-1?
 # Biomass in the beginning of the year
 sa_data$t.series$B[sa_data$t.series$year == 1986] / sa_data$t.series$B[sa_data$t.series$year == 1985] - 1 #-0.1715829
