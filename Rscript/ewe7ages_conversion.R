@@ -1,5 +1,5 @@
-library(IFA4EBFM)
-# set working path and load Atlantic menhaden BAM stock assessment --------
+devtools::load_all()
+# Set working path and load Atlantic menhaden BAM stock assessment --------
 project_path <- here::here()
 working_dir <- file.path(project_path, "data", "ewe")
 sa_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
@@ -67,12 +67,15 @@ testthat::expect_equal(
   tolerance = 0.001
 )
 
-# Update relative biomass acculation rate BA/B: (B1986/B1985)-1?
+updateZ <- sa_data$a.series$M + sa_data$L.age.pred.mt["1985", ]/sa_data$B.mdyr.age["1985", ]
+# Update relative biomass accumulation rate BA/B: (B1986-B1985)/B1986?
 # Biomass in the beginning of the year
-sa_data$t.series$B[sa_data$t.series$year == 1986] / sa_data$t.series$B[sa_data$t.series$year == 1985] - 1 #-0.1715829
+(sa_data$t.series$B[sa_data$t.series$year == 1986] - sa_data$t.series$B[sa_data$t.series$year == 1985]) / sa_data$t.series$B[sa_data$t.series$year == 1986] #-0.2071214
 
 # Biomass in the middle of the year
-sum(sa_data$B.mdyr.age["1986", ]) / sum(sa_data$B.mdyr.age["1985", ]) - 1 #-0.07531567
+(sum(sa_data$B.mdyr.age["1986", ]) -  sum(sa_data$B.mdyr.age["1985", ])) / sum(sa_data$B.mdyr.age["1986", ]) #-0.08145015
+
+(sum(sa_data$B.mdyr.age["1986", ]) /  sum(sa_data$B.mdyr.age["1985", ])) -1
 
 # Update Ecopath diet composition -------------------------------------------------
 # diet composition data from https://hjort.cbl.umces.edu/NWACS/TS_694_17_NWACS_Model_Documentation.pdf: menhaden groups include small (0), medium (1-2), and large groups (3+)
@@ -243,15 +246,25 @@ annualF <- annualF[ , colSums(is.na(annualF)) < nrow(annualF)]
 annualF <- annualF[rowSums(is.na(annualF)) < ncol(annualF), ]
 colnames(annualF) <- c(group_name)
 
+# use estimated fishing mortality from BAM
 for (i in 1:6) {
   annualF[, i + 4] <- rep(sa_data$F.age[as.character(sim_years), i + 1], each = 12)
 }
 
 write.csv(annualF, file = file.path(working_dir, "7ages", "updated_f.csv"))
 
+# use Catch/Biomass for fishing mortality inputs
+scaleF <- annualF
 
+for (i in 1:6) {
+  scaleF[, i + 4] <- rep(sa_data$L.age.pred.mt[as.character(sim_years), i + 1]/sa_data$B.mdyr.age[as.character(sim_years), i + 1], each = 12)
+}
+write.csv(scaleF, file = file.path(working_dir, "7ages", "updated_scalef.csv"))
 
+scaleF_unique <- sa_data$L.age.pred.mt[as.character(sim_years), ]/sa_data$B.mdyr.age[as.character(sim_years), ]
+write.csv(scaleF_unique, file = file.path(working_dir, "7ages", "updated_scalef_unique.csv"))
 
-
-
+# Update Ecosim AM rec dev forcing ----------------------------------------
+rec_dev <- rep(exp(sa_data$t.series$logR.dev[sa_data$t.series$year %in% sim_years]), each = 12)
+write.csv(rec_dev, file = file.path(working_dir, "7ages", "updated_AMrecdev.csv"))
 
