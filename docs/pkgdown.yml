@@ -1,11 +1,9 @@
 pandoc: 2.11.4
-pkgdown: 1.6.1
+pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  01_litreview/01_001_Bibliography: 01_001_Bibliography.html
-  01_litreview/01_001_Bibliography_noabstract: 01_001_Bibliography_noabstract.html
-  01_litreview/ForecastingReviewGeneralInformation: ForecastingReviewGeneralInformation.html
-  01_litreview/ForecastingReviewWorkingDocument: ForecastingReviewWorkingDocument.html
+  01_001_Bibliography: 01_litreview/01_001_Bibliography.html
   02_EcosystemModelsReview: 02_EcosystemModelsReview.html
-last_built: 2021-11-09T19:51Z
+  03_Ecosystem_model_restructuring: 03_Ecosystem_model_restructuring.html
+last_built: 2022-02-13T22:41Z
 
