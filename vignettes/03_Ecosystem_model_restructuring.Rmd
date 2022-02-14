@@ -439,15 +439,17 @@ plot_ewe_agecomp(data=data,
 
 
 data <- ewe7ages_BA0$weight[, c("Year", paste0("X", 0:6))]
-data[, paste0("X", 0:6)] <- data[, paste0("X", 0:6)]/rowSums(data[, paste0("X", 0:6)])
 colnames(data) <- c("Year", paste(0:5), "6+")
 plot_ewe_agecomp(data=data,
                  title="Weight-at-age",
                  xlab="Age",
-                 ylab = "Proportion")
+                 ylab = "Weight")
 
 ```
 
+## Acknowledgements
+Thanks Sarah Gaichas, Howard Townsend, Desiree Tommasi, and Isaac Kaplan for helping lay out the tasks to restructure the EwE model and discussing the diagnostic process.
 
+Thanks David Chagaris and Amy Schueller for sharing model input files and providing suggestions to restructure the EwE model.
 
      
