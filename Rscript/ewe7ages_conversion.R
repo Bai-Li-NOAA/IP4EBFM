@@ -167,7 +167,7 @@ ALK <- function(length, mean_length, cv) {
 }
 
 # load time series data
-annualI <- scan(file.path(working_dir, "1age", "ecosim_input", "NWACS MICE 5 v2-1-6-Time series grid.csv"), what = "", sep = "\n")
+annualI <- scan(file.path(working_dir, "2ages", "ecosim_input", "NWACS MICE 5 v2-1-6-Time series grid.csv"), what = "", sep = "\n")
 col_names <- read.table(text = as.character(annualI[3]), sep = ",")
 annualI <- annualI[-c(1:8)]
 annualI <- read.table(
