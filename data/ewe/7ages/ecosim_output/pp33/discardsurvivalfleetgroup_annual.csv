@@ -1,0 +1,10 @@
+EwEVersion,"6.6.5.17207 (compiled 12/14/2020)"
+Date,"2/9/2022 12:36:04 PM"
+ModelName,"NWACS AM 7ages updateF"
+EcosimScenario,"sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap"
+TimeSeries,"copyUpdated NWACS MICE 5 v2-1-6-Time series grid"
+StartYear,1985
+
+Data,DiscardSurvivalFleetGroup
+
+year,fleet,group,value
