@@ -31,5 +31,5 @@ The folder contains links to project white paper and project plans.
     -   [Data-moderate
         case](https://docs.google.com/document/d/1r1fYXdIdz59PwlzfXUBsT2vo0mJZl0YdRhWj5rdIzWc/edit?usp=sharing)
 
-    -   [Data-rich
+    -   [Data-poor
         case](https://docs.google.com/document/d/1NsbjPVU5zW3qcaFzsJI6ws8A_ByBbV9SevZZQzCpSyA/edit?usp=sharing)
