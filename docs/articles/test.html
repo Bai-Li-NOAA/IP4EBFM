@@ -114,7 +114,7 @@
             <h4 data-toc-skip class="date">Updated on Feb 14, 2022</h4>
       
       
-      <div class="hidden name"><code>03_Ecosystem_model_restructuring.Rmd</code></div>
+      <div class="hidden name"><code>test.Rmd</code></div>
 
     </div>
 
@@ -125,47 +125,41 @@
 </h2>
 <p>The goal of the this work is to restructure an EwE model that include a menhaden-like species with 7 age classes (i.e. 0 - 6+). An existing EwE model of the Northwest Atlantic Continental Shelf model of intermediate complexity for ecosystems (NWACS-MICE) was previously developed to link the dynamics of menhaden with key managed predators (<a href="https://doi.org/10.3389/fmars.2020.606417" class="external-link">Chagaris et al., 2020</a>). There were two age classes of menhaden in the NWACS-MICE model. To restructure the MWACS-MICE model, we made following changes:</p>
 <ul>
-<li>
-<p>Updated Ecopath multi-stanza groups (menhaden-like species)</p>
-<ul>
+<li><p>Updated Ecopath multi-stanza groups (menhaden-like species)</p></li>
 <li><p>Updated age 6+ biomass in 1985 using Beaufort Assessment Model (BAM) outputs (<a href="http://sedarweb.org/sedar-69-atlantic-menhaden-benchmark-stock-assessment-report" class="external-link">SEDAR 2020</a>).</p></li>
 <li><p>Updated total mortality-at-age in 1985 inputs using <span class="math inline">\(C_{a}/B_{a}+M_{a}\)</span> with BAM outputs. Here <span class="math inline">\(C\)</span>, <span class="math inline">\(B\)</span>, and <span class="math inline">\(M\)</span> represent catch, biomass, and natural mortality respectively. <span class="math inline">\(a\)</span> denotes age.</p></li>
 <li><p>Updated relative biomass accumulation rate (BA/B). Three scenarios were explored: 1) 0.114 from Chagaris et al. (2020), 2) EwE default value of 0, 3) -0.081 based on <span class="math inline">\((B_{1986} - B_{1985})/B_{1986}\)</span> (<a href="https://hjort.cbl.umces.edu/NWACS/TS_694_17_NWACS_Model_Documentation.pdf" class="external-link">Buchheister et al., 2017</a>). Both BA/B = 0 and BA/B = -0.081 help improve agreement between Ecosim predicted catch with observed catch and BA/B = 0 showed lower sum of squares (SS) value. SS values from scenarios 1 - 3 were 3059, 2339, and 3136 respectively. So we used BA/B = 0 for base run. Key figures from the three scenarios could be found <a href="https://drive.google.com/file/d/1s6MHeuN8xo273gCszfKRRNl791KZbjYp/view?usp=sharing" class="external-link">here</a>.</p></li>
-</ul>
-</li>
 <li><p>Updated Ecopath diet composition using inputs from NWACS-MICE model (Chagaris et al., 2020), full NWACS model (Buchhester et al., 2017), and BAM M-at-age data.</p></li>
 <li><p>Updated Ecopath C-at-age using BAM outputs.</p></li>
 <li><p>Updated Ecosim vulnerabilities and ages 1-6+ share the same vulnerability values.</p></li>
 <li><p>Updated time series matrix using I-at-age, C-at-age, and F-at-age from BAM outputs. Here <span class="math inline">\(I\)</span> and <span class="math inline">\(F\)</span> represent abundance indices and fishing mortality respectively.</p></li>
 <li><p>A few forcing scenarios were tested to explore various sources of environmental variability. For example, primary production splines was applied to phytoplankton, recruitment deviations from Chagaris et al. (2020) and BAM outputs were linked with menhaden age 0 fish. However, incorporating primary production splines did help soak up some of the process variability in the food web dynamics and did not help improve model fits. Incorporation of recruitment deviations did not help better represent interannual variability in the system. <strong>Question: Maybe not apply forcing functions to the EwE model, but exploring relationships between environmental drivers and menhaden biomass when adjusting <span class="math inline">\(F_{ECO}\)</span>?</strong>.</p></li>
-<li><p><strong>Density-dependent growth: According to <a href="https://repository.oceanbestpractices.org/bitstream/handle/11329/498/Ewe%20User%20Guide%206.pdf?sequence=2&amp;isAllowed=y" class="external-link">EwE 6.0 guide</a>, users could set a non-zero feeding time adjustment for the juvenile group and this represents density-dependent changes in juvenile mortality rate associated with changes in feeding time and predation risk. The feeding time adjust rate for age 0 of menhaden-like species was set to 0.5.</strong></p></li>
+<li>
+<p><strong>Density-dependent growth: According to <a href="https://repository.oceanbestpractices.org/bitstream/handle/11329/498/Ewe%20User%20Guide%206.pdf?sequence=2&amp;isAllowed=y" class="external-link">EwE 6.0 guide</a>, users could set a non-zero feeding time adjustment for the juvenile group and this represents density-dependent changes in juvenile mortality rate associated with changes in feeding time and predation risk. The feeding time adjust rate for age 0 of menhaden-like species was set to 0.5.</strong></p>
+<h2 id="comparison-between-ewe-model-with-2-age-classes-of-menhaden-chagaris-et-al.-2020-and-ewe-model-with-7-age-classes-of-menhaden-like-species.">Comparison between EwE model with 2 age classes of menhaden (Chagaris et al., 2020) and EwE model with 7 age classes of menhaden-like species.</h2>
+</li>
 </ul>
-</div>
-<div class="section level2">
-<h2 id="comparison-between-ewe-model-with-2-age-classes-of-menhaden-chagaris-et-al--2020-and-ewe-model-with-7-age-classes-of-menhaden-like-species-">Comparison between EwE model with 2 age classes of menhaden (Chagaris et al., 2020) and EwE model with 7 age classes of menhaden-like species.<a class="anchor" aria-label="anchor" href="#comparison-between-ewe-model-with-2-age-classes-of-menhaden-chagaris-et-al--2020-and-ewe-model-with-7-age-classes-of-menhaden-like-species-"></a>
-</h2>
-<p><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-1-1.png" width="1152"><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-1-2.png" width="1152"></p>
+<p><img src="test_files/figure-html/unnamed-chunk-1-1.png" width="1152"><img src="test_files/figure-html/unnamed-chunk-1-2.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="biomass-at-age-of-menhaden-like-species-over-years-1985---2017">Biomass-at-age of menhaden-like species over years (1985 - 2017)<a class="anchor" aria-label="anchor" href="#biomass-at-age-of-menhaden-like-species-over-years-1985---2017"></a>
 </h2>
-<p><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-2-1.png" width="1152"></p>
-<p>The bars represents the outputs from EwE and the solid points represent the outputs from BAM stock assessment outputs.</p>
+<p><img src="test_files/figure-html/unnamed-chunk-2-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="mortality-at-age-of-menhaden-like-species-over-years-1985---2017">Mortality-at-age of menhaden-like species over years (1985 - 2017)<a class="anchor" aria-label="anchor" href="#mortality-at-age-of-menhaden-like-species-over-years-1985---2017"></a>
 </h2>
-<p><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
+<p><img src="test_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="catch-at-age-of-menhaden-like-species-over-years-1985---2017">Catch-at-age of menhaden-like species over years (1985 - 2017)<a class="anchor" aria-label="anchor" href="#catch-at-age-of-menhaden-like-species-over-years-1985---2017"></a>
 </h2>
-<p><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
+<p><img src="test_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="weight-at-age-of-menhaden-like-spcies-over-years-1985---2017">Weight-at-age of menhaden-like spcies over years (1985 - 2017)<a class="anchor" aria-label="anchor" href="#weight-at-age-of-menhaden-like-spcies-over-years-1985---2017"></a>
 </h2>
-<p><img src="03_Ecosystem_model_restructuring_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
+<p><img src="test_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>

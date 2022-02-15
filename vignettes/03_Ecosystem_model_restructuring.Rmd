@@ -381,52 +381,86 @@ ggplot(ewe_data, aes(x = Year, y = value, color = Model)) +
 ## Biomass-at-age of menhaden-like species over years (1985 - 2017)
 
 ``` {r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-plot_ewe_agecomp <- function(data, title, xlab, ylab) {
-  data_melt <- reshape2::melt(data, id.vars = "Year")
-  data_melt$variable <- as.factor(data_melt$variable)
-  colnames(data_melt)[which(colnames(data_melt) == "variable")] <- "Age"
+plot_ewe_agecomp <- function(ewe, sa=NULL, title, xlab, ylab) {
+  ewe_melt <- reshape2::melt(ewe, id.vars = "Year")
+  ewe_melt$variable <- as.factor(ewe_melt$variable)
+  colnames(ewe_melt)[which(colnames(ewe_melt) == "variable")] <- "Age"
+
+  if(!is.null(sa)) {
+    sa_melt <- reshape2::melt(sa, id.vars = "Year")
+    sa_melt$variable <- as.factor(sa_melt$variable)
+    colnames(sa_melt)[which(colnames(sa_melt) == "variable")] <- "Age"
+
+    ggplot(data=ewe_melt, aes(x=Age, fill=Age, y=value)) +
+      geom_bar(position='dodge', stat='identity') +
+      geom_point(data=sa_melt, mapping=aes(x=Age, y=value)) +
+      facet_wrap(~Year) +
+      labs(title = title,
+           x = xlab,
+           y = ylab) +
+      theme_bw()
+  } else{
+    ggplot(data=ewe_melt, aes(x=Age, fill=Age, y=value)) +
+      geom_bar(position='dodge', stat='identity') +
+      facet_wrap(~Year) +
+      labs(title = title,
+           x = xlab,
+           y = ylab) +
+      theme_bw()
+  }
 
 
-  ggplot(data_melt, aes(x=Age, fill=Age, y=value)) +
-    geom_bar(position='dodge', stat='identity') +
-    facet_wrap(~Year) +
-    labs(title = title,
-         x = xlab,
-         y = ylab) +
-    theme_bw()
+
 }
 
-data <- ewe7ages_BA0$biomass[, c("Year", paste0("X", 0:6))]
-data[, paste0("X", 0:6)] <- data[, paste0("X", 0:6)]/rowSums(data[, paste0("X", 0:6)])
-colnames(data) <- c("Year", paste(0:5), "6+")
-plot_ewe_agecomp(data=data,
+ewe <- ewe7ages_BA0$biomass[, c("Year", paste0("X", 0:6))]
+ewe[, paste0("X", 0:6)] <- ewe[, paste0("X", 0:6)]/rowSums(ewe[, paste0("X", 0:6)])
+colnames(ewe) <- c("Year", paste(0:5), "6+")
+
+sa <- as.data.frame(sa_data$B.mdyr.age[as.numeric(row.names(sa_data$B.mdyr.age)) %in% sim_years, ]/1000)
+sa <- sa/rowSums(sa)
+colnames(sa) <- c(paste(0:5), "6+")
+sa$Year <- sim_years
+
+plot_ewe_agecomp(ewe=ewe,
+                 sa=sa,
                  title="Biomass-at-age",
                  xlab="Age",
                  ylab = "Proportion")
 
 ```
 
+The bars represents the outputs from EwE and the solid points represent the outputs from BAM stock assessment outputs.
+
 ## Mortality-at-age of menhaden-like species over years (1985 - 2017)
 
 ``` {r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
-data <- ewe7ages_BA0$mortality[, c("Year", paste0("X", 0:6))]
-colnames(data) <- c("Year", paste(0:5), "6+")
-plot_ewe_agecomp(data=data,
+ewe <- ewe7ages_BA0$mortality[, c("Year", paste0("X", 0:6))]
+colnames(ewe) <- c("Year", paste(0:5), "6+")
+
+plot_ewe_agecomp(ewe=ewe,
+                 sa=NULL,
                  title="Mortality-at-age",
                  xlab="Age",
                  ylab = "Mortality")
-
 ```
 
 ## Catch-at-age of menhaden-like species over years (1985 - 2017)
 
 ``` {r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
-data <- ewe7ages_BA0$catch[, c("Year", paste0("X", 0:6))]
-data[, paste0("X", 0:6)] <- data[, paste0("X", 0:6)]/rowSums(data[, paste0("X", 0:6)])
-colnames(data) <- c("Year", paste(0:5), "6+")
-plot_ewe_agecomp(data=data,
+ewe <- ewe7ages_BA0$catch[, c("Year", paste0("X", 0:6))]
+ewe[, paste0("X", 0:6)] <- ewe[, paste0("X", 0:6)]/rowSums(ewe[, paste0("X", 0:6)])
+colnames(ewe) <- c("Year", paste(0:5), "6+")
+
+sa <- as.data.frame(sa_data$L.age.pred.mt[as.numeric(row.names(sa_data$L.age.pred.mt)) %in% sim_years, ]/1000)
+sa <- sa/rowSums(sa)
+colnames(sa) <- c(paste(0:5), "6+")
+sa$Year <- sim_years
+
+plot_ewe_agecomp(ewe=ewe,
+                 sa=sa,
                  title="Catch-at-age",
                  xlab="Age",
                  ylab = "Proportion")
@@ -438,9 +472,16 @@ plot_ewe_agecomp(data=data,
 ``` {r, echo=FALSE, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 
-data <- ewe7ages_BA0$weight[, c("Year", paste0("X", 0:6))]
-colnames(data) <- c("Year", paste(0:5), "6+")
-plot_ewe_agecomp(data=data,
+ewe <- ewe7ages_BA0$weight[, c("Year", paste0("X", 0:6))]
+colnames(ewe) <- c("Year", paste(0:5), "6+")
+
+sa <- as.data.frame(do.call("rbind", replicate(
+  length(sim_years), sa_data$a.series$weight.spawn*1000, simplify = FALSE)))
+colnames(sa) <- c(paste(0:5), "6+")
+sa$Year <- sim_years
+
+plot_ewe_agecomp(ewe=ewe,
+                 sa=sa,
                  title="Weight-at-age",
                  xlab="Age",
                  ylab = "Weight")
