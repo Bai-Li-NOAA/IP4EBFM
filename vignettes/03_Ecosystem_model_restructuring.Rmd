@@ -430,7 +430,7 @@ plot_ewe_agecomp(ewe=ewe,
 
 ```
 
-The bars represents the outputs from EwE and the solid points represent the outputs from BAM stock assessment outputs.
+The bars represent the outputs from EwE and the solid points represent the outputs from BAM stock assessment outputs.
 
 ## Mortality-at-age of menhaden-like species over years (1985 - 2017)
 
@@ -439,8 +439,12 @@ The bars represents the outputs from EwE and the solid points represent the outp
 ewe <- ewe7ages_BA0$mortality[, c("Year", paste0("X", 0:6))]
 colnames(ewe) <- c("Year", paste(0:5), "6+")
 
+sa <- as.data.frame(sa_data$Z.age[as.numeric(row.names(sa_data$Z.age)) %in% sim_years, ])
+colnames(sa) <- c(paste(0:5), "6+")
+sa$Year <- sim_years
+
 plot_ewe_agecomp(ewe=ewe,
-                 sa=NULL,
+                 sa=sa,
                  title="Mortality-at-age",
                  xlab="Age",
                  ylab = "Mortality")
