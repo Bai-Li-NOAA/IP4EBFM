@@ -24,3 +24,12 @@ The folder contains links to project white paper and project plans.
 
 -   [Project experimental
     design](https://docs.google.com/document/d/18rye1HAM-uqekJB2_noHI8iNBGb5oIPr/edit?usp=sharing&ouid=108654539371382020272&rtpof=true&sd=true)
+
+    -   [Data-rich
+        case](https://docs.google.com/document/d/1Vv0HF21G4T9uhZMbHOcbF6FPZwbATecmVG4Cm6mtsXk/edit?usp=sharing)
+
+    -   [Data-moderate
+        case](https://docs.google.com/document/d/1r1fYXdIdz59PwlzfXUBsT2vo0mJZl0YdRhWj5rdIzWc/edit?usp=sharing)
+
+    -   [Data-poor
+        case](https://docs.google.com/document/d/1NsbjPVU5zW3qcaFzsJI6ws8A_ByBbV9SevZZQzCpSyA/edit?usp=sharing)
