@@ -3,9 +3,10 @@ navbar:
     left:
     - home
     - reference
+    - articles
     - github
     - issue
-    - article
+    right: github
 
   components:
     home:
@@ -33,4 +34,8 @@ navbar:
       menu:
       - text: Forecasting review bibliography
         href: articles/01_litreview/01_001_Bibliography.html
+      - text: Ecosystem models review
+        href: articles/02_EcosystemModelsReview.html
+      - text: Ecosystem model restructuring
+        href: articles/03_Ecosystem_model_restructuring.html
 

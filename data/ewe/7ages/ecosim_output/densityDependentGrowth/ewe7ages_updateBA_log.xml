@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <Platform>Microsoft Windows NT 10.0.19042.0</Platform>
+  <Is64BitOS>True</Is64BitOS>
+  <ModelName>ewe7ages_updateBA</ModelName>
+  <Created>8:29:11 AM Tuesday, February 15, 2022</Created>
+<Session_Started
+  Date="8:29:11 AM Tuesday, February 15, 2022">
+  <Model>ewe7ages_updateBA</Model>
+  <LogFile>C:\Users\bai.li\Desktop\IFA4EBFM\data\ewe\densityDependentGrowth\ewe7ages_updateBA_log.xml</LogFile>
+  <Is64BitExe>False</Is64BitExe>
+  <CultureOS>English (United States)</CultureOS>
+  <CultureUI>Spanish (Spain)</CultureUI>
+  <DecimalSeparator>.</DecimalSeparator>
+</Session_Started>
+<Information_Message
+  Date="8:29:11 AM Tuesday, February 15, 2022">
+  <Message>Ecopath model 'C:\Users\bai.li\Desktop\IFA4EBFM\data\ewe\densityDependentGrowth\ewe7ages_updateBA.eweaccdb' loaded.</Message>
+  <Message_Type>DataAddedOrRemoved</Message_Type>
+  <Message_Source>EcoPath</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Exception_Messages
+  Date="8:29:11 AM Tuesday, February 15, 2022">
+  <Detail>cPluginManager.LoadPluginAssembly::LoadFrom(C:\Program Files (x86)\Ecopath with Ecosim 6.6.5 32-bit\Includes\LPSolve\win32\lpsolve55.dll)</Detail>
+  <Exception>
+    <Type>System.BadImageFormatException</Type>
+    <Source>mscorlib</Source>
+    <Message>Could not load file or assembly 'file:///C:\Program Files (x86)\Ecopath with Ecosim 6.6.5 32-bit\Includes\LPSolve\win32\lpsolve55.dll' or one of its dependencies. The module was expected to contain an assembly manifest.</Message>
+  </Exception>
+  <StackTrace>
+    <Method>
+      <Name>_nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadAssemblyName</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadPluginAssembly</Name>
+      <Line>0</Line>
+    </Method>
+  </StackTrace>
+</Exception_Messages>
+<Exception_Messages
+  Date="8:29:11 AM Tuesday, February 15, 2022">
+  <Detail>cPluginManager.LoadPluginAssembly::LoadFrom(C:\Program Files (x86)\Ecopath with Ecosim 6.6.5 32-bit\Includes\LPSolve\win64\lpsolve55.dll)</Detail>
+  <Exception>
+    <Type>System.BadImageFormatException</Type>
+    <Source>mscorlib</Source>
+    <Message>Could not load file or assembly 'file:///C:\Program Files (x86)\Ecopath with Ecosim 6.6.5 32-bit\Includes\LPSolve\win64\lpsolve55.dll' or one of its dependencies. The module was expected to contain an assembly manifest.</Message>
+  </Exception>
+  <StackTrace>
+    <Method>
+      <Name>_nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>nLoad</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadAssemblyName</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>InternalLoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadFrom</Name>
+      <Line>0</Line>
+    </Method>
+    <Method>
+      <Name>LoadPluginAssembly</Name>
+      <Line>0</Line>
+    </Method>
+  </StackTrace>
+</Exception_Messages>
+<Log_Message
+  Date="8:29:12 AM Tuesday, February 15, 2022">
+  <Message>Unable to obtain server time</Message>
+</Log_Message>
+<Information_Message
+  Date="8:31:01 AM Tuesday, February 15, 2022">
+  <Message>Ecopath run completed.</Message>
+  <Message_Type>Any</Message_Type>
+  <Message_Source>EcoPath</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Log_Message
+  Date="8:31:01 AM Tuesday, February 15, 2022">
+  <Message>Ecospace scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="8:31:01 AM Tuesday, February 15, 2022">
+  <Message>Ecotracer scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="8:31:01 AM Tuesday, February 15, 2022">
+  <Message>Ecosim scenario closed</Message>
+</Log_Message>
+<Information_Message
+  Date="8:31:02 AM Tuesday, February 15, 2022">
+  <Message>Ecosim scenario 'sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap' loaded.</Message>
+  <Message_Type>DataAddedOrRemoved</Message_Type>
+  <Message_Source>EcoSim</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Information_Message
+  Date="8:31:07 AM Tuesday, February 15, 2022">
+  <Message>Time Series dataset 'copyUpdated NWACS MICE 5 v2-1-6-Time series grid' loaded.</Message>
+  <Message_Type>DataAddedOrRemoved</Message_Type>
+  <Message_Source>TimeSeries</Message_Source>
+  <Message_DataType>TimeSeriesDataset</Message_DataType>
+</Information_Message>
+<Information_Message
+  Date="8:31:23 AM Tuesday, February 15, 2022">
+  <Message>Ecosim scenario 'sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap' has been saved.</Message>
+  <Message_Type>DataModified</Message_Type>
+  <Message_Source>EcoSim</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Information_Message
+  Date="8:31:29 AM Tuesday, February 15, 2022">
+  <Message>Network Analysis indices saved to 'C:\Users\bai.li\Documents\Github\IFA4EBFM\data\EwE\original_output\ewe7ages_updateBA\ecosim_sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap\NA_Annual_IndicesWithoutPPR.csv'</Message>
+  <Message_Type>DataExport</Message_Type>
+  <Message_Source>External</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Information_Message
+  Date="8:31:29 AM Tuesday, February 15, 2022">
+  <Message>Network Analysis indices saved to 'C:\Users\bai.li\Documents\Github\IFA4EBFM\data\EwE\original_output\ewe7ages_updateBA\ecosim_sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap\NA_Monthly_IndicesWithoutPPR.csv'</Message>
+  <Message_Type>DataExport</Message_Type>
+  <Message_Source>External</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Information_Message
+  Date="8:31:58 AM Tuesday, February 15, 2022">
+  <Message>Ecosim results saved to 'C:\Users\bai.li\Desktop\IFA4EBFM\data\ewe\densityDependentGrowth'</Message>
+  <Message_Type>DataExport</Message_Type>
+  <Message_Source>EcoSim</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Entry>
+  <Formcannotberesolved>frmEwE6 cmdNavigate OnInvoke</Formcannotberesolved>
+</Entry>
+<Information_Message
+  Date="8:45:56 AM Tuesday, February 15, 2022">
+  <Message>Ecosim scenario 'sim3.5_ts1_fit28v_i7_PreySwitch1 vulcap' has been saved.</Message>
+  <Message_Type>DataModified</Message_Type>
+  <Message_Source>EcoSim</Message_Source>
+  <Message_DataType>NotSet</Message_DataType>
+</Information_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>EwECore.SpatialData.cSpatialDataSetManager Failed to stop run when loading new model.</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Ecotracer scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Ecospace scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Ecospace scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Ecotracer scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Ecosim scenario closed</Message>
+</Log_Message>
+<Log_Message
+  Date="9:41:08 AM Tuesday, February 15, 2022">
+  <Message>Model closed</Message>
+</Log_Message>
+</doc>
