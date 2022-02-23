@@ -9,7 +9,6 @@ load(file = here::here("data", "AtlanticMenhadenSA", "projection", "bootstrap_wi
 
 #################################################################################
 
-# graphics.off()
 # rm(list = ls(all = TRUE)) # start fresh by removing everything from the working environment
 
 filename <- "am019" # admb file to run, without tpl or rdat extension
@@ -34,7 +33,7 @@ plot.title <- as.logical(T) # If TRUE, add title to plots
 
 ###############################################################################
 #------Get results and define some global variables  -------------------------------------------------------------------
-spp <- dget(here::here("data", "AtlanticMenhadenSA", "projection", paste(filename, ".rdat", sep = "")))
+spp <- dget(here::here("data", "AtlanticMenhadenSA", paste(filename, ".rdat", sep = "")))
 
 # life-history stuff
 ages <- spp$a.series$age
