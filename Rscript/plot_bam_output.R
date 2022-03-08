@@ -6,18 +6,6 @@ library(FishGraph)
 
 working_dir <- here::here("data", "AtlanticMenhadenSA")
 
-# ## Issues: could not load FishGraph properly, the only thing I can find in FishGraph is the gag dataset. So need to download the R folder from the FishGraph repository and source all the R files for now.
-#
-# download.file(url = "https://github.com/RobCheshire-NOAA/FishGraph/archive/refs/heads/master.zip",
-#               destfile = here::here("data", "FishGraph-master.zip"))
-#
-# # unzip the .zip file
-# unzip(zipfile = here::here("data", "FishGraph-master.zip"))
-#
-# # source the files
-# Rfiles <- list.files(here::here("FishGraph-master", "R"))
-# sapply(here::here("FishGraph-master", "R", Rfiles), source,.GlobalEnv)
-
 ##### Start fresh ###########
 graphics.off()
 .SavedPlots <- NULL
