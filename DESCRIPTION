@@ -11,3 +11,6 @@ VignetteBuilder: knitr
 LazyData: true
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
+Imports:
+    scales,
+    data.table
