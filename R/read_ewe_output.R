@@ -5,7 +5,7 @@
 #' @param file_path a character string shows path to the working folder where EwE output csv files are located.
 #' @param file_names a vector of csv file names.
 #' @param skip_nrows interger: the number of lines of the data file to skip before reading data.
-#' #' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
+#' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
 #' @param plot logical: if `TRUE` then make figures for all output data files.
 #' @param figure_titles a character vector of strings describes the names of each figure.
 #' @param figure_colors a vector of colors.
