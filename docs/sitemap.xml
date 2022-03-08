@@ -13,6 +13,9 @@
     <loc>/articles/03_Ecosystem_model_restructuring.html</loc>
   </url>
   <url>
+    <loc>/articles/04_Ecosystem_simulation_with_environmental_drivers.html</loc>
+  </url>
+  <url>
     <loc>/articles/index.html</loc>
   </url>
   <url>
@@ -29,6 +32,15 @@
   </url>
   <url>
     <loc>/reference/bibtex2rmd.html</loc>
+  </url>
+  <url>
+    <loc>/reference/create_fishery.html</loc>
+  </url>
+  <url>
+    <loc>/reference/download_amo.html</loc>
+  </url>
+  <url>
+    <loc>/reference/download_ncei.html</loc>
   </url>
   <url>
     <loc>/reference/index.html</loc>

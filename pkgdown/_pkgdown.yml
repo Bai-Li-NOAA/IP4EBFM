@@ -38,4 +38,6 @@ navbar:
         href: articles/02_EcosystemModelsReview.html
       - text: Ecosystem model restructuring
         href: articles/03_Ecosystem_model_restructuring.html
+      - text: Ecosystem simulation with envrionmental drivers
+        href: articles/04_Ecosystem_simulation_with_environmental_drivers.html
 
