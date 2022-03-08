@@ -1,0 +1,10 @@
+EwEVersion,"6.6.5.17207 (compiled 12/14/2020)"
+Date,"3/7/2022 6:50:49 PM"
+ModelName,"NWACS AM 7ages base run"
+EcosimScenario,base_run1
+TimeSeries,"copyUpdated NWACS MICE 5 v2-1-6-Time series grid"
+StartYear,1985
+
+Data,DiscardMortalityFleetGroup
+
+timestep,fleet,group,value
