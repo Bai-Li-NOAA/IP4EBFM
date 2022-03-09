@@ -318,8 +318,8 @@ labels_2ages <- c(
 labels_7ages <- c(
   "Striped Bass 0", "Striped Bass 2-5", "Striped Bass 6+",
   "Atlantic Menhaden 0", "Atlantic Menhaden 1",
-  "Atlantic Menhaden 2", "Atlatnic Menhaden 3",
-  "Atlantic Menhaden 4", "Atlantic Menahden 5",
+  "Atlantic Menhaden 2", "Atlantic Menhaden 3",
+  "Atlantic Menhaden 4", "Atlantic Menhaden 5",
   "Atlantic Menhaden 6+",
   "Spiny Dogfish", "Bluefish juv", "Bluefish adult",
   "Weakfish juv", "Weakfish adult",
