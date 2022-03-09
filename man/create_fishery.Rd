@@ -8,11 +8,13 @@ create_fishery(
   file_path,
   skip_nrows,
   species,
+  species_labels,
   years,
   fleet_num,
   selectivity = NULL,
   CV,
-  sample_num
+  sample_num,
+  waa_path
 )
 }
 \arguments{
@@ -21,6 +23,8 @@ create_fishery(
 \item{skip_nrows}{interger; the number of lines of the data file to skip before reading data.}
 
 \item{species}{The species to create fishery for. A vector of column names from the catch_annual.csv.}
+
+\item{species_labels}{Customized names for speicies columns.}
 
 \item{years}{A vector of years of the fishery.}
 
@@ -31,9 +35,11 @@ create_fishery(
 \item{CV}{CV of catch. A vector of CVs for individual fleets.}
 
 \item{sample_num}{Annual sample size. A vector of sample sizes for indiviudal fleets.}
+
+\item{waa_path}{A character string shows path to Ecosim weight output file (e.g., weight_annual.csv) is located.}
 }
 \value{
-A data list that includes obserserved catch and composition data for each fleet.
+A data list that includes catch and composition data from the EwE operating model, and observed catch and composition data for each fleet.
 Each fleet has time series catch with lognormal error and composition data with sampling error.
 }
 \description{

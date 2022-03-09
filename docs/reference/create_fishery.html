@@ -100,11 +100,13 @@
   <span class="va">file_path</span>,
   <span class="va">skip_nrows</span>,
   <span class="va">species</span>,
+  <span class="va">species_labels</span>,
   <span class="va">years</span>,
   <span class="va">fleet_num</span>,
   selectivity <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">CV</span>,
-  <span class="va">sample_num</span>
+  <span class="va">sample_num</span>,
+  <span class="va">waa_path</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -116,6 +118,8 @@
 <dd><p>interger; the number of lines of the data file to skip before reading data.</p></dd>
 <dt>species</dt>
 <dd><p>The species to create fishery for. A vector of column names from the catch_annual.csv.</p></dd>
+<dt>species_labels</dt>
+<dd><p>Customized names for speicies columns.</p></dd>
 <dt>years</dt>
 <dd><p>A vector of years of the fishery.</p></dd>
 <dt>fleet_num</dt>
@@ -126,10 +130,12 @@
 <dd><p>CV of catch. A vector of CVs for individual fleets.</p></dd>
 <dt>sample_num</dt>
 <dd><p>Annual sample size. A vector of sample sizes for indiviudal fleets.</p></dd>
+<dt>waa_path</dt>
+<dd><p>A character string shows path to Ecosim weight output file (e.g., weight_annual.csv) is located.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data list that includes obserserved catch and composition data for each fleet.
+    <p>A data list that includes catch and composition data from the EwE operating model, and observed catch and composition data for each fleet.
 Each fleet has time series catch with lognormal error and composition data with sampling error.</p>
     </div>
     <div id="details">
