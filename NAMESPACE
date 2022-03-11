@@ -2,8 +2,10 @@
 
 export(bibtex2rmd)
 export(create_fishery)
+export(create_survey)
 export(download_amo)
 export(download_ncei)
+export(logistic)
 export(read_ewe_output)
 import(data.table)
 import(scales)
