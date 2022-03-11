@@ -16,11 +16,10 @@
 #' @param years A vector of years of the fishery.
 #' @param fleet_num Fleet number.
 #' @param selectivity Selectivity at age. A dataframe defining selectivity-at-age for a species over time. Columns represent age classes and rows represent years. Provide selectivity data only if \code{fleet_num} is greater than 1.
-#' @param CV CV of catch. A vector of CVs for individual fleets.
+#' @param CV Coefficient of variation of catch. A vector of CVs for individual fleets.
 #' @param sample_num Annual sample size. A vector of sample sizes for indiviudal fleets.
 #' @param waa_path A character string shows path to Ecosim weight output file (e.g., weight_annual.csv) is located.
-#' @return A data list that includes catch and composition data from the EwE operating model, and observed catch and composition data for each fleet.
-#' Each fleet has time series catch with lognormal error and composition data with sampling error.
+#' @return A data list that includes catch and composition data from the EwE operating model, and observed catch and composition data for each fleet. Each fleet has time series catch with lognormal error and composition data with sampling error.
 #'
 #' @export
 create_fishery <- function(file_path, skip_nrows, species, species_labels, years, fleet_num, selectivity = NULL, CV, sample_num, waa_path) {
