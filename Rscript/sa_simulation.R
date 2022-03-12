@@ -79,7 +79,7 @@ survey_time <- list(
 
 # set up survey selectivity
 nad_sel <- IFA4EBFM::logistic(
-  pattern = "simple_logistic",
+  pattern = "double_logistic",
   x = ages,
   slope_asc = 2.2,
   location_asc = 3.0,
