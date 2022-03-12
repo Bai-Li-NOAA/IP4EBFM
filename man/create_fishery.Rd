@@ -24,17 +24,17 @@ create_fishery(
 
 \item{species}{The species to create fishery for. A vector of column names from the catch_annual.csv.}
 
-\item{species_labels}{Customized names for speicies columns.}
+\item{species_labels}{Customized names for species columns.}
 
-\item{years}{A vector of years of the fishery.}
+\item{years}{A vector of years.}
 
 \item{fleet_num}{Fleet number.}
 
-\item{selectivity}{Selectivity at age. A dataframe defining selectivity-at-age for a species over time. Columns represent age classes and rows represent years. Provide selectivity data only if \code{fleet_num} is greater than 1.}
+\item{selectivity}{Selectivity at age. A data frame defining selectivity-at-age for a species over time. Columns represent age classes and rows represent years. Provide selectivity data only if \code{fleet_num} is greater than 1.}
 
 \item{CV}{Coefficient of variation of catch. A vector of CVs for individual fleets.}
 
-\item{sample_num}{Annual sample size. A vector of sample sizes for indiviudal fleets.}
+\item{sample_num}{Annual sample size. A vector of sample sizes for individual fleets.}
 
 \item{waa_path}{A character string shows path to Ecosim weight output file (e.g., weight_annual.csv) is located.}
 }

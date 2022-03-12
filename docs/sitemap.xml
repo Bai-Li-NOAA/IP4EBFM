@@ -37,6 +37,9 @@
     <loc>/reference/create_fishery.html</loc>
   </url>
   <url>
+    <loc>/reference/create_survey.html</loc>
+  </url>
+  <url>
     <loc>/reference/download_amo.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/logistic.html</loc>
   </url>
   <url>
     <loc>/reference/read_ewe_output.html</loc>
