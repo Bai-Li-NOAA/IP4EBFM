@@ -1,6 +1,6 @@
 #' Download AMO data
 #'
-#' @description It downloads data from https://psl.noaa.gov/data/timeseries/AMO/, reshape the data to one column, and save the data to a specified location. It returns a dataframe with 2 columns. One column contains raw values and the other column contains scaled values with specified output range. 
+#' @description It downloads data from https://psl.noaa.gov/data/timeseries/AMO/, reshape the data to one column, and save the data to a specified location. It returns a dataframe with 2 columns. One column contains raw values and the other column contains scaled values with specified output range.
 #'
 #' @param url url for downloading data.
 #' @param years a vector of years.
@@ -9,7 +9,7 @@
 #' @import scales
 #' @import data.table
 #' @export
-download_amo <- function(url, years, output_dir, scale_range=c(0, 2)) {
+download_amo <- function(url, years, output_dir, scale_range = c(0, 2)) {
   data <- data.table::fread(url, fill = TRUE)
   data <- as.data.frame(data)
   amo <- data[data[, 1] %in% as.character(years), ]
@@ -17,7 +17,7 @@ download_amo <- function(url, years, output_dir, scale_range=c(0, 2)) {
   amo <- data.table(v1 = c(t(amo)))
   amo <- as.data.frame(amo)
   colnames(amo) <- "raw_value"
-  row.names(amo) <- paste0(rep(years, each=12), "_", rep(1:12, times=length(years)))
+  row.names(amo) <- paste0(rep(years, each = 12), "_", rep(1:12, times = length(years)))
   amo$raw_value <- as.numeric(amo$raw_value)
   amo$scaled_value <- scales::rescale(amo$raw_value, to = scale_range)
   write.csv(amo, file = output_dir)
@@ -37,15 +37,14 @@ download_amo <- function(url, years, output_dir, scale_range=c(0, 2)) {
 #' @import scales
 #' @import data.table
 #' @export
-download_ncei <- function(years, states, states_id, parameter, output_dir, scale_range=c(0, 2)) {
-  
-  return_data <- as.data.frame(matrix(NA, nrow = length(years)*12, ncol=length(states_id)))
+download_ncei <- function(years, states, states_id, parameter, output_dir, scale_range = c(0, 2)) {
+  return_data <- as.data.frame(matrix(NA, nrow = length(years) * 12, ncol = length(states_id)))
 
-  for (i in 1:ncol(return_data)){
-      data <- data.table::fread(paste0("https://www.ncdc.noaa.gov/cag/statewide/time-series/", states_id[i], "-", parameter, "-all-1-", years[1], "-", years[length(years)]+1, ".csv"))
-      data <- as.data.frame(data)
-      data <- data[-nrow(data), ]
-      return_data[, i] <- data$Value
+  for (i in 1:ncol(return_data)) {
+    data <- data.table::fread(paste0("https://www.ncdc.noaa.gov/cag/statewide/time-series/", states_id[i], "-", parameter, "-all-1-", years[1], "-", years[length(years)] + 1, ".csv"))
+    data <- as.data.frame(data)
+    data <- data[-nrow(data), ]
+    return_data[, i] <- data$Value
   }
 
   mean_value <- apply(return_data, 1, mean)
@@ -55,5 +54,4 @@ download_ncei <- function(years, states, states_id, parameter, output_dir, scale
   )
   write.csv(mean_data, file = output_dir)
   return(mean_data)
-
 }

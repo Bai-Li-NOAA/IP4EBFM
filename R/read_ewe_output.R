@@ -16,7 +16,7 @@ read_ewe_output <- function(file_path,
                             skip_nrows = 8,
                             functional_groups,
                             plot = FALSE,
-                            figure_titles=NULL,
+                            figure_titles = NULL,
                             figure_colors = rainbow(12)) {
   data <- vector(mode = "list", length = length(file_names))
 
@@ -51,7 +51,7 @@ read_ewe_output <- function(file_path,
           pch = group_id,
           lty = group_id,
           type = "o",
-          cex=0.7
+          cex = 0.7
         )
       }
 
@@ -62,7 +62,7 @@ read_ewe_output <- function(file_path,
         lty = 1:length(functional_groups),
         pch = 1:length(functional_groups),
         title = "Functional Groups",
-        cex=0.7
+        cex = 0.7
       )
     }
     dev.off()

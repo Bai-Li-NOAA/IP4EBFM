@@ -15,7 +15,6 @@ bibtex2rmd <- function(bibfile,
                        abstract = FALSE,
                        overwrite = FALSE,
                        section_title) {
-
   filename <- outfile
 
   if (!file.exists(file.path(outfold, filename)) | overwrite) {
@@ -35,7 +34,6 @@ output:
 knitr::opts_chunk$set(collapse = TRUE)
 ```
             ", fileConn)
-
   }
 
   fileConn <- file.path(outfold, filename)
@@ -73,7 +71,6 @@ knitr::opts_chunk$set(collapse = TRUE)
         ifelse(!is.na(x[["pages"]]), paste0(x[["pages"]], ", "), ""),
         ifelse(!is.na(x[["doi"]]), paste0("https://doi.org/", x[["doi"]]), "")
       ),
-
       fileConn,
       append = T
       )
