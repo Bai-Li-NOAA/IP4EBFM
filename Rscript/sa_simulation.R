@@ -7,7 +7,7 @@ set.seed(999)
 # specify working directories ---------------------------------------------
 
 project_path <- here::here()
-ewe_output_path <- file.path(project_path, "data", "ewe", "7ages", "ecosim_output", "BA0")
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp")
 menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
 
 # read Atlantic menhaden Beaufort Assessment Model output data --------
@@ -81,7 +81,7 @@ survey_time <- list(
 nad_sel <- IFA4EBFM::logistic(
   pattern = "double_logistic",
   x = ages,
-  slope_asc = 2.2,
+  slope_asc = 3,
   location_asc = 3.0,
   slope_desc = 3.0,
   location_desc = 3.5
@@ -193,3 +193,18 @@ survey <- IFA4EBFM::create_survey(
   bin_width = bin_width,
   length_CV = length_CV
 )
+
+# Create biological data
+biodata <- create_biodata(nsex=1, narea=1, ages=ages, years=years,
+                          length_bin=length_bin, mid_length_bin=mid_length_bin,
+                          nbin=nbin, bin_width=bin_width, length_CV=length_CV,
+                          annual_weight_path=file.path(ewe_output_path, "weight_annual.csv"),
+                          monthly_weight_path=file.path(ewe_output_path, "weight_monthly.csv"),
+                          species=4:10,
+                          species_labels=paste0("age", ages),
+                          skip_nrows=8,
+                          lw_a=0.01, lw_b=3,
+                          k=0.331,
+                          maturity_at_age=c(0.0, 0.1, 0.5, 0.9, 1.0, 1.0, 1.0), # From both BAM and EwE
+                          natural_mortality_at_age=c(1.76, 1.31, 1.03, 0.9, 0.81, 0.76, 0.72) # From both BAM and EwE
+                          )

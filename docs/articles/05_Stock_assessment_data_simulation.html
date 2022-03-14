@@ -130,9 +130,11 @@
 <h2 id="ewe-scenario">EwE scenario<a class="anchor" aria-label="anchor" href="#ewe-scenario"></a>
 </h2>
 <p>We used the output data from EwE AMO_PCP scenario for generating single species stock assessment input data. The AMO_PCP scenario incorporates Atlantic Multidecadal Oscillation and precipitation information in the ecosystem modeling work and it creates a strong response.</p>
-<ul>
-<li>
-<code><a href="../reference/create_fishery.html">IFA4EBFM::create_fishery()</a></code> is used to simulate fishery data
+</div>
+<div class="section level2">
+<h2 id="ifa4ebfmcreate_fishery-is-used-to-simulate-fishery-data">
+<code>IFA4EBFM::create_fishery()</code> is used to simulate fishery data<a class="anchor" aria-label="anchor" href="#ifa4ebfmcreate_fishery-is-used-to-simulate-fishery-data"></a>
+</h2>
 <ul>
 <li>Input data
 <ul>
@@ -148,16 +150,39 @@
 </ul>
 </li>
 </ul>
-</li>
-</ul>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create fishery ----------------------------------------------------------</span>
+
+<span class="va">fishery_sample_num</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span>
+  <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">acomp.cRs.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">acomp.cBs.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.</span><span class="op">$</span><span class="va">acomp.cBn.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">acomp.cRn.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>
+<span class="op">)</span>
+<span class="va">fishery_sample_num</span><span class="op">[</span><span class="va">fishery_sample_num</span><span class="op">==</span><span class="op">-</span><span class="fl">99999</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span>
+
+<span class="va">fishery</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_fishery.html">create_fishery</a></span><span class="op">(</span>
+  file_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"catch_annual.csv"</span><span class="op">)</span>,
+  skip_nrows <span class="op">=</span> <span class="fl">8</span>,
+  species <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">10</span>,
+  species_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span>,
+  years <span class="op">=</span> <span class="va">years</span>,
+  fleet_num <span class="op">=</span> <span class="fl">1</span>,
+  selectivity <span class="op">=</span> <span class="cn">NULL</span>,
+  CV <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
+  sample_num <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">fishery_sample_num</span>, <span class="fl">1</span>, <span class="va">sum</span><span class="op">)</span>,
+  waa_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"weight_annual.csv"</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="catch-biomass-and-catch-at-age-in-proportion-over-time">Catch biomass and catch-at-age in proportion over time<a class="anchor" aria-label="anchor" href="#catch-biomass-and-catch-at-age-in-proportion-over-time"></a>
 </h2>
 <p><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-2.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-3.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-4.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-5.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-6.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-3-7.png" width="1152"></p>
-<ul>
-<li>
-<code><a href="../reference/create_survey.html">IFA4EBFM::create_survey()</a></code> is used to simulate fishery data
+</div>
+<div class="section level2">
+<h2 id="ifa4ebfmcreate_survey-is-used-to-simulate-fishery-data">
+<code>IFA4EBFM::create_survey()</code> is used to simulate fishery data<a class="anchor" aria-label="anchor" href="#ifa4ebfmcreate_survey-is-used-to-simulate-fishery-data"></a>
+</h2>
 <ul>
 <li>Input data
 <ul>
@@ -181,8 +206,160 @@
 </ul>
 </li>
 </ul>
-</li>
-</ul>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create survey ----------------------------------------------------------</span>
+
+<span class="co"># selectivity settings</span>
+<span class="va">survey_num</span> <span class="op">&lt;-</span> <span class="fl">4</span>
+
+<span class="va">survey_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"nad"</span>, <span class="st">"mad"</span>, <span class="st">"sad"</span>, <span class="st">"yoy"</span><span class="op">)</span>
+
+<span class="co"># set up survey time</span>
+<span class="co"># Need to check Table 26 from BAM assessment: Length cutoffs used to distinguish age-0 from age-1+ Atlantic menhaden at different regions.</span>
+
+<span class="va">nad_year</span> <span class="op">&lt;-</span> <span class="fl">1990</span><span class="op">:</span><span class="fl">2017</span> <span class="co"># BAM Northern Adult Index (NAD): age 1+ fish; September - January; Time of the year when menhaden were most abundant in this region</span>
+
+<span class="va">mad_year</span> <span class="op">&lt;-</span> <span class="fl">1985</span><span class="op">:</span><span class="fl">2017</span> <span class="co"># BAM Middle Adult Index (MAD): age 1+ fish; March - May</span>
+
+<span class="va">sad_year</span> <span class="op">&lt;-</span> <span class="fl">1990</span><span class="op">:</span><span class="fl">2017</span> <span class="co"># BAM South Adult Index (SAD): age 1+ fish: April - July</span>
+
+<span class="va">yoy_year</span> <span class="op">&lt;-</span> <span class="fl">1985</span><span class="op">:</span><span class="fl">2017</span> <span class="co"># covered all months, many surveys starts at July</span>
+
+<span class="va">survey_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+    year <span class="op">=</span> <span class="va">nad_year</span>,
+    month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">nad_year</span><span class="op">)</span><span class="op">)</span> <span class="co"># Oct 15</span>
+  <span class="op">)</span>,
+  mad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+    year <span class="op">=</span> <span class="va">mad_year</span>,
+    month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">mad_year</span><span class="op">)</span><span class="op">)</span> <span class="co"># April 15</span>
+  <span class="op">)</span>,
+  sad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+    year <span class="op">=</span> <span class="va">sad_year</span>,
+    month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">sad_year</span><span class="op">)</span><span class="op">)</span> <span class="co"># April 15</span>
+  <span class="op">)</span>,
+  yoy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>
+    year <span class="op">=</span> <span class="va">yoy_year</span>,
+    month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">6</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">yoy_year</span><span class="op">)</span><span class="op">)</span> <span class="co"># June 1</span>
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># set up survey selectivity</span>
+<span class="va">nad_sel</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/logistic.html">logistic</a></span><span class="op">(</span>
+  pattern <span class="op">=</span> <span class="st">"double_logistic"</span>,
+  x <span class="op">=</span> <span class="va">ages</span>,
+  slope_asc <span class="op">=</span> <span class="fl">3</span>,
+  location_asc <span class="op">=</span> <span class="fl">3.0</span>,
+  slope_desc <span class="op">=</span> <span class="fl">3.0</span>,
+  location_desc <span class="op">=</span> <span class="fl">3.5</span>
+<span class="op">)</span>
+
+<span class="va">mad_sel</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/logistic.html">logistic</a></span><span class="op">(</span>
+  pattern <span class="op">=</span> <span class="st">"double_logistic"</span>,
+  x <span class="op">=</span> <span class="va">ages</span>,
+  slope_asc <span class="op">=</span> <span class="fl">4.3</span>,
+  location_asc <span class="op">=</span> <span class="fl">2.3</span>,
+  slope_desc <span class="op">=</span> <span class="fl">34.9</span>,
+  location_desc <span class="op">=</span> <span class="fl">2.3</span>
+<span class="op">)</span>
+
+<span class="va">sad_sel</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/logistic.html">logistic</a></span><span class="op">(</span>
+  pattern <span class="op">=</span> <span class="st">"double_logistic"</span>,
+  x <span class="op">=</span> <span class="va">ages</span>,
+  slope_asc <span class="op">=</span> <span class="fl">7.0</span>,
+  location_asc <span class="op">=</span> <span class="fl">0.3</span>,
+  slope_desc <span class="op">=</span> <span class="fl">7.0</span>,
+  location_desc <span class="op">=</span> <span class="fl">2.0</span>
+<span class="op">)</span>
+
+<span class="va">survey_selectivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">nad_sel</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ages</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    row.names <span class="op">=</span> <span class="va">years</span>
+  <span class="op">)</span>,
+  mad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">mad_sel</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ages</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    row.names <span class="op">=</span> <span class="va">years</span>,
+  <span class="op">)</span>,
+  sad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">sad_sel</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ages</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    row.names <span class="op">=</span> <span class="va">years</span>,
+  <span class="op">)</span>,
+  yoy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span><span class="op">)</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ages</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    row.names <span class="op">=</span> <span class="va">years</span>,
+  <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">survey_selectivity</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_selectivity</span>, <span class="va">setNames</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># set up catchability</span>
+<span class="va">yr_catchability_change_yoy</span> <span class="op">&lt;-</span> <span class="fl">1986</span>
+
+<span class="va">survey_catchability</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">q.nad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  mad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">q.mad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  sad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">q.sad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  yoy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">q.jai</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">years</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">:</span><span class="va">yr_catchability_change_yoy</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>, <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">q2.jai</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">(</span><span class="va">yr_catchability_change_yoy</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="va">years</span>, n <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">survey_catchability</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_catchability</span>, <span class="va">setNames</span>, <span class="va">years</span><span class="op">)</span>
+
+<span class="co"># set up CV</span>
+<span class="va">survey_CV</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">cv.U.nad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  mad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">cv.U.mad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  sad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">cv.U.sad</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  yoy <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">cv.U.jai</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>
+<span class="op">)</span>
+<span class="va">survey_CV</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_CV</span>, <span class="va">setNames</span>, <span class="va">years</span><span class="op">)</span>
+
+<span class="co"># set up sample number</span>
+<span class="va">survey_sample_num</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">lcomp.nad.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  mad <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">lcomp.mad.n</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
+  sad <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
+  yoy <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">survey_sample_num</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_sample_num</span>, <span class="va">setNames</span>, <span class="va">years</span><span class="op">)</span>
+
+<span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">survey_sample_num</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">survey_sample_num</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">survey_sample_num</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">==</span> <span class="op">-</span><span class="fl">99999</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
+<span class="op">}</span>
+
+<span class="co"># set up age-length population structure</span>
+<span class="va">length_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">400</span>, <span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span> <span class="co"># in cm</span>
+<span class="va">mid_length_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">105</span>, <span class="fl">405</span>, <span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span> <span class="co"># in cm</span>
+<span class="va">nbin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">length_bin</span><span class="op">)</span>
+<span class="va">bin_width</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+
+<span class="va">length_CV</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+  nad <span class="op">=</span> <span class="fl">0.12</span>,
+  mad <span class="op">=</span> <span class="fl">0.17</span>,
+  sad <span class="op">=</span> <span class="cn">NA</span>,
+  yoy <span class="op">=</span> <span class="cn">NA</span>
+<span class="op">)</span>
+
+<span class="co"># Create survey</span>
+<span class="va">survey</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/create_survey.html">create_survey</a></span><span class="op">(</span>
+  file_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"biomass_monthly.csv"</span><span class="op">)</span>,
+  skip_nrows <span class="op">=</span> <span class="fl">8</span>,
+  species <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">10</span>,
+  species_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span>,
+  years <span class="op">=</span> <span class="va">years</span>,
+  survey_num <span class="op">=</span> <span class="va">survey_num</span>,
+  survey_time <span class="op">=</span> <span class="va">survey_time</span>,
+  selectivity <span class="op">=</span> <span class="va">survey_selectivity</span>,
+  catchability <span class="op">=</span> <span class="va">survey_catchability</span>,
+  CV <span class="op">=</span> <span class="va">survey_CV</span>,
+  sample_num <span class="op">=</span> <span class="va">survey_sample_num</span>,
+  waa_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"weight_monthly.csv"</span><span class="op">)</span>,
+  length_bin <span class="op">=</span> <span class="va">length_bin</span>,
+  mid_length_bin <span class="op">=</span> <span class="va">mid_length_bin</span>,
+  nbin <span class="op">=</span> <span class="va">nbin</span>,
+  bin_width <span class="op">=</span> <span class="va">bin_width</span>,
+  length_CV <span class="op">=</span> <span class="va">length_CV</span>
+<span class="op">)</span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="survey-selectivity-patterns">Survey selectivity patterns<a class="anchor" aria-label="anchor" href="#survey-selectivity-patterns"></a>
@@ -200,6 +377,33 @@
 <ul>
 <li><p>SS3 approach <img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-7-2.png" width="1152"></p></li>
 <li><p>BAM approach <img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-8-2.png" width="1152"></p></li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="ifa4ebfmcreate_biodata-is-used-to-prepare-biological-data-for-a-stock-assessment">
+<code>IFA4EBFM::create_biodata()</code> is used to prepare biological data for a stock assessment<a class="anchor" aria-label="anchor" href="#ifa4ebfmcreate_biodata-is-used-to-prepare-biological-data-for-a-stock-assessment"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">biodata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_biodata.html">create_biodata</a></span><span class="op">(</span>nsex<span class="op">=</span><span class="fl">1</span>, narea<span class="op">=</span><span class="fl">1</span>, ages<span class="op">=</span><span class="va">ages</span>, years<span class="op">=</span><span class="va">years</span>,
+                          length_bin<span class="op">=</span><span class="va">length_bin</span>, mid_length_bin<span class="op">=</span><span class="va">mid_length_bin</span>,
+                          nbin<span class="op">=</span><span class="va">nbin</span>, bin_width<span class="op">=</span><span class="va">bin_width</span>, length_CV<span class="op">=</span><span class="va">length_CV</span>,
+                          annual_weight_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"weight_annual.csv"</span><span class="op">)</span>,
+                          monthly_weight_path<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"weight_monthly.csv"</span><span class="op">)</span>,
+                          species<span class="op">=</span><span class="fl">4</span><span class="op">:</span><span class="fl">10</span>,
+                          species_labels<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span>,
+                          skip_nrows<span class="op">=</span><span class="fl">8</span>,
+                          lw_a<span class="op">=</span><span class="fl">0.01</span>, lw_b<span class="op">=</span><span class="fl">3</span>,
+                          k<span class="op">=</span><span class="fl">0.331</span>,
+                          maturity_at_age<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span><span class="op">)</span>, <span class="co"># From both BAM and EwE</span>
+                          natural_mortality_at_age<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.76</span>, <span class="fl">1.31</span>, <span class="fl">1.03</span>, <span class="fl">0.9</span>, <span class="fl">0.81</span>, <span class="fl">0.76</span>, <span class="fl">0.72</span><span class="op">)</span> <span class="co"># From both BAM and EwE</span>
+                          <span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="key-findings">Key findings<a class="anchor" aria-label="anchor" href="#key-findings"></a>
+</h2>
+<ul>
+<li><p>EwE Von Bertalanffy Growth model uses a specialized equation. Carrying capacity parameter k from the model needs to be carefully compared before using the value. The default values used in the EwE weight-at-age calculation are different compared to the BAM input values, so the weight-at-age matrices would be different from different models.</p></li>
+<li><p>When computing observed length composition data, variation in length-at-age is computed first. However, age 0 fish all go to the first length bin. Later, when applying selectivity-at-age using BAM NAD selectivity estimates, all the age 0 fish go to the first length bin, result in a relatively high proportion value at the first length bin. Therefore, slope parameter was modified to a higher value (from 2.3 to 3) to reduce the proportion at the first length bin. Would be good to check the code from line 140 to line 180 in the <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/blob/5f663122facdf749c3c1d8256c8ecb3f533d46c6/R/create_survey.R#L140" class="external-link">create_survey.R file</a>.</p></li>
 </ul>
 </div>
   </div>

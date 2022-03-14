@@ -42,16 +42,17 @@ ages <- 0:6
 
 ```
 
-- `IFA4EBFM::create_fishery()` is used to simulate fishery data
-  - Input data
-    - EwE annual catch-at-age and weight-at-age data
-    - BAM annual Coefficient of variation (CV) of catch and sample size data.
-  - Output data
-    - Ecosystem operating model total catch in biomass, total catch in abundance, catch-at-age in abundance, catch-at-age in biomass, CV of catch, sample size, and weight-at-age data
-    - Observed total catch in biomass and catch-at-age in proportion for one fleet
-    - Units information
+## `IFA4EBFM::create_fishery()` is used to simulate fishery data
 
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+- Input data
+  - EwE annual catch-at-age and weight-at-age data
+  - BAM annual Coefficient of variation (CV) of catch and sample size data.
+- Output data
+  - Ecosystem operating model total catch in biomass, total catch in abundance, catch-at-age in abundance, catch-at-age in biomass, CV of catch, sample size, and weight-at-age data
+  - Observed total catch in biomass and catch-at-age in proportion for one fleet
+  - Units information
+
+```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Create fishery ----------------------------------------------------------
 
@@ -75,10 +76,11 @@ fishery <- create_fishery(
   sample_num = apply(fishery_sample_num, 1, sum),
   waa_path = file.path(ewe_output_path, "weight_annual.csv")
 )
-#fishery
+
 ```
 
 ## Catch biomass and catch-at-age in proportion over time
+
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Total catch in biomass
@@ -104,7 +106,6 @@ bam <- data.frame (
 data <- rbind(om, obs, bam)
 ggplot(data, aes(x = Year, y = Catch, color = Model)) +
   geom_line() +
-  #facet_wrap(~variable, scales = "free_y") +
   labs(
     title = "Comparison between models",
     x = "Year",
@@ -173,21 +174,22 @@ for (i in 1:length(data)){
 ```
 
 
-- `IFA4EBFM::create_survey()` is used to simulate fishery data
-  - Input data
-    - EwE monthly biomass-at-age and weight-at-age data
-    - BAM survey number, time, selectivity, catchability, CV, sample size data
-  - Output data
-    - Ecosystem operating model biomass-at-age, abundance-at-age, abundance index, CV of surveys, sample size, weight-at-age, and length-at-age data
-    - Observed abundance indices, length composition in proportion/in number using differnet approaches
-    - Units information
-  - Survey information
-    - nad survey: Oct from 1990 - 2017; length composition data from 1990 - 2017 
-    - mad survey: April from 1985 - 2017; length composition data from 2013 - 2017
-    - sad survey: April from 1990 - 2017; no length composition data
-    - yoy survey: June from 1985 - 2017; no length composition data
+## `IFA4EBFM::create_survey()` is used to simulate fishery data
+
+- Input data
+  - EwE monthly biomass-at-age and weight-at-age data
+  - BAM survey number, time, selectivity, catchability, CV, sample size data
+- Output data
+  - Ecosystem operating model biomass-at-age, abundance-at-age, abundance index, CV of surveys, sample size, weight-at-age, and length-at-age data
+  - Observed abundance indices, length composition in proportion/in number using differnet approaches
+  - Units information
+- Survey information
+  - nad survey: Oct from 1990 - 2017; length composition data from 1990 - 2017 
+  - mad survey: April from 1985 - 2017; length composition data from 2013 - 2017
+  - sad survey: April from 1990 - 2017; no length composition data
+  - yoy survey: June from 1985 - 2017; no length composition data
     
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Create survey ----------------------------------------------------------
 
 # selectivity settings
@@ -229,7 +231,7 @@ survey_time <- list(
 nad_sel <- IFA4EBFM::logistic(
   pattern = "double_logistic",
   x = ages,
-  slope_asc = 2.2,
+  slope_asc = 3,
   location_asc = 3.0,
   slope_desc = 3.0,
   location_desc = 3.5
@@ -342,6 +344,7 @@ survey <- IFA4EBFM::create_survey(
   length_CV = length_CV
 )
 ```
+
 ## Survey selectivity patterns
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 plot(0:6, as.numeric(survey_selectivity$nad[1, ]), type="l", pch=1, col=1, lty=1,
@@ -461,3 +464,27 @@ for (i in 1:length(survey$obs_lencomp_proportion_bam)){
 }
 
 ```
+
+
+## `IFA4EBFM::create_biodata()` is used to prepare biological data for a stock assessment
+
+```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+biodata <- create_biodata(nsex=1, narea=1, ages=ages, years=years,
+                          length_bin=length_bin, mid_length_bin=mid_length_bin,
+                          nbin=nbin, bin_width=bin_width, length_CV=length_CV,
+                          annual_weight_path=file.path(ewe_output_path, "weight_annual.csv"),
+                          monthly_weight_path=file.path(ewe_output_path, "weight_monthly.csv"),
+                          species=4:10,
+                          species_labels=paste0("age", ages),
+                          skip_nrows=8,
+                          lw_a=0.01, lw_b=3,
+                          k=0.331,
+                          maturity_at_age=c(0.0, 0.1, 0.5, 0.9, 1.0, 1.0, 1.0), # From both BAM and EwE
+                          natural_mortality_at_age=c(1.76, 1.31, 1.03, 0.9, 0.81, 0.76, 0.72) # From both BAM and EwE
+                          )
+```
+
+## Key findings
+- EwE Von Bertalanffy Growth model uses a specialized equation. Carrying capacity parameter k from the model needs to be carefully compared before using the value. The default values used in the EwE weight-at-age calculation are different compared to the BAM input values, so the weight-at-age matrices would be different from different models.
+
+- When computing observed length composition data, variation in length-at-age is computed first. However, age 0 fish all go to the first length bin. Later, when applying selectivity-at-age using BAM NAD selectivity estimates, all the age 0 fish go to the first length bin, result in a relatively high proportion value at the first length bin. Therefore, slope parameter was modified to a higher value (from 2.3 to 3) to reduce the proportion at the first length bin. Would be good to check the code from line 140 to line 180 in the [create_survey.R file](https://github.com/Bai-Li-NOAA/IFA4EBFM/blob/5f663122facdf749c3c1d8256c8ecb3f533d46c6/R/create_survey.R#L140). 
