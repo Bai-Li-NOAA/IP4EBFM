@@ -160,6 +160,12 @@ for (i in 1:length(survey_sample_num)){
   survey_sample_num[[i]][survey_sample_num[[i]] == -99999] <- NA
 }
 
+# set up age-length population structure
+length_bin <- seq(100, 400, 10)/10 # in cm
+mid_length_bin <- seq(105, 405, 10)/10 # in cm
+nbin <- length(length_bin)
+bin_width <- 1
+
 length_CV <- list(
   nad = 0.12,
   mad = 0.17,
@@ -180,5 +186,10 @@ survey <- IFA4EBFM::create_survey(
   catchability = survey_catchability,
   CV = survey_CV,
   sample_num = survey_sample_num,
-  waa_path = file.path(ewe_output_path, "weight_monthly.csv")
+  waa_path = file.path(ewe_output_path, "weight_monthly.csv"),
+  length_bin = length_bin,
+  mid_length_bin = mid_length_bin,
+  nbin = nbin,
+  bin_width = bin_width,
+  length_CV = length_CV
 )
