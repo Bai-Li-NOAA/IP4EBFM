@@ -1,0 +1,446 @@
+---
+title: 'Stock assessment data simulation'
+date: 'Updated on March 14, 2022'
+output:
+  html_document: 
+    code_folding: hide
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## EwE scenario 
+
+We used the output data from EwE AMO_PCP scenario for generating single species stock assessment input data. The AMO_PCP scenario incorporates Atlantic Multidecadal Oscillation and precipitation information in the ecosystem modeling work and it creates a strong response.
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+devtools::load_all()
+
+library(RColorBrewer)
+library(ggplot2)
+library(tidyverse)
+library(reshape2)
+library(here)
+set.seed(999)
+
+options(digits = 2)
+
+# specify working directories ---------------------------------------------
+
+project_path <- here::here()
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp")
+menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
+
+# read Atlantic menhaden Beaufort Assessment Model output data --------
+
+menhadenSA_output <- dget(file.path(menhadenSA_output_path, "am019.rdat"))
+
+years <- 1985:2017
+ages <- 0:6
+
+```
+
+- `IFA4EBFM::create_fishery()` is used to simulate fishery data
+  - Input data
+    - EwE annual catch-at-age and weight-at-age data
+    - BAM annual Coefficient of variation (CV) of catch and sample size data.
+  - Output data
+    - Ecosystem operating model total catch in biomass, total catch in abundance, catch-at-age in abundance, catch-at-age in biomass, CV of catch, sample size, and weight-at-age data
+    - Observed total catch in biomass and catch-at-age in proportion for one fleet
+    - Units information
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+# Create fishery ----------------------------------------------------------
+
+fishery_sample_num <- cbind(
+  menhadenSA_output$t.series$acomp.cRs.n[which(menhadenSA_output$t.series$year %in% years)],
+  menhadenSA_output$t.series$acomp.cBs.n[which(menhadenSA_output$t.series$year %in% years)],
+  menhadenSA_output$t.$acomp.cBn.n[which(menhadenSA_output$t.series$year %in% years)],
+  menhadenSA_output$t.series$acomp.cRn.n[which(menhadenSA_output$t.series$year %in% years)]
+)
+fishery_sample_num[fishery_sample_num==-99999] <- 0
+
+fishery <- create_fishery(
+  file_path = file.path(ewe_output_path, "catch_annual.csv"),
+  skip_nrows = 8,
+  species = 4:10,
+  species_labels = paste0("age", ages),
+  years = years,
+  fleet_num = 1,
+  selectivity = NULL,
+  CV = rep(0.05, length(years)),
+  sample_num = apply(fishery_sample_num, 1, sum),
+  waa_path = file.path(ewe_output_path, "weight_annual.csv")
+)
+#fishery
+```
+
+## Catch biomass and catch-at-age in proportion over time
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+# Total catch in biomass
+om <- data.frame (
+  Year = years, 
+  Catch = fishery$om_total_catch_biomass,
+  Model = "OM"
+)
+
+obs <- data.frame (
+  Year = years, 
+  Catch = fishery$obs_total_catch_biomass$fleet1,
+  Model = "OBS"
+)
+
+year_id <- which(menhadenSA_output$t.series$year %in% years)
+bam <- data.frame (
+  Year = years, 
+  Catch = (menhadenSA_output$t.series$L.cBs.ob[year_id] + menhadenSA_output$t.series$L.cBn.ob[year_id] + menhadenSA_output$t.series$L.cRs.ob[year_id] + menhadenSA_output$t.series$L.cRn.ob[year_id]) * 1000,
+  Model = "BAM"
+)
+
+data <- rbind(om, obs, bam)
+ggplot(data, aes(x = Year, y = Catch, color = Model)) +
+  geom_line() +
+  #facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Comparison between models",
+    x = "Year",
+    y = "Total Catch (mt)"
+  ) +
+  theme_bw()
+
+# Catch-at-age in number
+om <- fishery$om_caa_abundance/rowSums(fishery$om_caa_abundance)
+om$Year <- years
+om$Model <- "OM"
+om <- reshape2::melt(om, id.vars = c("Year", "Model"))
+colnames(om) <- c("Year", "Model", "Age", "Catch")
+
+obs <- fishery$obs_caa_prop$fleet1
+obs$Year <- years
+obs$Model <- "OBS"
+obs <- reshape2::melt(obs, id.vars = c("Year", "Model"))
+colnames(obs) <- c("Year", "Model", "Age", "Catch")
+
+bam_crn <- as.data.frame(menhadenSA_output$comp.mats$acomp.cRn.ob[paste(years), ])
+colnames(bam_crn) <- paste0("age", ages)
+bam_crn$Year <- years
+bam_crn$Model <- "BAM_cRn"
+bam_crn <- reshape2::melt(bam_crn, id.vars = c("Year", "Model"))
+colnames(bam_crn) <- c("Year", "Model", "Age", "Catch")
+
+bam_crs <- as.data.frame(menhadenSA_output$comp.mats$acomp.cRs.ob[paste(years), ])
+colnames(bam_crs) <- paste0("age", ages)
+bam_crs$Year <- years
+bam_crs$Model <- "BAM_cRs"
+bam_crs <- reshape2::melt(bam_crs, id.vars = c("Year", "Model"))
+colnames(bam_crs) <- c("Year", "Model", "Age", "Catch")
+
+bam_cbn <- as.data.frame(menhadenSA_output$comp.mats$acomp.cBn.ob[paste(years), ])
+colnames(bam_cbn) <- paste0("age", ages)
+bam_cbn$Year <- years
+bam_cbn$Model <- "BAM_cBn"
+bam_cbn <- reshape2::melt(bam_cbn, id.vars = c("Year", "Model"))
+colnames(bam_cbn) <- c("Year", "Model", "Age", "Catch")
+
+bam_cbs <- as.data.frame(menhadenSA_output$comp.mats$acomp.cBs.ob[paste(years), ])
+colnames(bam_cbs) <- paste0("age", ages)
+bam_cbs$Year <- years
+bam_cbs$Model <- "BAM_cBs"
+bam_cbs <- reshape2::melt(bam_cbs, id.vars = c("Year", "Model"))
+colnames(bam_cbs) <- c("Year", "Model", "Age", "Catch")
+
+data <- list(om=om, obs=obs, bam_crn=bam_crn, bam_crs=bam_crs, bam_cbn=bam_cbn, bam_cbs=bam_cbs)
+title <- paste(c("OM", "OBS", "BAM_cRn", "BAM_cRs", "BAM_cBn", "BAM_cBs"), "catch-at-age")
+
+for (i in 1:length(data)){
+  p <- ggplot(data=data[[i]], aes(x=Age, fill=Age, y=Catch)) +
+      geom_bar(position='dodge', stat='identity') +
+      facet_wrap(~Year) +
+      labs(
+        title = title[i],
+        x = "Year",
+        y = "Proportion"
+      )+
+      theme_bw()
+  print(p)
+}
+
+
+```
+
+
+- `IFA4EBFM::create_survey()` is used to simulate fishery data
+  - Input data
+    - EwE monthly biomass-at-age and weight-at-age data
+    - BAM survey number, time, selectivity, catchability, CV, sample size data
+  - Output data
+    - Ecosystem operating model biomass-at-age, abundance-at-age, abundance index, CV of surveys, sample size, weight-at-age, and length-at-age data
+    - Observed abundance indices, length composition in proportion/in number using differnet approaches
+    - Units information
+  - Survey information
+    - nad survey: Oct from 1990 - 2017; length composition data from 1990 - 2017 
+    - mad survey: April from 1985 - 2017; length composition data from 2013 - 2017
+    - sad survey: April from 1990 - 2017; no length composition data
+    - yoy survey: June from 1985 - 2017; no length composition data
+    
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# Create survey ----------------------------------------------------------
+
+# selectivity settings
+survey_num <- 4
+
+survey_name <- c("nad", "mad", "sad", "yoy")
+
+# set up survey time
+# Need to check Table 26 from BAM assessment: Length cutoffs used to distinguish age-0 from age-1+ Atlantic menhaden at different regions.
+
+nad_year <- 1990:2017 # BAM Northern Adult Index (NAD): age 1+ fish; September - January; Time of the year when menhaden were most abundant in this region
+
+mad_year <- 1985:2017 # BAM Middle Adult Index (MAD): age 1+ fish; March - May
+
+sad_year <- 1990:2017 # BAM South Adult Index (SAD): age 1+ fish: April - July
+
+yoy_year <- 1985:2017 # covered all months, many surveys starts at July
+
+survey_time <- list(
+  nad = data.frame(
+    year = nad_year,
+    month = rep(10, length(nad_year)) # Oct 15
+  ),
+  mad = data.frame(
+    year = mad_year,
+    month = rep(4, length(mad_year)) # April 15
+  ),
+  sad = data.frame(
+    year = sad_year,
+    month = rep(4, length(sad_year)) # April 15
+  ),
+  yoy = data.frame(
+    year = yoy_year,
+    month = rep(6, length(yoy_year)) # June 1
+  )
+)
+
+# set up survey selectivity
+nad_sel <- IFA4EBFM::logistic(
+  pattern = "double_logistic",
+  x = ages,
+  slope_asc = 2.2,
+  location_asc = 3.0,
+  slope_desc = 3.0,
+  location_desc = 3.5
+)
+
+mad_sel <- IFA4EBFM::logistic(
+  pattern = "double_logistic",
+  x = ages,
+  slope_asc = 4.3,
+  location_asc = 2.3,
+  slope_desc = 34.9,
+  location_desc = 2.3
+)
+
+sad_sel <- IFA4EBFM::logistic(
+  pattern = "double_logistic",
+  x = ages,
+  slope_asc = 7.0,
+  location_asc = 0.3,
+  slope_desc = 7.0,
+  location_desc = 2.0
+)
+
+survey_selectivity <- list(
+  nad = as.data.frame(
+    matrix(rep(nad_sel, times = length(years)), ncol = length(ages), byrow = TRUE),
+    row.names = years
+  ),
+  mad = as.data.frame(
+    matrix(rep(mad_sel, times = length(years)), ncol = length(ages), byrow = TRUE),
+    row.names = years,
+  ),
+  sad = as.data.frame(
+    matrix(rep(sad_sel, times = length(years)), ncol = length(ages), byrow = TRUE),
+    row.names = years,
+  ),
+  yoy = as.data.frame(
+    matrix(rep(c(1, rep(0, 6)), times = length(years)), ncol = length(ages), byrow = TRUE),
+    row.names = years,
+  )
+)
+
+survey_selectivity <- lapply(survey_selectivity, setNames, paste("age", ages))
+
+# set up catchability
+yr_catchability_change_yoy <- 1986
+
+survey_catchability <- list(
+  nad = menhadenSA_output$t.series$q.nad[which(menhadenSA_output$t.series$year %in% years)],
+  mad = menhadenSA_output$t.series$q.mad[which(menhadenSA_output$t.series$year %in% years)],
+  sad = menhadenSA_output$t.series$q.sad[which(menhadenSA_output$t.series$year %in% years)],
+  yoy = c(menhadenSA_output$t.series$q.jai[which(menhadenSA_output$t.series$year %in% c(years[1]:yr_catchability_change_yoy))], menhadenSA_output$t.series$q2.jai[which(menhadenSA_output$t.series$year %in% c((yr_catchability_change_yoy + 1):tail(years, n = 1)))])
+)
+
+survey_catchability <- lapply(survey_catchability, setNames, years)
+
+# set up CV
+survey_CV <- list(
+  nad = menhadenSA_output$t.series$cv.U.nad[which(menhadenSA_output$t.series$year %in% years)],
+  mad = menhadenSA_output$t.series$cv.U.mad[which(menhadenSA_output$t.series$year %in% years)],
+  sad = menhadenSA_output$t.series$cv.U.sad[which(menhadenSA_output$t.series$year %in% years)],
+  yoy = menhadenSA_output$t.series$cv.U.jai[which(menhadenSA_output$t.series$year %in% years)]
+)
+survey_CV <- lapply(survey_CV, setNames, years)
+
+# set up sample number
+survey_sample_num <- list(
+  nad = menhadenSA_output$t.series$lcomp.nad.n[which(menhadenSA_output$t.series$year %in% years)],
+  mad = menhadenSA_output$t.series$lcomp.mad.n[which(menhadenSA_output$t.series$year %in% years)],
+  sad = rep(NA, length = length(years)),
+  yoy = rep(NA, length = length(years))
+)
+survey_sample_num <- lapply(survey_sample_num, setNames, years)
+
+for (i in 1:length(survey_sample_num)){
+  survey_sample_num[[i]][survey_sample_num[[i]] == -99999] <- NA
+}
+
+# set up age-length population structure
+length_bin <- seq(100, 400, 10)/10 # in cm
+mid_length_bin <- seq(105, 405, 10)/10 # in cm
+nbin <- length(length_bin)
+bin_width <- 1
+
+length_CV <- list(
+  nad = 0.12,
+  mad = 0.17,
+  sad = NA,
+  yoy = NA
+)
+
+# Create survey
+survey <- IFA4EBFM::create_survey(
+  file_path = file.path(ewe_output_path, "biomass_monthly.csv"),
+  skip_nrows = 8,
+  species = 4:10,
+  species_labels = paste0("age", ages),
+  years = years,
+  survey_num = survey_num,
+  survey_time = survey_time,
+  selectivity = survey_selectivity,
+  catchability = survey_catchability,
+  CV = survey_CV,
+  sample_num = survey_sample_num,
+  waa_path = file.path(ewe_output_path, "weight_monthly.csv"),
+  length_bin = length_bin,
+  mid_length_bin = mid_length_bin,
+  nbin = nbin,
+  bin_width = bin_width,
+  length_CV = length_CV
+)
+```
+
+## Survey index over time
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+om <- data.frame(matrix(ncol=4, nrow=0))
+for (i in 1:length(survey$om_abundance_index)){
+  temp <- data.frame(
+  Year = as.numeric(names(survey$om_abundance_index[[i]])), 
+  Index = survey$om_abundance_index[[i]],
+  Model = "OM",
+  Survey = names(survey$om_abundance_index)[i]
+)
+  om <- rbind(om, temp)
+}
+
+obs <- data.frame(matrix(ncol=4, nrow=0))
+for (i in 1:length(survey$obs_abundance_index)){
+  temp <- data.frame(
+  Year = as.numeric(names(survey$obs_abundance_index[[i]])), 
+  Index = survey$obs_abundance_index[[i]],
+  Model = "OBS",
+  Survey = names(survey$obs_abundance_index)[i]
+)
+  obs <- rbind(obs, temp)
+}
+
+data <- rbind(om, obs)
+ggplot(data, aes(x = Year, y = Index, color = Model)) +
+  geom_line() +
+  facet_wrap(~Survey, scales = "free_y") +
+  labs(
+    title = "Comparison between models",
+    x = "Year",
+    y = "Abundance Index"
+  ) +
+  theme_bw()
+
+```
+
+## Survey length composition over time
+- SS3 approach
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+for (i in 1:length(survey$obs_lencomp_proportion_ss3)){
+  obs <- as.data.frame(survey$obs_lencomp_proportion_ss3[[i]])
+  obs$Year <- as.numeric(row.names(survey$obs_lencomp_proportion_ss3[[i]]))
+  obs$Model <- "OBS"
+  obs$Survey <- names(survey$obs_lencomp_proportion_ss3)[i]
+  
+  obs <- na.omit(obs)
+  
+  obs <- reshape2::melt(obs, id.vars = c("Year", "Model", "Survey"))
+  colnames(obs) <- c("Year", "Model", "Survey", "Length_Bin", "Value")
+  
+  if (nrow(obs) != 0) {
+    p <- ggplot(data=obs, aes(x=Length_Bin, fill=Length_Bin, y=Value)) +
+      geom_bar(position='dodge', stat='identity') +
+      facet_wrap(~Year) +
+      labs(
+        title = names(survey$obs_lencomp_proportion_ss3)[i],
+        x = "Year",
+        y = "Proportion"
+      )+
+      theme_bw()
+  print(p)
+  }
+}
+
+```
+
+- BAM approach
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+for (i in 1:length(survey$obs_lencomp_proportion_bam)){
+  obs <- as.data.frame(survey$obs_lencomp_proportion_bam[[i]])
+  obs$Year <- as.numeric(row.names(survey$obs_lencomp_proportion_bam[[i]]))
+  obs$Model <- "OBS"
+  obs$Survey <- names(survey$obs_lencomp_proportion_bam)[i]
+  
+  obs <- na.omit(obs)
+  
+  obs <- reshape2::melt(obs, id.vars = c("Year", "Model", "Survey"))
+  colnames(obs) <- c("Year", "Model", "Survey", "Length_Bin", "Value")
+  
+  
+  
+  if (nrow(obs) != 0) {
+    p <- ggplot(data=obs, aes(x=Length_Bin, fill=Length_Bin, y=Value)) +
+      geom_bar(position='dodge', stat='identity') +
+      facet_wrap(~Year) +
+      labs(
+        title = names(survey$obs_lencomp_proportion_bam)[i],
+        x = "Year",
+        y = "Proportion"
+      )+
+      theme_bw()
+  print(p)
+  }
+}
+
+```

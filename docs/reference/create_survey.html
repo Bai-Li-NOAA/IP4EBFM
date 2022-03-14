@@ -55,6 +55,9 @@
     <li>
       <a href="../articles/04_Ecosystem_simulation_with_environmental_drivers.html">Ecosystem simulation with envrionmental drivers</a>
     </li>
+    <li>
+      <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
+    </li>
   </ul></li>
 <li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
@@ -108,7 +111,14 @@
   <span class="va">catchability</span>,
   <span class="va">CV</span>,
   <span class="va">sample_num</span>,
-  <span class="va">waa_path</span>
+  <span class="va">waa_path</span>,
+  lw_a <span class="op">=</span> <span class="fl">0.01</span>,
+  lw_b <span class="op">=</span> <span class="fl">3</span>,
+  <span class="va">length_bin</span>,
+  <span class="va">mid_length_bin</span>,
+  <span class="va">nbin</span>,
+  <span class="va">bin_width</span>,
+  <span class="va">length_CV</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -136,6 +146,20 @@
 <dd><p>Annual sample size. A vector of sample sizes for individual surveys.</p></dd>
 <dt>waa_path</dt>
 <dd><p>A character string shows path to Ecosim weight output file (e.g., weight_monthly.csv) is located.</p></dd>
+<dt>lw_a</dt>
+<dd><p>Length-weight coefficients a. W=a*L^b. Default EwE value is 0.01.</p></dd>
+<dt>lw_b</dt>
+<dd><p>Length-weight coefficients b. W=a*L^b. Default EwE value is 3.</p></dd>
+<dt>length_bin</dt>
+<dd><p>A vector of length bins.</p></dd>
+<dt>mid_length_bin</dt>
+<dd><p>A vector of middle point of the length bins.</p></dd>
+<dt>nbin</dt>
+<dd><p>Total number of bins.</p></dd>
+<dt>bin_width</dt>
+<dd><p>Width of bins.</p></dd>
+<dt>length_CV</dt>
+<dd><p>CV about length.</p></dd>
 <dt>cathability</dt>
 <dd><p>Catchability of survey indices. A vector of catchability values for individual surveys.</p></dd>
 </dl></div>
