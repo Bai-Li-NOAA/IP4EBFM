@@ -50,4 +50,8 @@ The catch data are read in from Ecosim catch_annual.csv and the catch data are i
 The function reads in total catch-at-age data of a specific species by age classes and time.
 EwE already applies a fishery selectivity internally, so no need to reallocate catch if there is only one fleet for the fishery.
 }
+\seealso{
+Other create_data functions: 
+\code{\link{create_biodata}()}
+}
 \concept{create_data functions}
