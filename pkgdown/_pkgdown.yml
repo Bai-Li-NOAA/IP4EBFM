@@ -40,4 +40,6 @@ navbar:
         href: articles/03_Ecosystem_model_restructuring.html
       - text: Ecosystem simulation with envrionmental drivers
         href: articles/04_Ecosystem_simulation_with_environmental_drivers.html
+      - text: Stock assessment data simulation
+        href: articles/05_Stock_assessment_data_simulation.html
 
