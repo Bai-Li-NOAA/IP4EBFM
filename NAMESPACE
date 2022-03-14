@@ -3,6 +3,7 @@
 export(bibtex2rmd)
 export(create_fishery)
 export(create_survey)
+export(cumd_norm)
 export(download_amo)
 export(download_ncei)
 export(logistic)

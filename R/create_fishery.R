@@ -96,7 +96,7 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, years
     om_caa_biomass = catch_age_biomass,
     om_cv = CV,
     om_sample_number = sample_num,
-    om_waa_mt = waa,
+    om_waa = waa,
     obs_total_catch_biomass = catch_obs,
     obs_caa_prop = catch_age_obs,
     units_info = list(

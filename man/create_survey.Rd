@@ -16,7 +16,14 @@ create_survey(
   catchability,
   CV,
   sample_num,
-  waa_path
+  waa_path,
+  lw_a = 0.01,
+  lw_b = 3,
+  length_bin,
+  mid_length_bin,
+  nbin,
+  bin_width,
+  length_CV
 )
 }
 \arguments{
@@ -41,6 +48,20 @@ create_survey(
 \item{sample_num}{Annual sample size. A vector of sample sizes for individual surveys.}
 
 \item{waa_path}{A character string shows path to Ecosim weight output file (e.g., weight_monthly.csv) is located.}
+
+\item{lw_a}{Length-weight coefficients a. W=a*L^b. Default EwE value is 0.01.}
+
+\item{lw_b}{Length-weight coefficients b. W=a*L^b. Default EwE value is 3.}
+
+\item{length_bin}{A vector of length bins.}
+
+\item{mid_length_bin}{A vector of middle point of the length bins.}
+
+\item{nbin}{Total number of bins.}
+
+\item{bin_width}{Width of bins.}
+
+\item{length_CV}{CV about length.}
 
 \item{cathability}{Catchability of survey indices. A vector of catchability values for individual surveys.}
 }
