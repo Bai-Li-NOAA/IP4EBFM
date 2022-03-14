@@ -342,6 +342,23 @@ survey <- IFA4EBFM::create_survey(
   length_CV = length_CV
 )
 ```
+## Survey selectivity patterns
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+plot(0:6, as.numeric(survey_selectivity$nad[1, ]), type="l", pch=1, col=1, lty=1,
+     xlab = "Age", ylab = "Selectivity")
+lines(0:6, as.numeric(survey_selectivity$mad[1, ]), pch=2, col=2, lty=2)
+lines(0:6, as.numeric(survey_selectivity$sad[1,]), pch=3, col=3, lty=3)
+lines(0:6, as.numeric(survey_selectivity$yoy[1, ]), pch=4, col=4, lty=4)
+legend("topright",
+       names(survey_selectivity),
+       pch= 1:4,
+       col = 1:4, 
+       lty=1:4,
+       bty="n"
+       )
+
+```
+
 
 ## Survey index over time
 
