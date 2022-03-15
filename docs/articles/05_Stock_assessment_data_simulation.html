@@ -145,7 +145,8 @@
 <li>Output data
 <ul>
 <li>Ecosystem operating model total catch in biomass, total catch in abundance, catch-at-age in abundance, catch-at-age in biomass, CV of catch, sample size, and weight-at-age data</li>
-<li>Observed total catch in biomass and catch-at-age in proportion for one fleet</li>
+<li>Observed total catch in biomass and catch-at-age in proportion for <strong>one fleet</strong>
+</li>
 <li>Units information</li>
 </ul>
 </li>
@@ -248,7 +249,7 @@
 <span class="va">nad_sel</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/logistic.html">logistic</a></span><span class="op">(</span>
   pattern <span class="op">=</span> <span class="st">"double_logistic"</span>,
   x <span class="op">=</span> <span class="va">ages</span>,
-  slope_asc <span class="op">=</span> <span class="fl">3</span>,
+  slope_asc <span class="op">=</span> <span class="fl">2.2</span>,
   location_asc <span class="op">=</span> <span class="fl">3.0</span>,
   slope_desc <span class="op">=</span> <span class="fl">3.0</span>,
   location_desc <span class="op">=</span> <span class="fl">3.5</span>
@@ -378,12 +379,93 @@
 <li><p>SS3 approach <img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-7-2.png" width="1152"></p></li>
 <li><p>BAM approach <img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-8-2.png" width="1152"></p></li>
 </ul>
+<div class="section level3">
+<h3 id="key-findings">Key findings<a class="anchor" aria-label="anchor" href="#key-findings"></a>
+</h3>
+<ul>
+<li>Tried two approaches to calculate age-length probability matrix
+<ul>
+<li>use SS3 approach using <code>pnorm</code> in R</li>
+<li>rewrite ADMB function in R based on BAM code</li>
+<li>the two approaches produce almost identical results, so will only use SS3 approach for further analysis</li>
+</ul>
+</li>
+<li>Observed a very high proportion of fish in length bin 10.5 cm
+<ul>
+<li>need to check selectivity-at-age 0 and perhaps modify selectivity pattern for survey nad</li>
+<li>expand length bins. According to EwE outputs, mean length-at-age 0 is around 6 cm, which is below the current first length bin 10.5 cm.</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="modify-selectivity-pattern-for-survey-nad-and-update-length-bins">Modify selectivity pattern for survey nad and update length bins<a class="anchor" aria-label="anchor" href="#modify-selectivity-pattern-for-survey-nad-and-update-length-bins"></a>
+</h2>
+<ul>
+<li>Change <code>slope_asc</code> from 2.2 to 2.5:
+<ul>
+<li>selectivity-at-age from original scenario: 0.003, 0.030, 0.240, 1.00, 0.400, 0.027, 0.001</li>
+<li>updated selectivity-at-age: 0.0003, 0.0060, 0.1147, 1.0000, 0.4251, 0.0268, 0.0014</li>
+</ul>
+</li>
+<li>Change the first length bin from 10 cm to 1 cm and the last length bin from 40.5 cm to 46.5 cm</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nad_sel</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/logistic.html">logistic</a></span><span class="op">(</span>
+  pattern <span class="op">=</span> <span class="st">"double_logistic"</span>,
+  x <span class="op">=</span> <span class="va">ages</span>,
+  slope_asc <span class="op">=</span> <span class="fl">3.0</span>,
+  location_asc <span class="op">=</span> <span class="fl">3.0</span>,
+  slope_desc <span class="op">=</span> <span class="fl">3.0</span>,
+  location_desc <span class="op">=</span> <span class="fl">3.5</span>
+<span class="op">)</span>
+
+<span class="va">nad</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">nad_sel</span>, times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">ages</span><span class="op">)</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,
+    row.names <span class="op">=</span> <span class="va">years</span>
+  <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">nad</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"ages"</span>, <span class="va">ages</span><span class="op">)</span>
+
+<span class="va">survey_selectivity</span><span class="op">$</span><span class="va">nad</span> <span class="op">&lt;-</span> <span class="va">nad</span>
+
+<span class="co"># set up age-length population structure</span>
+<span class="va">length_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">460</span>, <span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span> <span class="co"># in cm</span>
+<span class="va">mid_length_bin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">15</span>, <span class="fl">465</span>, <span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span> <span class="co"># in cm</span>
+<span class="va">nbin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">length_bin</span><span class="op">)</span>
+<span class="va">bin_width</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+
+<span class="co"># Create survey</span>
+<span class="va">survey</span> <span class="op">&lt;-</span> <span class="fu">IFA4EBFM</span><span class="fu">::</span><span class="fu"><a href="../reference/create_survey.html">create_survey</a></span><span class="op">(</span>
+  file_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"biomass_monthly.csv"</span><span class="op">)</span>,
+  skip_nrows <span class="op">=</span> <span class="fl">8</span>,
+  species <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">10</span>,
+  species_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span>,
+  years <span class="op">=</span> <span class="va">years</span>,
+  survey_num <span class="op">=</span> <span class="va">survey_num</span>,
+  survey_time <span class="op">=</span> <span class="va">survey_time</span>,
+  selectivity <span class="op">=</span> <span class="va">survey_selectivity</span>,
+  catchability <span class="op">=</span> <span class="va">survey_catchability</span>,
+  CV <span class="op">=</span> <span class="va">survey_CV</span>,
+  sample_num <span class="op">=</span> <span class="va">survey_sample_num</span>,
+  waa_path <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">ewe_output_path</span>, <span class="st">"weight_monthly.csv"</span><span class="op">)</span>,
+  length_bin <span class="op">=</span> <span class="va">length_bin</span>,
+  mid_length_bin <span class="op">=</span> <span class="va">mid_length_bin</span>,
+  nbin <span class="op">=</span> <span class="va">nbin</span>,
+  bin_width <span class="op">=</span> <span class="va">bin_width</span>,
+  length_CV <span class="op">=</span> <span class="va">length_CV</span>
+<span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="updated-survey-length-composition-over-time">Updated survey length composition over time<a class="anchor" aria-label="anchor" href="#updated-survey-length-composition-over-time"></a>
+</h2>
+<p><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-10-1.png" width="1152"><img src="05_Stock_assessment_data_simulation_files/figure-html/unnamed-chunk-10-2.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="ifa4ebfmcreate_biodata-is-used-to-prepare-biological-data-for-a-stock-assessment">
 <code>IFA4EBFM::create_biodata()</code> is used to prepare biological data for a stock assessment<a class="anchor" aria-label="anchor" href="#ifa4ebfmcreate_biodata-is-used-to-prepare-biological-data-for-a-stock-assessment"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">biodata</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_biodata.html">create_biodata</a></span><span class="op">(</span>nsex<span class="op">=</span><span class="fl">1</span>, narea<span class="op">=</span><span class="fl">1</span>, ages<span class="op">=</span><span class="va">ages</span>, years<span class="op">=</span><span class="va">years</span>,
                           length_bin<span class="op">=</span><span class="va">length_bin</span>, mid_length_bin<span class="op">=</span><span class="va">mid_length_bin</span>,
                           nbin<span class="op">=</span><span class="va">nbin</span>, bin_width<span class="op">=</span><span class="va">bin_width</span>, length_CV<span class="op">=</span><span class="va">length_CV</span>,
@@ -397,14 +479,13 @@
                           maturity_at_age<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.0</span>, <span class="fl">0.1</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span><span class="op">)</span>, <span class="co"># From both BAM and EwE</span>
                           natural_mortality_at_age<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1.76</span>, <span class="fl">1.31</span>, <span class="fl">1.03</span>, <span class="fl">0.9</span>, <span class="fl">0.81</span>, <span class="fl">0.76</span>, <span class="fl">0.72</span><span class="op">)</span> <span class="co"># From both BAM and EwE</span>
                           <span class="op">)</span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="key-findings">Key findings<a class="anchor" aria-label="anchor" href="#key-findings"></a>
-</h2>
+<div class="section level3">
+<h3 id="key-findings-1">Key findings<a class="anchor" aria-label="anchor" href="#key-findings-1"></a>
+</h3>
 <ul>
-<li><p>EwE Von Bertalanffy Growth model uses a specialized equation. Carrying capacity parameter k from the model needs to be carefully compared before using the value. The default values used in the EwE weight-at-age calculation are different compared to the BAM input values, so the weight-at-age matrices would be different from different models.</p></li>
-<li><p>When computing observed length composition data, variation in length-at-age is computed first. However, age 0 fish all go to the first length bin. Later, when applying selectivity-at-age using BAM NAD selectivity estimates, all the age 0 fish go to the first length bin, result in a relatively high proportion value at the first length bin. Therefore, slope parameter was modified to a higher value (from 2.3 to 3) to reduce the proportion at the first length bin. Would be good to check the code from line 140 to line 180 in the <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/blob/5f663122facdf749c3c1d8256c8ecb3f533d46c6/R/create_survey.R#L140" class="external-link">create_survey.R file</a>.</p></li>
+<li>EwE Von Bertalanffy Growth model uses a specialized equation. Carrying capacity parameter k from the model needs to be carefully compared before using the value. The default values used in the EwE weight-at-age calculation are different compared to the BAM input values, so the weight-at-age matrices would be different from different models.</li>
 </ul>
+</div>
 </div>
   </div>
 

@@ -49,7 +49,7 @@ ages <- 0:6
   - BAM annual Coefficient of variation (CV) of catch and sample size data.
 - Output data
   - Ecosystem operating model total catch in biomass, total catch in abundance, catch-at-age in abundance, catch-at-age in biomass, CV of catch, sample size, and weight-at-age data
-  - Observed total catch in biomass and catch-at-age in proportion for one fleet
+  - Observed total catch in biomass and catch-at-age in proportion for **one fleet**
   - Units information
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
@@ -163,10 +163,11 @@ for (i in 1:length(data)){
       facet_wrap(~Year) +
       labs(
         title = title[i],
-        x = "Year",
+        x = "Age",
         y = "Proportion"
       )+
-      theme_bw()
+      theme_bw()+
+      theme(axis.text.x = element_text(angle = 45))
   print(p)
 }
 
@@ -231,7 +232,7 @@ survey_time <- list(
 nad_sel <- IFA4EBFM::logistic(
   pattern = "double_logistic",
   x = ages,
-  slope_asc = 3,
+  slope_asc = 2.2,
   location_asc = 3.0,
   slope_desc = 3.0,
   location_desc = 3.5
@@ -418,12 +419,13 @@ for (i in 1:length(survey$obs_lencomp_proportion_ss3)){
   colnames(obs) <- c("Year", "Model", "Survey", "Length_Bin", "Value")
   
   if (nrow(obs) != 0) {
+    obs$Length_Bin <- as.numeric(as.character(obs$Length_Bin))
     p <- ggplot(data=obs, aes(x=Length_Bin, fill=Length_Bin, y=Value)) +
       geom_bar(position='dodge', stat='identity') +
       facet_wrap(~Year) +
       labs(
         title = names(survey$obs_lencomp_proportion_ss3)[i],
-        x = "Year",
+        x = "Length Bins (cm)",
         y = "Proportion"
       )+
       theme_bw()
@@ -447,9 +449,8 @@ for (i in 1:length(survey$obs_lencomp_proportion_bam)){
   obs <- reshape2::melt(obs, id.vars = c("Year", "Model", "Survey"))
   colnames(obs) <- c("Year", "Model", "Survey", "Length_Bin", "Value")
   
-  
-  
   if (nrow(obs) != 0) {
+    obs$Length_Bin <- as.numeric(as.character(obs$Length_Bin))
     p <- ggplot(data=obs, aes(x=Length_Bin, fill=Length_Bin, y=Value)) +
       geom_bar(position='dodge', stat='identity') +
       facet_wrap(~Year) +
@@ -465,6 +466,125 @@ for (i in 1:length(survey$obs_lencomp_proportion_bam)){
 
 ```
 
+### Key findings
+
+- Tried two approaches to calculate age-length probability matrix
+  - use SS3 approach using `pnorm` in R 
+  - rewrite ADMB function in R based on BAM code
+  - the two approaches produce almost identical results, so will only use SS3 approach for further analysis
+ 
+- Observed a very high proportion of fish in length bin 10.5 cm
+  - need to check selectivity-at-age 0 and perhaps modify selectivity pattern for survey nad
+  - expand length bins. According to EwE outputs, mean length-at-age 0 is around 6 cm, which is below the current first length bin 10.5 cm.
+  
+## Modify selectivity pattern for survey nad and update length bins
+
+- Change `slope_asc` from 2.2 to 2.5: 
+  - selectivity-at-age from original scenario: 0.003, 0.030, 0.240, 1.00, 0.400, 0.027, 0.001
+  - updated selectivity-at-age: 0.0003, 0.0060, 0.1147, 1.0000, 0.4251, 0.0268, 0.0014
+
+- Change the first length bin from 10 cm to 1 cm and the last length bin from 40.5 cm to 46.5 cm
+
+```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+nad_sel <- IFA4EBFM::logistic(
+  pattern = "double_logistic",
+  x = ages,
+  slope_asc = 3.0,
+  location_asc = 3.0,
+  slope_desc = 3.0,
+  location_desc = 3.5
+)
+
+nad = as.data.frame(
+    matrix(rep(nad_sel, times = length(years)), ncol = length(ages), byrow = TRUE),
+    row.names = years
+  )
+colnames(nad) <- paste0("ages", ages)
+
+survey_selectivity$nad <- nad
+
+# set up age-length population structure
+length_bin <- seq(10, 460, 10)/10 # in cm
+mid_length_bin <- seq(15, 465, 10)/10 # in cm
+nbin <- length(length_bin)
+bin_width <- 1
+
+# Create survey
+survey <- IFA4EBFM::create_survey(
+  file_path = file.path(ewe_output_path, "biomass_monthly.csv"),
+  skip_nrows = 8,
+  species = 4:10,
+  species_labels = paste0("age", ages),
+  years = years,
+  survey_num = survey_num,
+  survey_time = survey_time,
+  selectivity = survey_selectivity,
+  catchability = survey_catchability,
+  CV = survey_CV,
+  sample_num = survey_sample_num,
+  waa_path = file.path(ewe_output_path, "weight_monthly.csv"),
+  length_bin = length_bin,
+  mid_length_bin = mid_length_bin,
+  nbin = nbin,
+  bin_width = bin_width,
+  length_CV = length_CV
+)
+
+```
+
+## Updated survey length composition over time
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+om <- data.frame(matrix(ncol=4, nrow=0))
+for (i in 1:length(survey$om_abundance_index)){
+  temp <- data.frame(
+  Year = as.numeric(names(survey$om_abundance_index[[i]])), 
+  Index = survey$om_abundance_index[[i]],
+  Model = "OM",
+  Survey = names(survey$om_abundance_index)[i]
+)
+  om <- rbind(om, temp)
+}
+
+obs <- data.frame(matrix(ncol=4, nrow=0))
+for (i in 1:length(survey$obs_abundance_index)){
+  temp <- data.frame(
+  Year = as.numeric(names(survey$obs_abundance_index[[i]])), 
+  Index = survey$obs_abundance_index[[i]],
+  Model = "OBS",
+  Survey = names(survey$obs_abundance_index)[i]
+)
+  obs <- rbind(obs, temp)
+}
+
+data <- rbind(om, obs)
+for (i in 1:length(survey$obs_lencomp_proportion_ss3)){
+  obs <- as.data.frame(survey$obs_lencomp_proportion_ss3[[i]])
+  obs$Year <- as.numeric(row.names(survey$obs_lencomp_proportion_ss3[[i]]))
+  obs$Model <- "OBS"
+  obs$Survey <- names(survey$obs_lencomp_proportion_ss3)[i]
+  
+  obs <- na.omit(obs)
+  
+  obs <- reshape2::melt(obs, id.vars = c("Year", "Model", "Survey"))
+  colnames(obs) <- c("Year", "Model", "Survey", "Length_Bin", "Value")
+  
+  if (nrow(obs) != 0) {
+    obs$Length_Bin <- as.numeric(as.character(obs$Length_Bin))
+    p <- ggplot(data=obs, aes(x=Length_Bin, fill=Length_Bin, y=Value)) +
+      geom_bar(position='dodge', stat='identity') +
+      facet_wrap(~Year) +
+      labs(
+        title = names(survey$obs_lencomp_proportion_ss3)[i],
+        x = "Length Bins (cm)",
+        y = "Proportion"
+      )+
+      theme_bw()
+  print(p)
+  }
+}
+
+```
 
 ## `IFA4EBFM::create_biodata()` is used to prepare biological data for a stock assessment
 
@@ -484,7 +604,6 @@ biodata <- create_biodata(nsex=1, narea=1, ages=ages, years=years,
                           )
 ```
 
-## Key findings
+### Key findings
 - EwE Von Bertalanffy Growth model uses a specialized equation. Carrying capacity parameter k from the model needs to be carefully compared before using the value. The default values used in the EwE weight-at-age calculation are different compared to the BAM input values, so the weight-at-age matrices would be different from different models.
 
-- When computing observed length composition data, variation in length-at-age is computed first. However, age 0 fish all go to the first length bin. Later, when applying selectivity-at-age using BAM NAD selectivity estimates, all the age 0 fish go to the first length bin, result in a relatively high proportion value at the first length bin. Therefore, slope parameter was modified to a higher value (from 2.3 to 3) to reduce the proportion at the first length bin. Would be good to check the code from line 140 to line 180 in the [create_survey.R file](https://github.com/Bai-Li-NOAA/IFA4EBFM/blob/5f663122facdf749c3c1d8256c8ecb3f533d46c6/R/create_survey.R#L140). 
