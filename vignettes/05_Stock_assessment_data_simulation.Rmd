@@ -479,7 +479,7 @@ for (i in 1:length(survey$obs_lencomp_proportion_bam)){
   
 ## Modify selectivity pattern for survey nad and update length bins
 
-- Change `slope_asc` from 2.2 to 2.5: 
+- Change `slope_asc` from 2.2 to 3.0: 
   - selectivity-at-age from original scenario: 0.003, 0.030, 0.240, 1.00, 0.400, 0.027, 0.001
   - updated selectivity-at-age: 0.0003, 0.0060, 0.1147, 1.0000, 0.4251, 0.0268, 0.0014
 
