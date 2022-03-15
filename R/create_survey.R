@@ -140,20 +140,24 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
   # SS3 approach
   for (i in 1:survey_num) {
     subdata_id <- which((data$year %in% survey_time[[survey_name[i]]]$year) & (data$month %in% survey_time[[survey_name[i]]]$month))
-    phi[[survey_name[i]]] <- matrix(NA, nrow = length(length_bin), ncol = length(ages))
-    colnames(phi[[survey_name[i]]]) <- species_labels
-    row.names(phi[[survey_name[i]]]) <- mid_length_bin
+
+    phi[[survey_name[[i]]]] <- vector(mode = "list", length = length(subdata_id))
+    names(phi[[survey_name[[i]]]]) <- survey_time[[survey_name[i]]]$year
+
     for (j in 1:length(subdata_id)) {
+      phi[[survey_name[i]]][[j]] <- matrix(NA, nrow = length(length_bin), ncol = length(ages))
+      colnames(phi[[survey_name[i]]][[j]]) <- species_labels
+      row.names(phi[[survey_name[i]]][[j]]) <- mid_length_bin
       for (k in 1:nage) {
         # first length bin
-        phi[[i]][1, k] <- pnorm(length_bin[1 + 1], as.numeric(laa[subdata_id[j], species_labels[k]]), sigma_at_age[[i]][j, k])
-        total_phi <- phi[[i]][1, k]
+        phi[[i]][[j]][1, k] <- pnorm(length_bin[1 + 1], as.numeric(laa[subdata_id[j], species_labels[k]]), sigma_at_age[[i]][j, k])
+        total_phi <- phi[[i]][[j]][1, k]
         for (l in 2:(length(length_bin) - 1)) {
           p <- pnorm(length_bin[l + 1], as.numeric(laa[subdata_id[j], species_labels[k]]), sigma_at_age[[i]][j, k])
-          phi[[i]][l, k] <- p - total_phi
+          phi[[i]][[j]][l, k] <- p - total_phi
           total_phi <- p
         }
-        phi[[i]][nbin, k] <- 1 - total_phi
+        phi[[i]][[j]][nbin, k] <- 1 - total_phi
       }
     }
   }
@@ -169,7 +173,7 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
       for (j in 1:length(subdata_id)) {
 
           if (!is.na(sample_num[[i]][paste0(survey_time[[survey_name[i]]]$year[j])])) {
-            len_dist_ss3[[i]][j, ] <- phi[[i]] %*% as.numeric(naa_sel[[i]][j, ])/sum(naa_sel[[i]][j, ])
+            len_dist_ss3[[i]][j, ] <- phi[[i]][[j]] %*% as.numeric(naa_sel[[i]][j, ])/sum(naa_sel[[i]][j, ])
           } else {
             len_dist_ss3[[i]][j, ] <- NA
           }
