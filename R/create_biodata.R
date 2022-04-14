@@ -22,13 +22,15 @@
 #'@param skip_nrows integer; the number of lines of the data file to skip before reading data.
 #'@param lw_a Length-weight coefficients a. W=a*L^b. Default EwE value is 0.01.
 #'@param lw_b Length-weight coefficients b. W=a*L^b. Default EwE value is 3.
-#'@param k Carrying capacity parameter of the von Bertalanffy model.
+#'@param k Growth rate parameter of the von Bertalanffy model.
+#'@param t0 Theoretical age at size 0. Default EwE value is -0.1.
+#'@param winf Asymptotic average weight. EwE weight-at-age calculated as Wa = (1-exp(k*age))^3.
 #'@param maturity_at_age A vector of maturity-at-age value or time-varying maturity-at-age matrix with rows present years and columns represent ages.
 #'@param natural_mortality_at_age A vector of natural mortality-at-age value or time-varying natural mortality-at-age matrix with rows present years and columns represent ages.
 #'@return A data list that includes biological data for set up a stock assessment.
 #'
 #' @export
-create_biodata <- function(nsex=1, narea=1, ages, years, length_bin, mid_length_bin, nbin, bin_width, length_CV, annual_weight_path, monthly_weight_path, species, species_labels, skip_nrows, lw_a=0.01, lw_b=3, k, maturity_at_age, natural_mortality_at_age) {
+create_biodata <- function(nsex=1, narea=1, ages, years, length_bin, mid_length_bin, nbin, bin_width, length_CV, annual_weight_path, monthly_weight_path, species, species_labels, skip_nrows, lw_a=0.01, lw_b=3, k, t0=-0.1, winf, maturity_at_age, natural_mortality_at_age) {
 
   species_vec <- paste0("X", species)
 
@@ -60,8 +62,6 @@ create_biodata <- function(nsex=1, narea=1, ages, years, length_bin, mid_length_
   colnames(annual_waa) <- c("year", species_labels)
   annual_waa[, species_labels] <- annual_waa[, species_labels] / 1000 # weight in kg and need divide the value by 1000 to get mt
 
-  r = k/3
-
   # maturity-at-age matrix
   if (length(maturity_at_age) == length(ages)) maturity_matrix <- t(replicate(length(years), maturity_at_age))
   if (length(maturity_at_age) != length(ages)) maturity_matrix <- maturity_at_age
@@ -90,7 +90,8 @@ create_biodata <- function(nsex=1, narea=1, ages, years, length_bin, mid_length_
     lw_a = lw_a,
     lw_b = lw_b,
     k = k,
-    r = r,
+    t0 = t0,
+    winf = winf,
     maturity_matrix = maturity_matrix,
     natural_mortality_matrix = natural_mortality_matrix
 
