@@ -16,7 +16,7 @@ lapply(required_pkg, library, character.only = TRUE)
 
 # Load simulated input data
 source(here::here("Rscript", "simulation.R"))
-
+sensitivity_run = FALSE
 ## Questions: DB-SRA is a method designed for determining a catch limit
 ## and management reference points for data-limited fisheries
 ## where catches are known from the beginning of exploitation.
@@ -48,9 +48,9 @@ ss_case0@vbK <- sa_data$biodata$k
 # VB theoretical age at zero length
 # default from EwE: -0.1
 # https://www.researchgate.net/publication/267193103_Ecopath_with_Ecosim_A_User's_Guide#pf66
-ss_case0@vbt0 <- (-0.1)
+ss_case0@vbt0 <- sa_data$biodata$t0
 # VB maximum length
-ss_case0@vbLinf <- (0.237 * 1000 / sa_data$biodata$lw_a)^(1 / sa_data$biodata$lw_b)
+ss_case0@vbLinf <- (sa_data$biodata$winf * 1000 / sa_data$biodata$lw_a)^(1 / sa_data$biodata$lw_b)
 # ss_case0@vbLinf <- 500 # mm from FishBase
 # Ratio of FMSY/M
 # Q: Is it possible to find the ratio of FMSY to M
@@ -90,28 +90,33 @@ DBSRA_40(1, ss_case0, plot = TRUE)
 DBSRA4010(1, ss_case0, plot = TRUE)
 
 # Sensitivity runs
-altValue_list <- list(
-  samples = 1:100,
-  dep = seq(0.1, 0.9, by = 0.1),
-  fmsy_m = c(0.1, 0.5, 1, 1.5, 2),
-  bmsy_b0 = seq(0.1, 0.9, by = 0.1)
-)
+if (sensitivity_run){
+  altValue_list <- list(
+    samples = 1:100,
+    dep = seq(0.1, 0.9, by = 0.1),
+    fmsy_m = c(0.1, 0.5, 1, 1.5, 2),
+    bmsy_b0 = seq(0.1, 0.9, by = 0.1)
+  )
 
-altValue_data <- do.call(expand.grid, altValue_list)
-altValue_data$dbsra_tac <-
-  altValue_data$dbsra40_tac <-
-  altValue_data$dbsra4010_tac <- NA
+  altValue_data <- do.call(expand.grid, altValue_list)
+  altValue_data$dbsra_tac <-
+    altValue_data$dbsra40_tac <-
+    altValue_data$dbsra4010_tac <- NA
 
-id <- seq(1, nrow(altValue_data), by = 100)
-for (i in 1:length(id)) {
-  ss_case <- ss_case0
-  ss_case@Dep <- altValue_data$dep[id[i]]
-  ss_case@FMSY_M <- altValue_data$fmsy_m[id[i]]
-  ss_case@BMSY_B0 <- altValue_data$bmsy_b0[id[i]]
+  id <- seq(1, nrow(altValue_data), by = 100)
+  for (i in 1:length(id)) {
+    ss_case <- ss_case0
+    ss_case@Dep <- altValue_data$dep[id[i]]
+    ss_case@FMSY_M <- altValue_data$fmsy_m[id[i]]
+    ss_case@BMSY_B0 <- altValue_data$bmsy_b0[id[i]]
 
-  altValue_data$dbsra_tac[id[i]:(id[i] + 99)] <- DBSRA(1, ss_case, plot = FALSE)@TAC
-  altValue_data$dbsra40_tac[id[i]:(id[i] + 99)] <- DBSRA_40(1, ss_case, plot = FALSE)@TAC
-  altValue_data$dbsra4010_tac[id[i]:(id[i] + 99)] <- DBSRA4010(1, ss_case, plot = FALSE)@TAC
+    altValue_data$dbsra_tac[id[i]:(id[i] + 99)] <- DBSRA(1, ss_case, plot = FALSE)@TAC
+    altValue_data$dbsra40_tac[id[i]:(id[i] + 99)] <- DBSRA_40(1, ss_case, plot = FALSE)@TAC
+    altValue_data$dbsra4010_tac[id[i]:(id[i] + 99)] <- DBSRA4010(1, ss_case, plot = FALSE)@TAC
+  }
+  save(altValue_data, file=here::here("Rscript", "data_poor_sensitivity_run.RData"))
+} else {
+  load(here::here("Rscript", "data_poor_sensitivity_run.RData"))
 }
 
 plot_dbsra <- ggplot(data = altValue_data, aes(x = dep, y = dbsra_tac, group = dep)) +
@@ -150,6 +155,7 @@ for (i in 1:length(projection_year)) {
   projection_output[[i]] <- DBSRA_(1, ss_case)
 }
 
+# plot figures
 ylim <- range(unlist(sapply(projection_output, '[', 'TAC')))
 plot(c(model_year, projection_year),
   c(projection_output[[1]]$C_hist, rep(NA, length(projection_year))),
@@ -168,3 +174,16 @@ for (i in 1:length(projection_year)) {
     axes = FALSE
   )
 }
+
+catch_year <- projection_year[1:length(projection_year)-1]
+points(catch_year, sa_data$fishery$obs_total_catch_biomass$fleet1[names(sa_data$fishery$obs_total_catch_biomass$fleet1) %in% catch_year],
+       pch = 16, col="blue")
+
+legend("top",
+       c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
+       lty= c(1, NA, NA),
+       pch=c(NA, 16, NA),
+       col=c("black", "blue", NA),
+       fill=c(NA, NA, "gray"),
+       border=c(NA, NA, "black"),
+       bty="n")
