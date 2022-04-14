@@ -22,6 +22,8 @@ create_biodata(
   lw_a = 0.01,
   lw_b = 3,
   k,
+  t0 = -0.1,
+  winf,
   maturity_at_age,
   natural_mortality_at_age
 )
@@ -59,7 +61,11 @@ create_biodata(
 
 \item{lw_b}{Length-weight coefficients b. W=a*L^b. Default EwE value is 3.}
 
-\item{k}{Carrying capacity parameter of the von Bertalanffy model.}
+\item{k}{Growth rate parameter of the von Bertalanffy model.}
+
+\item{t0}{Theoretical age at size 0. Default EwE value is -0.1.}
+
+\item{winf}{Asymptotic average weight. EwE weight-at-age calculated as Wa = (1-exp(k*age))^3.}
 
 \item{maturity_at_age}{A vector of maturity-at-age value or time-varying maturity-at-age matrix with rows present years and columns represent ages.}
 

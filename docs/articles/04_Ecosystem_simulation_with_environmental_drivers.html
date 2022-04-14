@@ -132,13 +132,14 @@
 <p>We want to incorporate climate, environmental, or biological drivers to the Ecopath with Ecosim (EwE) model. Base on <a href="https://doi.org/10.1093/icesjms/fsv260" class="external-link">Buchheister et al. (2016)</a> paper, we explored the following scenarios:</p>
 <table class="table">
 <colgroup>
+<col width="2%">
 <col width="3%">
+<col width="20%">
 <col width="3%">
-<col width="25%">
-<col width="5%">
-<col width="36%">
-<col width="16%">
-<col width="8%">
+<col width="43%">
+<col width="11%">
+<col width="7%">
+<col width="7%">
 </colgroup>
 <thead><tr class="header">
 <th align="right">scenario_id</th>
@@ -147,7 +148,8 @@
 <th align="left">driver_category</th>
 <th align="left">justification</th>
 <th align="left">data_source</th>
-<th align="right">sum_of_squared_differences</th>
+<th align="right">sum_of_squared_differences_menhaden0</th>
+<th align="right">sum_of_squared_differences_total</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -157,6 +159,7 @@
 <td align="left">None</td>
 <td align="left">None</td>
 <td align="left">Ecosim outputs without environmental consideration</td>
+<td align="right">30</td>
 <td align="right">2339</td>
 </tr>
 <tr class="even">
@@ -164,8 +167,9 @@
 <td align="left">amo_lag0</td>
 <td align="left">Atlantic Multidecadal Oscillation Index with lag 0</td>
 <td align="left">Climate</td>
-<td align="left">Indicator of climate conditions; linked to recruitment variability of NW Atlantic fishes</td>
+<td align="left">Indicator of climate conditions; linked to recruitment variability of NW Atlantic fishes; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"><a href="https://psl.noaa.gov/data/timeseries/AMO/" class="external-link uri">https://psl.noaa.gov/data/timeseries/AMO/</a></td>
+<td align="right">37</td>
 <td align="right">2407</td>
 </tr>
 <tr class="odd">
@@ -173,8 +177,9 @@
 <td align="left">amo_lag1</td>
 <td align="left">Atlantic Multidecadal Oscillation Index with lag of 1 year</td>
 <td align="left">Climate</td>
-<td align="left">Indicator of climate conditions; linked to recruitment variability of NW Atlantic fishes</td>
+<td align="left">Indicator of climate conditions; linked to recruitment variability of NW Atlantic fishes; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"><a href="https://psl.noaa.gov/data/timeseries/AMO/" class="external-link uri">https://psl.noaa.gov/data/timeseries/AMO/</a></td>
+<td align="right">34</td>
 <td align="right">2343</td>
 </tr>
 <tr class="even">
@@ -182,8 +187,9 @@
 <td align="left">sst</td>
 <td align="left">Kaplan sea surface temperature</td>
 <td align="left">Environmental</td>
-<td align="left">Affects fish physiology, behaviour, and various basic system properties</td>
+<td align="left">Affects fish physiology, behaviour, and various basic system properties; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"><a href="https://psl.noaa.gov/data/timeseries/AMO/" class="external-link uri">https://psl.noaa.gov/data/timeseries/AMO/</a></td>
+<td align="right">32</td>
 <td align="right">2380</td>
 </tr>
 <tr class="odd">
@@ -191,8 +197,9 @@
 <td align="left">pcp</td>
 <td align="left">Precipitation (average value from VA, MD, CT, RI, and MA)</td>
 <td align="left">Environmental</td>
-<td align="left">Alters availability of high-salinity habitat, affects nutrient loading, production, hypoxia, and foodweb structure</td>
+<td align="left">Alters availability of high-salinity habitat, affects nutrient loading, production, hypoxia, and foodweb structure; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"><a href="https://www.ncdc.noaa.gov/cag/statewide/time-series" class="external-link uri">https://www.ncdc.noaa.gov/cag/statewide/time-series</a></td>
+<td align="right">27</td>
 <td align="right">2298</td>
 </tr>
 <tr class="even">
@@ -200,8 +207,9 @@
 <td align="left">pdsi</td>
 <td align="left">Palmer drought severity index (average value from VA, MD, CT, RI, and MA)</td>
 <td align="left">Environmental</td>
-<td align="left">Long-term indicator of drought conditions; reflects river discharge and precipitation</td>
+<td align="left">Long-term indicator of drought conditions; reflects river discharge and precipitation; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"><a href="https://www.ncdc.noaa.gov/cag/statewide/time-series" class="external-link uri">https://www.ncdc.noaa.gov/cag/statewide/time-series</a></td>
+<td align="right">32</td>
 <td align="right">2452</td>
 </tr>
 <tr class="odd">
@@ -209,8 +217,9 @@
 <td align="left">pp11</td>
 <td align="left">Primary production spline 11</td>
 <td align="left">Biological</td>
-<td align="left">Force primary production</td>
+<td align="left">Force primary production; linked to phytoplankton through settings in forcing function</td>
 <td align="left">Chagaris et al., 2021</td>
+<td align="right">34</td>
 <td align="right">2394</td>
 </tr>
 <tr class="even">
@@ -218,8 +227,9 @@
 <td align="left">pp33</td>
 <td align="left">Primary production spline 33</td>
 <td align="left">Biological</td>
-<td align="left">Force primary production</td>
+<td align="left">Force primary production; linked to phytoplankton through settings in forcing function</td>
 <td align="left">Chagaris et al., 2021</td>
+<td align="right">36</td>
 <td align="right">3152</td>
 </tr>
 <tr class="odd">
@@ -227,8 +237,9 @@
 <td align="left">recdev</td>
 <td align="left">Recruitment deviations</td>
 <td align="left">Biological</td>
-<td align="left">Recruitment variablity of Atlantic menhaden</td>
+<td align="left">Recruitment variablity of Atlantic menhaden; linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left">BAM assessment report</td>
+<td align="right">29</td>
 <td align="right">2339</td>
 </tr>
 <tr class="even">
@@ -236,9 +247,20 @@
 <td align="left">amo_pcp</td>
 <td align="left">Atlantic Multidecadal Oscillation Index with lag of 1 year and precipitation</td>
 <td align="left"></td>
+<td align="left">linked to menhaden-like species age 0 fish through settings in environmental responses</td>
 <td align="left"></td>
-<td align="left"></td>
+<td align="right">31</td>
 <td align="right">2290</td>
+</tr>
+<tr class="odd">
+<td align="right">11</td>
+<td align="left">pcp_pp_amo_am</td>
+<td align="left">Atlantic Multidecadal Oscillation Index with lag of 1 year (age-0 fish) and precipitation (PP)</td>
+<td align="left"></td>
+<td align="left">linked pcp to phytoplankton through settings in forcing function and linked amo to menhaden-like species age 0 fish through settings in environmental responses</td>
+<td align="left"></td>
+<td align="right">39</td>
+<td align="right">20958</td>
 </tr>
 </tbody>
 </table>
@@ -270,6 +292,116 @@
 <li>The climate and environmental drivers were linked with age 0 of menhaden-like species only, only menhaden, zooplankton, phytoplankton, and detritus showed fluctuations over time. Other functional groups showed relatively smooth trends.</li>
 <li>The sharp decrease in age 0 menhaden biomass was caused by the incorporation of AMO index. The AMO index decreases over time in 1985.</li>
 </ul>
+</div>
+<div class="section level2">
+<h2 id="bratio-and-biomass-over-time-from-scenario-11-link-precipitation-with-primary-production-and-link-amo-with-age-0-fish">Bratio and biomass over time from scenario 11: link precipitation with primary production and link AMO with age-0 fish<a class="anchor" aria-label="anchor" href="#bratio-and-biomass-over-time-from-scenario-11-link-precipitation-with-primary-production-and-link-amo-with-age-0-fish"></a>
+</h2>
+<p>Bratio:</p>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="4%">
+<col width="3%">
+<col width="4%">
+<col width="3%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="5%">
+<col width="3%">
+<col width="4%">
+<col width="4%">
+<col width="4%">
+<col width="4%">
+<col width="5%">
+<col width="4%">
+<col width="2%">
+<col width="2%">
+<col width="3%">
+<col width="4%">
+<col width="2%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">StripedBass0</th>
+<th align="right">StripedBass2_5</th>
+<th align="right">StripedBass6</th>
+<th align="right">AtlanticMenhaden0</th>
+<th align="right">AtlanticMenhaden1</th>
+<th align="right">AtlanticMenhaden2</th>
+<th align="right">AtlanticMenhaden3</th>
+<th align="right">AtlanticMenhaden4</th>
+<th align="right">AtlanticMenhaden5</th>
+<th align="right">AtlanticMenhaden6</th>
+<th align="right">SpinyDogfish</th>
+<th align="right">BluefishJuvenile</th>
+<th align="right">BluefishAdult</th>
+<th align="right">WeakfishJuvenile</th>
+<th align="right">WeakfishAdult</th>
+<th align="right">AtlanticHerring0_1</th>
+<th align="right">AtlanticHerring2</th>
+<th align="right">Anchovies</th>
+<th align="right">Benthos</th>
+<th align="right">Zooplankton</th>
+<th align="right">Phytoplankton</th>
+<th align="right">Detritus</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">base</td>
+<td align="right">3.7</td>
+<td align="right">2</td>
+<td align="right">4.1</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">1.1</td>
+<td align="right">1.3</td>
+<td align="right">1.21</td>
+<td align="right">1.26</td>
+<td align="right">1.2</td>
+<td align="right">1.2</td>
+<td align="right">0.47</td>
+<td align="right">0.46</td>
+<td align="right">0.50</td>
+<td align="right">0.57</td>
+<td align="right">3.7</td>
+<td align="right">3.4</td>
+<td align="right">0.23</td>
+<td align="right">0.99</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+<td align="right">1.0</td>
+</tr>
+<tr class="even">
+<td align="left">pcp_pp_amo_am</td>
+<td align="right">106.1</td>
+<td align="right">48</td>
+<td align="right">199.2</td>
+<td align="right">1.1</td>
+<td align="right">1.1</td>
+<td align="right">1.1</td>
+<td align="right">1.1</td>
+<td align="right">0.96</td>
+<td align="right">0.69</td>
+<td align="right">0.4</td>
+<td align="right">20.7</td>
+<td align="right">23.73</td>
+<td align="right">11.25</td>
+<td align="right">0.38</td>
+<td align="right">0.56</td>
+<td align="right">95.0</td>
+<td align="right">84.4</td>
+<td align="right">0.00</td>
+<td align="right">0.88</td>
+<td align="right">1.2</td>
+<td align="right">1.1</td>
+<td align="right">1.2</td>
+</tr>
+</tbody>
+</table>
+<p>Biomass over time: <img src="04_Ecosystem_simulation_with_environmental_drivers_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
 </div>
   </div>
 
