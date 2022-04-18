@@ -16,7 +16,7 @@ lapply(required_pkg, library, character.only = TRUE)
 
 # Load simulated input data
 source(here::here("Rscript", "simulation.R"))
-sensitivity_run = FALSE
+sensitivity_run <- FALSE
 ## Questions: DB-SRA is a method designed for determining a catch limit
 ## and management reference points for data-limited fisheries
 ## where catches are known from the beginning of exploitation.
@@ -90,7 +90,7 @@ DBSRA_40(1, ss_case0, plot = TRUE)
 DBSRA4010(1, ss_case0, plot = TRUE)
 
 # Sensitivity runs
-if (sensitivity_run){
+if (sensitivity_run) {
   altValue_list <- list(
     samples = 1:100,
     dep = seq(0.1, 0.9, by = 0.1),
@@ -114,7 +114,7 @@ if (sensitivity_run){
     altValue_data$dbsra40_tac[id[i]:(id[i] + 99)] <- DBSRA_40(1, ss_case, plot = FALSE)@TAC
     altValue_data$dbsra4010_tac[id[i]:(id[i] + 99)] <- DBSRA4010(1, ss_case, plot = FALSE)@TAC
   }
-  save(altValue_data, file=here::here("Rscript", "data_poor_sensitivity_run.RData"))
+  save(altValue_data, file = here::here("Rscript", "data_poor_sensitivity_run.RData"))
 } else {
   load(here::here("Rscript", "data_poor_sensitivity_run.RData"))
 }
@@ -140,8 +140,7 @@ plot_dbsra4010 <- ggplot(data = altValue_data, aes(x = dep, y = dbsra4010_tac, g
   theme(axis.text.x = element_text(angle = 45))
 plot_dbsra4010
 
-# Projection --------------------------------------------------
-# case 0
+# Projection: case 0--------------------------------------------------
 projection_output <- list()
 for (i in 1:length(projection_year)) {
   ss_case <- ss_case0
@@ -156,7 +155,7 @@ for (i in 1:length(projection_year)) {
 }
 
 # plot figures
-ylim <- range(unlist(sapply(projection_output, '[', 'TAC')))
+ylim <- range(unlist(sapply(projection_output, "[", "TAC")))
 plot(c(model_year, projection_year),
   c(projection_output[[1]]$C_hist, rep(NA, length(projection_year))),
   type = "l",
@@ -175,15 +174,140 @@ for (i in 1:length(projection_year)) {
   )
 }
 
-catch_year <- projection_year[1:length(projection_year)-1]
+catch_year <- projection_year[1:length(projection_year) - 1]
 points(catch_year, sa_data$fishery$obs_total_catch_biomass$fleet1[names(sa_data$fishery$obs_total_catch_biomass$fleet1) %in% catch_year],
-       pch = 16, col="blue")
+  pch = 16, col = "blue"
+)
 
 legend("top",
-       c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
-       lty= c(1, NA, NA),
-       pch=c(NA, 16, NA),
-       col=c("black", "blue", NA),
-       fill=c(NA, NA, "gray"),
-       border=c(NA, NA, "black"),
-       bty="n")
+  c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
+  lty = c(1, NA, NA),
+  pch = c(NA, 16, NA),
+  col = c("black", "blue", NA),
+  fill = c(NA, NA, "gray"),
+  border = c(NA, NA, "black"),
+  bty = "n"
+)
+
+# Projection: case 1 - include an index
+ewe_ind_path <- here::here(
+  "data", "ewe", "ewe7ages_ecosim_scenarios",
+  "ecosim_amo_lag1_pcp", "biodiv_ind_Ecosim.csv"
+)
+ewe_ind <- scan(ewe_ind_path, what = "", sep = "\n")
+col_name <- read.table(
+  text = as.character(ewe_ind[7]),
+  sep = ","
+)
+ewe_ind <- read.table(
+  text = as.character(ewe_ind[-c(1:7)]),
+  sep = ",",
+  col.names = col_name
+)
+
+menhaden_b <- apply(projection_output[[1]]$Btrend, 2, median)
+year_id <- seq(1, max(ewe_ind$Time), by = 12)[1:length(model_year)]
+predatory_b <- ewe_ind$Predatory.B[year_id]
+tl4 <- ewe_ind$TL.community.4[year_id]
+
+
+predatoryB_lm <- lm(menhaden_b ~ predatory_b)
+summary(predatoryB_lm)
+predatoryB_fit <- fitted(predatoryB_lm)
+
+predatoryB_rlm <- MASS::rlm(menhaden_b ~ predatory_b)
+# summary(MASS::rlm(menhaden_b ~ predatory_b, resid = predatoryB_rlm$residuals, weight = predatoryB_rlm$weights))
+
+tl4_lm <- lm(menhaden_b ~ tl4)
+summary(tl4_lm)
+tl4_fit <- fitted(tl4_lm)
+
+par(mfrow = c(1, 2))
+plot(predatory_b, menhaden_b,
+  xlab = "Biomass of predators with TL > 3",
+  ylab = "Biomass of menhaden-like species"
+)
+lines(predatory_b, predatoryB_fit, lty = 2, col = "blue")
+
+plot(tl4, menhaden_b,
+  xlab = "TL of the community > 3",
+  ylab = "Biomass of menhaden-like species"
+)
+lines(tl4, tl4_fit, lty = 2, col = "blue")
+
+IS <- function(indicator_data, slope) {
+  min_val <- min(indicator_data)
+  max_val <- max(indicator_data)
+
+  if (slope > 0) IS <- (indicator_data - min_val) / (max_val - min_val)
+  if (slope < 0) IS <- 1 - (indicator_data - min_val) / (max_val - min_val)
+
+  return(IS)
+}
+
+predatoryB_IS <- IS(
+  indicator_data = predatory_b,
+  slope = coef(predatoryB_lm)[2]
+)
+
+tl4_IS <- IS(
+  indicator_data = tl4,
+  slope = coef(tl4_lm)[2]
+)
+
+par(mfrow = c(1, 1))
+plot(model_year, predatoryB_IS,
+  type = "l", lty = 1,
+  xlab = "Year", ylab = "Status of Indicators"
+)
+lines(model_year, tl4_IS, lty = 2)
+legend("topright",
+  c(
+    "Biomass of predators with TL > 3",
+    "TL of the community > 3"
+  ),
+  lty = c(1, 2),
+  bty = "n"
+)
+
+# Adjust TAC based on estimated TAC, IS, and Bt/BMSY values
+adjust_tac <- function(tac, IS, Bt_BMSY) {
+  tac_lower <- min(tac)
+  tac_upper <- max(tac)
+  adjust_tac <- c()
+
+  for (i in 1:length(tac)) {
+    if (Bt_BMSY[i] > 1) adjust_tac[i] <- tac_lower + IS * (tac_upper - tac_lower)
+    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_tac[i] <- IS * Bt_BMSY[i] * tac[i]
+    if (Bt_BMSY[i] <= 0.5) adjust_tac[i] <- 0
+  }
+
+  return(adjust_tac)
+}
+
+
+Bt_BMSY <- projection_output[[1]]$Bt_Kstore / projection_output[[1]]$BMSY_K_Mstore
+predatoryB_tac <- adjust_tac(
+  tac = projection_output[[1]]$TAC,
+  IS = tail(predatoryB_IS, n = 1),
+  Bt_BMSY = Bt_BMSY
+)
+
+ylim <- range(projection_output[[1]]$TAC, predatoryB_tac)
+plot(projection_output[[1]]$TAC,
+  type = "l", lty = 1,
+  ylim = ylim,
+  xlab = "Iterations", ylab = "TAC"
+)
+lines(predatoryB_tac, lty = 2)
+legend("topleft",
+  c("DB-SRA TAC", "Adjusted TAC"),
+  lty = 1:2,
+  bty = "n"
+)
+
+
+boxplot(projection_output[[1]]$TAC, predatoryB_tac,
+  names = c("DB-SRA TAC", "Adjusted TAC"),
+  ylab = "TAC"
+)
