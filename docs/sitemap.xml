@@ -34,7 +34,13 @@
     <loc>/LICENSE-text.html</loc>
   </url>
   <url>
+    <loc>/reference/adjust_projection_dbsra.html</loc>
+  </url>
+  <url>
     <loc>/reference/bibtex2rmd.html</loc>
+  </url>
+  <url>
+    <loc>/reference/calc_soi.html</loc>
   </url>
   <url>
     <loc>/reference/create_biodata.html</loc>
