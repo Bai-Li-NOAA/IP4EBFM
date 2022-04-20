@@ -11,8 +11,8 @@ adjust_projection_dbsra <- function(tac, soi, Bt_BMSY) {
   adjust_tac <- c()
 
   for (i in 1:length(tac)) {
-    if (Bt_BMSY[i] > 1) adjust_tac[i] <- tac_lower + IS * (tac_upper - tac_lower)
-    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_tac[i] <- IS * Bt_BMSY[i] * tac[i]
+    if (Bt_BMSY[i] > 1) adjust_tac[i] <- tac_lower + soi * (tac_upper - tac_lower)
+    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_tac[i] <- soi * Bt_BMSY[i] * tac[i]
     if (Bt_BMSY[i] <= 0.5) adjust_tac[i] <- 0
   }
 
