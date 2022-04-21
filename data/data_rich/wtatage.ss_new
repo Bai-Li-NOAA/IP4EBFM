@@ -1,0 +1,8 @@
+7 # maxage
+# if Yr is negative, then fill remaining years for that Seas, growpattern, Bio_Pattern, Fleet
+# if season is negative, then fill remaining fleets for that Seas, Bio_Pattern, Sex, Fleet
+# will fill through forecast years, so be careful
+# fleet 0 contains begin season pop WT
+# fleet -1 contains mid season pop WT
+# fleet -2 contains maturity*fecundity
+#Yr Seas Sex Bio_Pattern BirthSeas Fleet  0 1 2 3 4 5 6 7
