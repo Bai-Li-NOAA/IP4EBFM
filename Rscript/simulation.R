@@ -187,8 +187,8 @@ for (i in 1:length(survey_sample_num)){
 }
 
 # set up age-length population structure
-length_bin <- seq(100, 500, 10)/10 # in cm
-mid_length_bin <- seq(105, 505, 10)/10 # in cm
+length_bin <- seq(10.0, 500, 10)/10 # in cm
+mid_length_bin <- seq(10.5, 505, 10)/10 # in cm
 nbin <- length(length_bin)
 bin_width <- 1
 
