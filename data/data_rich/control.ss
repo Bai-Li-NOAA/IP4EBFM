@@ -17,10 +17,9 @@
 #_Cond 1.0 # first age that moves (real age at begin of season, not integer) also cond on do_migration>0
 #_Cond 1 1 1 2 4 10 # example move definition for seas=1, morph=1, source=1 dest=2, age1=4, age2=10
 #
-1 #_Nblock_Patterns
-1 #_blocks_per_pattern
-#_begin and end years of blocks
-1985 1985
+0 #_Nblock_Patterns
+#_Cond 0 #_blocks_per_pattern
+# begin and end years of blocks
 #
 # controls for all timevary parameters 
 1 #_env/block/dev_adjust_method for all time-vary parms (1=warn relative to base parm bounds; 3=no bound check)
@@ -33,8 +32,8 @@
 #
 3 #_natM_type:_0=1Parm; 1=N_breakpoints;_2=Lorenzen;_3=agespecific;_4=agespec_withseasinterpolate
 #_ #_Age_natmort_by sex x growthpattern
-#_c(0, sa_data$biodata$natural_mortality_matrix[1, ])
-   0	#_    
+#_c(sa_data$biodata$natural_mortality_matrix[1, 1], sa_data$biodata$natural_mortality_matrix[1, ])
+1.76	#_    
 1.76	#_age0
 1.31	#_age1
 1.03	#_age2
@@ -61,19 +60,19 @@
 #
 #_growth_parms
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env_var&link	dev_link	dev_minyr	dev_maxyr	dev_PH	Block	Block_Fxn
-    5	  15	     10	    0	 99	0	 3	0	0	0	0	0	0	0	#_L_at_Amin_Fem_GP_1       
-   40	  50	41.7592	    0	 99	0	 3	0	0	0	0	0	0	0	#_L_at_Amax_Fem_GP_1       
- 0.05	0.99	  0.331	    0	 99	0	 3	0	0	0	0	0	0	0	#_VonBert_K_Fem_GP_1       
- 0.05	 0.3	   0.25	    0	 99	0	-3	0	0	0	0	0	0	0	#_CV_young_Fem_GP_1        
- 0.05	 0.2	   0.09	    0	 99	0	-3	0	0	0	0	0	0	0	#_CV_old_Fem_GP_1          
-   -3	   3	   0.01	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_1_Fem_GP_1         
-   -3	   4	      3	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_2_Fem_GP_1         
-   50	  60	     55	   55	0.8	0	-3	0	0	0	0	0	0	0	#_Mat50%_Fem_GP_1          
-   -3	   3	  -0.25	-0.25	0.8	0	-3	0	0	0	0	0	0	0	#_Mat_slope_Fem_GP_1       
-   -3	   3	      1	    1	0.8	0	-3	0	0	0	0	0	0	0	#_Eggs/kg_inter_Fem_GP_1   
-   -3	   3	      0	    0	0.8	0	-3	0	0	0	0	0	0	0	#_Eggs/kg_slope_wt_Fem_GP_1
-  0.1	  10	      1	    1	  1	0	-1	0	0	0	0	0	0	0	#_CohortGrowDev            
-1e-06	0.99	    0.5	  0.5	0.5	0	-1	0	0	0	0	0	0	0	#_FracFemale_GP_1          
+    1	  15	    7	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amin_Fem_GP_1       
+   40	  50	   42	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amax_Fem_GP_1       
+ 0.05	0.99	0.331	    0	 99	0	-3	0	0	0	0	0	0	0	#_VonBert_K_Fem_GP_1       
+ 0.05	 0.3	 0.25	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_young_Fem_GP_1        
+ 0.05	 0.2	 0.09	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_old_Fem_GP_1          
+   -3	   3	 0.01	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_1_Fem_GP_1         
+   -3	   4	    3	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_2_Fem_GP_1         
+   50	  60	   55	   55	0.8	0	-3	0	0	0	0	0	0	0	#_Mat50%_Fem_GP_1          
+   -3	   3	-0.25	-0.25	0.8	0	-3	0	0	0	0	0	0	0	#_Mat_slope_Fem_GP_1       
+   -3	   3	    1	    1	0.8	0	-3	0	0	0	0	0	0	0	#_Eggs/kg_inter_Fem_GP_1   
+   -3	   3	    0	    0	0.8	0	-3	0	0	0	0	0	0	0	#_Eggs/kg_slope_wt_Fem_GP_1
+  0.1	  10	    1	    1	  1	0	-1	0	0	0	0	0	0	0	#_CohortGrowDev            
+1e-06	0.99	  0.5	  0.5	0.5	0	-1	0	0	0	0	0	0	0	#_FracFemale_GP_1          
 #_no timevary MG parameters
 #
 #_seasonal_effects_on_biology_parms
@@ -85,9 +84,9 @@
 0 # 0/1 to use steepness in initial equ recruitment calculation
 0 # future feature: 0/1 to make realized sigmaR a function of SR curvature
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn # parm_name
-  3	31	25.3284	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
-0.2	 1	   0.99	 0.7	0.05	0	  4	0	0	0	0	0	0	0	#_SR_BH_steep
-  0	 2	   0.49	 0.8	 0.8	0	  2	0	0	0	0	0	0	0	#_SR_sigmaR  
+  3	31	13.6937	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
+0.2	 1	   0.99	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
+  0	 2	   0.49	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
  -5	 5	      0	   0	   1	0	 -4	0	0	0	0	0	0	0	#_SR_regime  
   0	 0	      0	   0	   0	0	-99	0	0	0	0	0	0	0	#_SR_autocorr
 #_no timevary SR parameters
@@ -119,7 +118,7 @@
 0.3 # F ballpark
 2012 # F ballpark year (neg value to disable)
 3 # F_Method:  1=Pope; 2=instan. F; 3=hybrid (hybrid is recommended)
-2.9 # max F or harvest rate, depends on F_Method
+10 # max F or harvest rate, depends on F_Method
 4 # N iterations for tuning F in hybrid method (recommend 3 to 7)
 #
 #_initial_F_parms; count = 0
@@ -150,18 +149,18 @@
 #_SizeSelex
 #_No size_selex_parm
 #_AgeSelex
-0	7	  4	0	99	0	2	0	0	0	0	0	0	0	#_1 
-0	7	  2	0	99	0	2	0	0	0	0	0	0	0	#_2 
-0	7	  4	0	99	0	2	0	0	0	0	0	0	0	#_3 
-0	7	  2	0	99	0	2	0	0	0	0	0	0	0	#_4 
+0	7	  2	0	99	0	2	0	0	0	0	0	0	0	#_1 
+0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_2 
+0	7	3.5	0	99	0	2	0	0	0	0	0	0	0	#_3 
+0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_4 
 0	7	  1	0	99	0	2	0	0	0	0	0	0	0	#_5 
 0	7	0.1	0	99	0	2	0	0	0	0	0	0	0	#_6 
-0	7	  4	0	99	0	2	0	0	0	0	0	0	0	#_7 
-0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_8 
-0	7	4.3	0	99	0	2	0	0	0	0	0	0	0	#_9 
-0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_10
-0	7	3.5	0	99	0	2	0	0	0	0	0	0	0	#_11
-0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_12
+0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_7 
+0	7	2.2	0	99	0	2	0	0	0	0	0	0	0	#_8 
+0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_9 
+0	7	4.3	0	99	0	2	0	0	0	0	0	0	0	#_10
+0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_11
+0	7	3.5	0	99	0	2	0	0	0	0	0	0	0	#_12
 0	7	  1	0	99	0	2	0	0	0	0	0	0	0	#_13
 0	7	0.1	0	99	0	2	0	0	0	0	0	0	0	#_14
 #_no timevary selex parameters
