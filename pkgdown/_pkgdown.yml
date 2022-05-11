@@ -42,4 +42,6 @@ navbar:
         href: articles/04_Ecosystem_simulation_with_environmental_drivers.html
       - text: Stock assessment data simulation
         href: articles/05_Stock_assessment_data_simulation.html
+      - text: Data-poor stock assessment
+        href: articles/06_Data_poor_stock_assessment.html
 

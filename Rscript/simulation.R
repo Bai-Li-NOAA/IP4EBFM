@@ -171,6 +171,7 @@ survey_CV <- list(
     survey3 = menhadenSA_output$t.series$cv.U.sad[which(menhadenSA_output$t.series$year %in% years)],
     survey4 = menhadenSA_output$t.series$cv.U.jai[which(menhadenSA_output$t.series$year %in% years)]
 )
+
 survey_CV <- lapply(survey_CV, setNames, years)
 
 # set up sample number
@@ -243,4 +244,4 @@ sa_data <- list(
     biodata = biodata
 )
 
-rm(list=setdiff(ls(), "sa_data"))
+#rm(list=setdiff(ls(), "sa_data"))
