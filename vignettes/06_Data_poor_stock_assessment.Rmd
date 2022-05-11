@@ -404,7 +404,7 @@ legend("bottomright",
   - Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values
   - The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
   
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Projection: case 1 - include an index ---------------------------
 menhaden_b <- apply(projection_output[[1]]$Btrend, 2, median)
 year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:length(model_year)]
