@@ -295,7 +295,7 @@ legend("bottomright",
 ```
 
 - Case 0.2
-    - Depletion relative to unfished: 0.9 based on 
+    - Depletion relative to unfished: 0.9 based on ballpark values from EwE
     - $B_{MSY}$ relative to unfished: 0.3 (based on fecundity target value from Beaufort Stock Assessment report)
     
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
@@ -318,8 +318,8 @@ ss_case0@BMSY_B0 <- mean(bmsy/b0)
 
 dbsra <- DLMtool::DBSRA(1, ss_case0, plot = TRUE)
 
-# Projection: case 0.1 --------------------------------------------------
-projection_output <- list()
+# Projection: case 0.2 --------------------------------------------------
+projection_output2 <- list()
 for (i in 1:length(projection_year)) {
   ss_case <- ss_case0
   year <- model_year[1]:(projection_year[i] - 1)
@@ -330,7 +330,7 @@ for (i in 1:length(projection_year)) {
   ss_case@Year <- year
   #ss_case@Dep <- tail(ss_case@Cat[1, ], n = 1) / ss_case@Cat[1, 1]
   ss_case@Dep <- ss_case0@Dep
-  projection_output[[i]] <- DLMtool::DBSRA_(
+  projection_output2[[i]] <- DLMtool::DBSRA_(
     x = 1,
     Data = ss_case,
     depo = NULL, # Optional fixed depletion (single value)
@@ -340,16 +340,16 @@ for (i in 1:length(projection_year)) {
 
 # plot figures
 par(mfrow=c(1,2))
-ylim <- range(projection_output[[1]]$C_hist, unlist(sapply(projection_output, "[", "TAC")))
+ylim <- range(projection_output2[[1]]$C_hist, unlist(sapply(projection_output2, "[", "TAC")))
 plot(c(model_year, projection_year),
-  c(projection_output[[1]]$C_hist, rep(NA, length(projection_year))),
+  c(projection_output2[[1]]$C_hist, rep(NA, length(projection_year))),
   type = "l",
   ylim = ylim,
   xlab = "Year", ylab = "Catch (mt)"
 )
 
 for (i in 1:length(projection_year)) {
-  boxplot(projection_output[[i]]$TAC,
+  boxplot(projection_output2[[i]]$TAC,
     add = TRUE,
     at = projection_year[i],
     col = "grey",
@@ -394,7 +394,7 @@ legend("bottomright",
 )
 ```
 
-- Cases 1-4 are based on the settings from case 0.2
+- Cases 1-4 are based on the settings from case 0.1
     - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
     - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
     - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator

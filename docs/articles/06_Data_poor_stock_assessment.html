@@ -150,7 +150,7 @@
 <ul>
 <li>Case 0.2
 <ul>
-<li>Depletion relative to unfished: 0.9 based on</li>
+<li>Depletion relative to unfished: 0.9 based on ballpark values from EwE</li>
 <li>
 <span class="math inline">\(B_{MSY}\)</span> relative to unfished: 0.3 (based on fecundity target value from Beaufort Stock Assessment report)</li>
 </ul>
@@ -158,7 +158,7 @@
 </ul>
 <p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-2.png" width="1152"></p>
 <ul>
-<li>Cases 1-4 are based on the settings from case 0.2
+<li>Cases 1-4 are based on the settings from case 0.1
 <ul>
 <li>Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species</li>
 <li>Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading</li>
@@ -179,72 +179,72 @@
 <span class="co">## </span>
 <span class="co">## Residuals:</span>
 <span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -379708 -189666   -9974  130684  539574 </span>
+<span class="co">## -478923 -331866  -45910  112318 1725490 </span>
 <span class="co">## </span>
 <span class="co">## Coefficients:</span>
 <span class="co">##                             Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)                  3698051      46087   80.24   &lt;2e-16 ***</span>
-<span class="co">## amo_unsmooth_lag1$raw_value   677650     252945    2.68    0.013 *  </span>
+<span class="co">## (Intercept)                   612396      97673    6.27  1.2e-06 ***</span>
+<span class="co">## amo_unsmooth_lag1$raw_value -1400457     536066   -2.61    0.015 *  </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">## </span>
-<span class="co">## Residual standard error: 223000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.216,  Adjusted R-squared:  0.186 </span>
-<span class="co">## F-statistic: 7.18 on 1 and 26 DF,  p-value: 0.0126</span></code></pre>
+<span class="co">## Residual standard error: 472000 on 26 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.208,  Adjusted R-squared:  0.177 </span>
+<span class="co">## F-statistic: 6.82 on 1 and 26 DF,  p-value: 0.0147</span></code></pre>
 <pre><code><span class="co">## </span>
 <span class="co">## Call:</span>
 <span class="co">## lm(formula = menhaden_b ~ pcp$raw_value)</span>
 <span class="co">## </span>
 <span class="co">## Residuals:</span>
 <span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -464415 -178376   70499  168122  432569 </span>
+<span class="co">## -458329 -279853 -132201  -19271 1657320 </span>
 <span class="co">## </span>
 <span class="co">## Coefficients:</span>
-<span class="co">##               Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)    3807437     137104   27.77   &lt;2e-16 ***</span>
-<span class="co">## pcp$raw_value   -44932      36287   -1.24     0.23    </span>
+<span class="co">##               Estimate Std. Error t value Pr(&gt;|t|)   </span>
+<span class="co">## (Intercept)     944015     293624    3.22   0.0035 **</span>
+<span class="co">## pcp$raw_value   -63902      77714   -0.82   0.4184   </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">## </span>
-<span class="co">## Residual standard error: 244000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.0557, Adjusted R-squared:  0.0194 </span>
-<span class="co">## F-statistic: 1.53 on 1 and 26 DF,  p-value: 0.227</span></code></pre>
+<span class="co">## Residual standard error: 523000 on 26 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.0253, Adjusted R-squared:  -0.0121 </span>
+<span class="co">## F-statistic: 0.676 on 1 and 26 DF,  p-value: 0.418</span></code></pre>
 <pre><code><span class="co">## </span>
 <span class="co">## Call:</span>
 <span class="co">## lm(formula = menhaden_b ~ bass_bio$bass_bio)</span>
 <span class="co">## </span>
 <span class="co">## Residuals:</span>
 <span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -335637 -204054   36866  120222  697547 </span>
+<span class="co">## -498894 -110151   18152   81556 1016290 </span>
 <span class="co">## </span>
 <span class="co">## Coefficients:</span>
-<span class="co">##                   Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)       3.39e+06   1.16e+05   29.27   &lt;2e-16 ***</span>
-<span class="co">## bass_bio$bass_bio 1.09e+00   4.61e-01    2.36    0.026 *  </span>
+<span class="co">##                    Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">## (Intercept)        1.78e+06   1.50e+05   11.84  5.6e-12 ***</span>
+<span class="co">## bass_bio$bass_bio -4.54e+00   5.96e-01   -7.61  4.5e-08 ***</span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">## </span>
-<span class="co">## Residual standard error: 228000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.176,  Adjusted R-squared:  0.145 </span>
-<span class="co">## F-statistic: 5.57 on 1 and 26 DF,  p-value: 0.0261</span></code></pre>
+<span class="co">## Residual standard error: 3e+05 on 26 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.69,   Adjusted R-squared:  0.678 </span>
+<span class="co">## F-statistic: 57.9 on 1 and 26 DF,  p-value: 4.47e-08</span></code></pre>
 <pre><code><span class="co">## </span>
 <span class="co">## Call:</span>
 <span class="co">## lm(formula = sub_menhaden_b ~ sub_menhaden_dollars)</span>
 <span class="co">## </span>
 <span class="co">## Residuals:</span>
 <span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -447229 -176391   66653  185591  508997 </span>
+<span class="co">## -485234 -350167  -93031   53275 1752243 </span>
 <span class="co">## </span>
 <span class="co">## Coefficients:</span>
-<span class="co">##                       Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)           3.79e+06   2.63e+05   14.38  6.9e-14 ***</span>
-<span class="co">## sub_menhaden_dollars -4.07e-03   7.52e-03   -0.54     0.59    </span>
+<span class="co">##                       Estimate Std. Error t value Pr(&gt;|t|)  </span>
+<span class="co">## (Intercept)           1.21e+06   5.49e+05    2.21    0.036 *</span>
+<span class="co">## sub_menhaden_dollars -1.44e-02   1.57e-02   -0.92    0.366  </span>
 <span class="co">## ---</span>
 <span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
 <span class="co">## </span>
-<span class="co">## Residual standard error: 250000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.0112, Adjusted R-squared:  -0.0269 </span>
-<span class="co">## F-statistic: 0.293 on 1 and 26 DF,  p-value: 0.593</span></code></pre>
+<span class="co">## Residual standard error: 522000 on 26 degrees of freedom</span>
+<span class="co">## Multiple R-squared:  0.0315, Adjusted R-squared:  -0.00575 </span>
+<span class="co">## F-statistic: 0.846 on 1 and 26 DF,  p-value: 0.366</span></code></pre>
 <p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
 <ul>
 <li><p>Status of indicators from cases 1 - 4 <img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p></li>
