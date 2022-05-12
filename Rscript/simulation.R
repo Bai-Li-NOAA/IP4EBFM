@@ -244,4 +244,4 @@ sa_data <- list(
     biodata = biodata
 )
 
-#rm(list=setdiff(ls(), "sa_data"))
+rm(list=setdiff(ls(), "sa_data"))

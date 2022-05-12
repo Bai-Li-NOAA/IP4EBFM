@@ -35,6 +35,10 @@ lapply(required_pkg, library, character.only = TRUE)
     - BMSY relative to unfished: 0.3 (based on fecundity target value from Beaufort Stock Assessment report)
   
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# Load simulated input data
+source(here::here("Rscript", "simulation.R"))
+source(here::here("Rscript", "load_indices.R"))
+
 # Load EwE biomass----------------------------
 model_year <- 1985:2012
 projection_year <- 2013:2017
@@ -81,10 +85,6 @@ biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum)[time_id] * 1000000
 
 
 # Case 0.1: default stock assessment run ----------------------------
-
-# Load simulated input data
-source(here::here("Rscript", "simulation.R"))
-source(here::here("Rscript", "load_indices.R"))
 sensitivity_run <- FALSE
 sensitivity_plot <- FALSE
 ## DB-SRA is a method designed for determining a catch limit
