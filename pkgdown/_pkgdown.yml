@@ -44,4 +44,6 @@ navbar:
         href: articles/05_Stock_assessment_data_simulation.html
       - text: Data-poor stock assessment
         href: articles/06_Data_poor_stock_assessment.html
+      - text: Data-moderate stock assessment
+        href: articles/07_Data_moderate_stock_assessment.html
 

@@ -1,6 +1,23 @@
-# Data-moderate case --------------------------------------------------
-## Using Just Another Bayesian Biomass Assessment (JABBA)
-## Website: https://github.com/jabbamodel/JABBA
+---
+title: 'Data-moderate stock assessment'
+date: 'Updated on May 12, 2022'
+output:
+  html_document: 
+    code_folding: hide
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Just Another Bayesian Biomass Assessment (JABBA)
+
+- Website: [https://github.com/jabbamodel/JABBA](https://github.com/jabbamodel/JABBA)
+- Version: commit d73313debf9326f2be920846ee361b3dcca8c22d
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+devtools::load_all()
 
 # Install required R packages -------------------------------------
 required_pkg <- c(
@@ -19,13 +36,16 @@ devtools::install_github("jabbamodel/JABBA",
   ref = "d73313debf9326f2be920846ee361b3dcca8c22d"
 )
 
-# devtools::install_github("jabbamodel/JABBA",
-#   ref = "d780f6dba48186c6c0580f6cb6c559011a77325a"
-# )
 library(JABBA)
 
-# Case 0: default stock assessment run ----------------------------
+```
 
+## Case 0: stock assessment base run
+
+  - Case 0.1: K = 6500000, r = 0.6 with large CV 
+  - Case 0.2: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)
+  
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation.R"))
 source(here::here("Rscript", "load_indices.R"))
@@ -234,7 +254,20 @@ legend("topright",
   lty = c(NA, 1, 2),
   col = c(1, 1, 2)
 )
+```
 
+
+## Cases 1-4 are based on the settings from case 0.2
+    - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
+    - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
+    - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
+    - Case 4: Link dollars of menhaden with menhaden biomass estimates and adjust projections 
+
+- Linear regression models from case 1 - 4
+  - Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values
+  - The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
+  
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Projection: case 1 - include an index ---------------------------
 menhaden_b <- ss_case02$timeseries[, "mu", "B"]
 year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:length(model_year)]
@@ -373,9 +406,10 @@ legend("bottomright",
        bty = "n"
 )
 
+```
 
-# Adjust FMSY based on estimated FMSY, soi, and Bt/BMSY values -------
-
+## Adjusted FMSY for cases 1 - 4
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # 2012 Bt_BMSY
 Bt_BMSY <- ss_case02$posteriors$BtoBmsy[, length(model_year)]
 
@@ -440,4 +474,4 @@ boxplot(ss_case02$refpts_posterior$Fmsy,
         ),
         ylab = "FMSY"
 )
-
+```
