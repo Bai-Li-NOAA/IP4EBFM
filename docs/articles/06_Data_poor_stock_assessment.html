@@ -162,6 +162,23 @@
 </li>
 </ul>
 <p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-2.png" width="1152"></p>
+<ul>
+<li>Case 0.3
+<ul>
+<li>Add a long sequence of equilibrium catches (2010 - 2012) to the start of the catch</li>
+</ul>
+</li>
+</ul>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-2.png" width="1152"></p>
+<ul>
+<li>Case 0.4
+<ul>
+<li>Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with interval of 0.05) and find the scenario that has the lowest sum of squared differences</li>
+<li>Dep = 0.75, BMSY_B0 = 0.3, FMSY_M = 1.05</li>
+</ul>
+</li>
+</ul>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-1">Cases 1-4 are based on the settings from case 0.1<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-1"></a>
@@ -178,89 +195,12 @@
 </ul>
 </li>
 </ul>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## lm(formula = menhaden_b ~ amo_unsmooth_lag1$raw_value)</span>
-<span class="co">## </span>
-<span class="co">## Residuals:</span>
-<span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -478923 -331866  -45910  112318 1725490 </span>
-<span class="co">## </span>
-<span class="co">## Coefficients:</span>
-<span class="co">##                             Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)                   612396      97673    6.27  1.2e-06 ***</span>
-<span class="co">## amo_unsmooth_lag1$raw_value -1400457     536066   -2.61    0.015 *  </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">## </span>
-<span class="co">## Residual standard error: 472000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.208,  Adjusted R-squared:  0.177 </span>
-<span class="co">## F-statistic: 6.82 on 1 and 26 DF,  p-value: 0.0147</span></code></pre>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## lm(formula = menhaden_b ~ pcp$raw_value)</span>
-<span class="co">## </span>
-<span class="co">## Residuals:</span>
-<span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -458329 -279853 -132201  -19271 1657320 </span>
-<span class="co">## </span>
-<span class="co">## Coefficients:</span>
-<span class="co">##               Estimate Std. Error t value Pr(&gt;|t|)   </span>
-<span class="co">## (Intercept)     944015     293624    3.22   0.0035 **</span>
-<span class="co">## pcp$raw_value   -63902      77714   -0.82   0.4184   </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">## </span>
-<span class="co">## Residual standard error: 523000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.0253, Adjusted R-squared:  -0.0121 </span>
-<span class="co">## F-statistic: 0.676 on 1 and 26 DF,  p-value: 0.418</span></code></pre>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## lm(formula = menhaden_b ~ bass_bio$bass_bio)</span>
-<span class="co">## </span>
-<span class="co">## Residuals:</span>
-<span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -498894 -110151   18152   81556 1016290 </span>
-<span class="co">## </span>
-<span class="co">## Coefficients:</span>
-<span class="co">##                    Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="co">## (Intercept)        1.78e+06   1.50e+05   11.84  5.6e-12 ***</span>
-<span class="co">## bass_bio$bass_bio -4.54e+00   5.96e-01   -7.61  4.5e-08 ***</span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">## </span>
-<span class="co">## Residual standard error: 3e+05 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.69,   Adjusted R-squared:  0.678 </span>
-<span class="co">## F-statistic: 57.9 on 1 and 26 DF,  p-value: 4.47e-08</span></code></pre>
-<pre><code><span class="co">## </span>
-<span class="co">## Call:</span>
-<span class="co">## lm(formula = sub_menhaden_b ~ sub_menhaden_dollars)</span>
-<span class="co">## </span>
-<span class="co">## Residuals:</span>
-<span class="co">##     Min      1Q  Median      3Q     Max </span>
-<span class="co">## -485234 -350167  -93031   53275 1752243 </span>
-<span class="co">## </span>
-<span class="co">## Coefficients:</span>
-<span class="co">##                       Estimate Std. Error t value Pr(&gt;|t|)  </span>
-<span class="co">## (Intercept)           1.21e+06   5.49e+05    2.21    0.036 *</span>
-<span class="co">## sub_menhaden_dollars -1.44e-02   1.57e-02   -0.92    0.366  </span>
-<span class="co">## ---</span>
-<span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span>
-<span class="co">## </span>
-<span class="co">## Residual standard error: 522000 on 26 degrees of freedom</span>
-<span class="co">## Multiple R-squared:  0.0315, Adjusted R-squared:  -0.00575 </span>
-<span class="co">## F-statistic: 0.846 on 1 and 26 DF,  p-value: 0.366</span></code></pre>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-3.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-4.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-5.png" width="1152"></p>
 </div>
 <div class="section level2">
-<h2 id="status-of-indicators-from-cases-1---4">Status of indicators from cases 1 - 4<a class="anchor" aria-label="anchor" href="#status-of-indicators-from-cases-1---4"></a>
+<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-4">Cases 1-4 are based on the settings from case 0.4<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-4"></a>
 </h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-2.png" width="1152"></p>
-</div>
-<div class="section level2">
-<h2 id="adjusted-tac-in-2013-from-cases-1---4">Adjusted TAC in 2013 from cases 1 - 4<a class="anchor" aria-label="anchor" href="#adjusted-tac-in-2013-from-cases-1---4"></a>
-</h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-2.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-3.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-4.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-5.png" width="1152"></p>
 </div>
   </div>
 
