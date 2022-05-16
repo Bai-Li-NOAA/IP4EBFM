@@ -6,7 +6,8 @@
 required_pkg <- c(
   "devtools", "here", "gplots",
   "coda", "rjags", "R2jags",
-  "fitdistrplus", "reshape"
+  "fitdistrplus", "reshape",
+  "ggplot2", "reshape2"
 )
 
 pkg_to_install <- required_pkg[!(required_pkg %in%
@@ -302,77 +303,72 @@ lines(sub_menhaden_dollars, dollars_fit, lty = 2, col = "blue")
 
 # status of indicators --------------------------------------------
 
-amo_IS <- calc_soi(
+amo_soi <- calc_soi(
   indicator_data = amo_unsmooth_lag1$raw_value,
   slope = coef(amo_lm)[2]
 )
 
-pcp_IS <- calc_soi(
+pcp_soi <- calc_soi(
   indicator_data = pcp$raw_value,
   slope = coef(pcp_lm)[2]
 )
 
-bassB_IS <- calc_soi(
+bassB_soi <- calc_soi(
   indicator_data = bass_bio$bass_bio,
   slope = coef(bassB_lm)[2]
 )
 
-dollars_IS <- calc_soi(
+dollars_soi <- calc_soi(
   indicator_data = sub_menhaden_dollars,
   slope = coef(dollars_lm)[2]
 )
 
-par(mfrow = c(1, 2))
-
 scaled_data <- data.frame(
-  menhaden_b = scale(menhaden_b)[,1],
+  year = model_year,
   amo = scale(amo_unsmooth_lag1$raw_value)[,1],
   pcp = scale(pcp$raw_value)[,1],
-  bass_b = scale(bass_bio$bass_bio)[,1],
-  dollars = scale(sub_menhaden_dollars)[,1]
+  bassB = scale(bass_bio$bass_bio)[,1],
+  dollars = scale(sub_menhaden_dollars)[,1],
+  menhadenB = scale(menhaden_b)[,1]
 )
 
-plot(model_year, scaled_data$amo,
-     ylim = range(scaled_data),
-     type = "l", lty = 1,
-     xlab = "Year", ylab = "Scaled Indices")
-lines(model_year, scaled_data$pcp, lty = 2, col = 2)
-lines(model_year, scaled_data$bass_b, lty=3, col = 3)
-lines(model_year, scaled_data$dollars, lty = 4, col= 4)
-lines(model_year, scaled_data$menhaden_b, lty = 5, col= 5)
-legend("bottomright",
-       c(
-         "AMO",
-         "Precipitation",
-         "Striped bass biomass",
-         "Menhaden dollars",
-         "Menhaden-like species biomass"
-       ),
-       lty = 1:5,
-       col = 1:5,
-       bty = "n"
+scaled_data_melt <- reshape2::melt(
+  scaled_data,
+  id = "year"
 )
 
+ggplot(scaled_data_melt, aes(x = year, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Scaled Indices",
+    x = "Year",
+    y = "Scaled Indices"
+  ) +
+  theme_bw()
 
-plot(model_year, amo_IS,
-     type = "l", lty = 1,
-     xlab = "Year", ylab = "Status of Indicators"
-)
-lines(model_year, pcp_IS, lty = 2, col = 2)
-lines(model_year, bassB_IS, lty=3, col = 3)
-lines(model_year, dollars_IS, lty = 4, col= 4)
-legend("bottomright",
-       c(
-         "AMO",
-         "Precipitation",
-         "Striped bass biomass",
-         "Menhaden dollars"
-       ),
-       lty = 1:4,
-       col = 1:4,
-       bty = "n"
+soi_data <- data.frame(
+  year = model_year,
+  amo = amo_soi,
+  pcp = pcp_soi,
+  bass_b = bassB_soi,
+  dollars = dollars_soi
 )
 
+soi_data_melt <- reshape2::melt(
+  soi_data,
+  id = "year"
+)
+
+ggplot(soi_data_melt, aes(x = year, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Status of Indicators",
+    x = "Year",
+    y = "Status of Indicators"
+  ) +
+  theme_bw()
 
 # Adjust FMSY based on estimated FMSY, soi, and Bt/BMSY values -------
 
@@ -381,63 +377,56 @@ Bt_BMSY <- ss_case02$posteriors$BtoBmsy[, length(model_year)]
 
 amo_fmsy <- adjust_projection_jabba(
   FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(amo_IS, n = 1),
+  soi = tail(amo_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
 pcp_fmsy <- adjust_projection_jabba(
   FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(pcp_IS, n = 1),
+  soi = tail(pcp_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
 bassB_fmsy <- adjust_projection_jabba(
   FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(bassB_IS, n = 1),
+  soi = tail(bassB_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
 dollars_fmsy <- adjust_projection_jabba(
   FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(dollars_IS, n = 1),
+  soi = tail(dollars_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
 
-ylim <- range(ss_case02$refpts_posterior$Fmsy,
-              bassB_fmsy, amo_fmsy,
-              pcp_fmsy, dollars_fmsy)
-plot(ss_case02$refpts_posterior$Fmsy,
-     type = "l", lty = 1,
-     ylim = ylim,
-     xlab = "Iterations", ylab = "FMSY"
+
+fmsy_data <- data.frame(
+  iter = 1:length(amo_fmsy),
+  JABBA = ss_case02$refpts_posterior$Fmsy,
+  amo = amo_fmsy,
+  pcp = pcp_fmsy,
+  bassB = bassB_fmsy,
+  dollars = dollars_fmsy
 )
 
-lines(amo_fmsy, lty = 2, col = 2)
-lines(pcp_fmsy, lty = 3, col = 3)
-lines(bassB_fmsy, lty = 4, col = 4)
-lines(dollars_fmsy, lty = 5, col = 5)
-
-legend("topleft",
-       c("JABBA FMSY",
-         "Adjusted FMSY 1",
-         "Adjusted FMSY 2",
-         "Adjusted FMSY 3",
-         "Adjusted FMSY 4"),
-       lty = 1:5,
-       col = 1:5,
-       bty = "n"
+fmsy_data_melt <- reshape2::melt(
+  fmsy_data,
+  id = "iter"
 )
 
+ggplot(fmsy_data_melt, aes(x = iter, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable) +
+  labs(
+    title = "FMSY",
+    x = "Iteration",
+    y = "FMSY"
+  ) +
+  theme_bw()
 
-boxplot(ss_case02$refpts_posterior$Fmsy,
-        bassB_fmsy,
-        amo_fmsy,
-        pcp_fmsy,
-        dollars_fmsy,
-
-        names = c("DB-SRA FMSY",
-                  "FMSY 1",
-                  "FMSY 2",
-                  "FMSYC 3",
-                  "FMSY 4"
-        ),
-        ylab = "FMSY"
-)
+ggplot(fmsy_data_melt, aes(x=variable, y = value, fill = variable)) +
+  geom_boxplot()+
+  labs(
+    title = "FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
 

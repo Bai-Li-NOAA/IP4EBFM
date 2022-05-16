@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 devtools::load_all()
 
 # Install required R packages -------------------------------------
-required_pkg <- c("DLMtool", "here") ## version 6.0.3
+required_pkg <- c("DLMtool", "here", "ggplot2", "reshape2") ## DLMtool: version 6.0.3
 
 pkg_to_install <- required_pkg[!(required_pkg %in%
   installed.packages()[, "Package"])]
@@ -485,173 +485,134 @@ lines(sub_menhaden_dollars, dollars_fit, lty = 2, col = "blue")
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # status of indicators --------------------------------------------
 
-
-IS <- function(indicator_data, slope) {
-  min_val <- min(indicator_data)
-  max_val <- max(indicator_data)
-
-  if (slope > 0) IS <- (indicator_data - min_val) / (max_val - min_val)
-  if (slope < 0) IS <- 1 - (indicator_data - min_val) / (max_val - min_val)
-
-  return(IS)
-}
-
-amo_IS <- IS(
+amo_soi <- calc_soi(
   indicator_data = amo_unsmooth_lag1$raw_value,
   slope = coef(amo_lm)[2]
 )
 
-pcp_IS <- IS(
+pcp_soi <- calc_soi(
   indicator_data = pcp$raw_value,
   slope = coef(pcp_lm)[2]
 )
 
-bassB_IS <- IS(
+bassB_soi <- calc_soi(
   indicator_data = bass_bio$bass_bio,
   slope = coef(bassB_lm)[2]
 )
 
-dollars_IS <- IS(
+dollars_soi <- calc_soi(
   indicator_data = sub_menhaden_dollars,
   slope = coef(dollars_lm)[2]
 )
 
-par(mfrow = c(1, 2))
-
 scaled_data <- data.frame(
-  menhaden_b = scale(menhaden_b)[,1],
+  year = model_year,
   amo = scale(amo_unsmooth_lag1$raw_value)[,1],
   pcp = scale(pcp$raw_value)[,1],
-  bass_b = scale(bass_bio$bass_bio)[,1],
-  dollars = scale(sub_menhaden_dollars)[,1]
+  bassB = scale(bass_bio$bass_bio)[,1],
+  dollars = scale(sub_menhaden_dollars)[,1],
+  menhadenB = scale(menhaden_b)[,1]
 )
 
-plot(model_year, scaled_data$amo,
-     ylim = range(scaled_data),
-     type = "l", lty = 1,
-     xlab = "Year", ylab = "Scaled Indices")
-lines(model_year, scaled_data$pcp, lty = 2, col = 2)
-lines(model_year, scaled_data$bass_b, lty=3, col = 3)
-lines(model_year, scaled_data$dollars, lty = 4, col= 4)
-lines(model_year, scaled_data$menhaden_b, lty = 5, col= 5)
-legend("bottomright",
-       c(
-         "AMO",
-         "Precipitation",
-         "Striped bass biomass",
-         "Menhaden dollars",
-         "Menhaden-like species biomass"
-       ),
-       lty = 1:5,
-       col = 1:5,
-       bty = "n"
+scaled_data_melt <- reshape2::melt(
+  scaled_data,
+  id = "year"
 )
 
+ggplot(scaled_data_melt, aes(x = year, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Scaled Indices",
+    x = "Year",
+    y = "Scaled Indices"
+  ) +
+  theme_bw()
 
-plot(model_year, amo_IS,
-     type = "l", lty = 1,
-     xlab = "Year", ylab = "Status of Indicators"
+soi_data <- data.frame(
+  year = model_year,
+  amo = amo_soi,
+  pcp = pcp_soi,
+  bass_b = bassB_soi,
+  dollars = dollars_soi
 )
-lines(model_year, pcp_IS, lty = 2, col = 2)
-lines(model_year, bassB_IS, lty=3, col = 3)
-lines(model_year, dollars_IS, lty = 4, col= 4)
-legend("bottomright",
-       c(
-         "AMO",
-         "Precipitation",
-         "Striped bass biomass",
-         "Menhaden dollars"
-       ),
-       lty = 1:4,
-       col = 1:4,
-       bty = "n"
+
+soi_data_melt <- reshape2::melt(
+  soi_data,
+  id = "year"
 )
+
+ggplot(soi_data_melt, aes(x = year, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Status of Indicators",
+    x = "Year",
+    y = "Status of Indicators"
+  ) +
+  theme_bw()
+
 ```
 
 ## Adjusted TAC in 2013 from cases 1 - 4
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# Adjust TAC based on estimated TAC, IS, and Bt/BMSY values
-adjust_tac <- function(tac, IS, Bt_BMSY) {
-  tac_lower <- min(tac)
-  tac_upper <- max(tac)
-  adjust_tac <- c()
-
-  for (i in 1:length(tac)) {
-    if (Bt_BMSY[i] > 1) adjust_tac[i] <- tac_lower + IS * (tac_upper - tac_lower)
-    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_tac[i] <- IS * Bt_BMSY[i] * tac[i]
-    if (Bt_BMSY[i] <= 0.5) adjust_tac[i] <- 0
-  }
-
-  return(adjust_tac)
-}
-
-
+# Adjust TAC based on estimated TAC, soi, and Bt/BMSY values -------
 
 Bt_BMSY <- projection_output[[1]]$Bt_Kstore / projection_output[[1]]$BMSY_K_Mstore
 
-amo_tac <- adjust_tac(
+amo_tac <- adjust_projection_dbsra(
   tac = projection_output[[1]]$TAC,
-  IS = tail(amo_IS, n = 1),
+  soi = tail(amo_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
-pcp_tac <- adjust_tac(
+pcp_tac <- adjust_projection_dbsra(
   tac = projection_output[[1]]$TAC,
-  IS = tail(pcp_IS, n = 1),
+  soi = tail(pcp_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
-bassB_tac <- adjust_tac(
+bassB_tac <- adjust_projection_dbsra(
   tac = projection_output[[1]]$TAC,
-  IS = tail(bassB_IS, n = 1),
+  soi = tail(bassB_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
-dollars_tac <- adjust_tac(
+dollars_tac <- adjust_projection_dbsra(
   tac = projection_output[[1]]$TAC,
-  IS = tail(dollars_IS, n = 1),
+  soi = tail(dollars_soi, n = 1),
   Bt_BMSY = Bt_BMSY
 )
 
-ylim <- range(projection_output[[1]]$TAC,
-              bassB_tac, amo_tac,
-              pcp_tac, dollars_tac)
-plot(projection_output[[1]]$TAC,
-  type = "l", lty = 1,
-  ylim = ylim,
-  xlab = "Iterations", ylab = "TAC"
+
+tac_data <- data.frame(
+  iter = 1:length(amo_tac),
+  DBSRA = projection_output[[1]]$TAC,
+  amo = amo_tac,
+  pcp = pcp_tac,
+  bassB = bassB_tac,
+  dollars = dollars_tac
 )
 
-lines(amo_tac, lty = 2, col = 2)
-lines(pcp_tac, lty = 3, col = 3)
-lines(bassB_tac, lty = 4, col = 4)
-lines(dollars_tac, lty = 5, col = 5)
-
-legend("topleft",
-  c("DB-SRA TAC",
-    "Adjusted TAC 1",
-    "Adjusted TAC 2",
-    "Adjusted TAC 3",
-    "Adjusted TAC 4"),
-  lty = 1:5,
-  col = 1:5,
-  bty = "n"
+tac_data_melt <- reshape2::melt(
+  tac_data,
+  id = "iter"
 )
 
+ggplot(tac_data_melt, aes(x = iter, y = value, color = variable)) +
+  geom_line() +
+  facet_wrap(~variable) +
+  labs(
+    title = "2013 TAC",
+    x = "Iteration",
+    y = "2013 TAC"
+  ) +
+  theme_bw()
 
-boxplot(projection_output[[1]]$TAC,
-        bassB_tac,
-        amo_tac,
-        pcp_tac,
-        dollars_tac,
-
-  names = c("DB-SRA TAC",
-            "TAC 1",
-            "TAC 2",
-            "TAC 3",
-            "TAC 4"
-            ),
-  ylab = "TAC"
-)
-
-
-
+ggplot(tac_data_melt, aes(x=variable, y = value, fill = variable)) +
+  geom_boxplot()+
+  labs(
+    title = "2013 TAC",
+    x = "",
+    y = "2013 TAC"
+  ) +
+  theme_bw()
 
 ```
