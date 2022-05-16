@@ -268,109 +268,215 @@ legend("topright",
   - Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values
   - The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
   
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# Projection: case 1 - include an index ---------------------------
-menhaden_b <- ss_case02$timeseries[, "mu", "B"]
-year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:length(model_year)]
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
-par(mfrow = c(2, 2))
+for (projection_year_id in 1:length(projection_year)){
+  
+  if (projection_year_id ==1) {
+    menhaden_b <- ss_case02$timeseries[, "mu", "B"]
+  } else {
+    menhaden_b <- c(ss_case02$timeseries[, "mu", "B"], apply(as.matrix(ss_case02$posteriors$prBtoBmsy[, 1:(projection_year_id-1), 1]) * ss_case02$posteriors$SBmsy[,1], 2, median))
+  }
+    
+  
+  year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
+  
+  if (projection_year_id == 1) {
+    index_year = model_year
+  } else {
+    index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
+  }
+  
+  
+  # Linear regression model -----------------------------------------
+  
+  amo <- amo_unsmooth_lag1[year_id, ]
+  amo_lm <- lm(menhaden_b ~ amo$raw_value)
+  summary(amo_lm)
+  amo_fit <- fitted(amo_lm)
+  
+  pcp <- precipitation[year_id, ]
+  pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
+  summary(pcp_lm)
+  pcp_fit <- fitted(pcp_lm)
+  
+  bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+  bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
+  summary(bassB_lm)
+  bassB_fit <- fitted(bassB_lm)
+  
+  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
+  sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
+  dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
+  summary(dollars_lm)
+  dollars_fit <- fitted(dollars_lm)
+  
+  if (projection_year_id == length(projection_year)){
+    
+    par(mfrow = c(2, 2))
+    
+    plot(amo$raw_value, menhaden_b,
+         xlab = "AMO raw values",
+         ylab = "Biomass of menhaden-like species"
+    )
+    lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
 
-amo_unsmooth_lag1 <- amo_unsmooth_lag1[year_id, ]
-amo_lm <- lm(menhaden_b ~ amo_unsmooth_lag1$raw_value)
-summary(amo_lm)
-amo_fit <- fitted(amo_lm)
+    plot(pcp$raw_value, menhaden_b,
+         xlab = "Precipitation raw values",
+         ylab = "Biomass of menhaden-like species"
+    )
+   lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
 
-plot(amo_unsmooth_lag1$raw_value, menhaden_b,
-     xlab = "AMO raw values",
-     ylab = "Biomass of menhaden-like species"
-)
-lines(amo_unsmooth_lag1$raw_value, amo_fit, lty = 2, col = "blue")
+    plot(bassB$bass_bio, menhaden_b,
+         xlab = "Biomass of Striped bass",
+         ylab = "Biomass of menhaden-like species"
+    )
+    lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
 
-pcp <- precipitation[year_id, ]
-pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
-summary(pcp_lm)
-pcp_fit <- fitted(pcp_lm)
+    plot(sub_menhadenD, sub_menhaden_b,
+         xlab = "Menhaden dollars",
+         ylab = "Biomass of menhaden-like species"
+    )
+    lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
 
-plot(pcp$raw_value, menhaden_b,
-     xlab = "Precipitation raw values",
-     ylab = "Biomass of menhaden-like species"
-)
-lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+  }
+  
+  # status of indicators --------------------------------------------
+  
+  amo_soi <- calc_soi(
+    indicator_data = amo$raw_value,
+    slope = coef(amo_lm)[2]
+  )
+  
+  pcp_soi <- calc_soi(
+    indicator_data = pcp$raw_value,
+    slope = coef(pcp_lm)[2]
+  )
+  
+  bassB_soi <- calc_soi(
+    indicator_data = bassB$bass_bio,
+    slope = coef(bassB_lm)[2]
+  )
+  
+  dollars_soi <- calc_soi(
+    indicator_data = sub_menhadenD,
+    slope = coef(dollars_lm)[2]
+  )
+  
+  if (projection_year_id == 1) {
+    scaled_data <- data.frame(
+      year = model_year,
+      projection_year_id = projection_year_id,
+      amo = scale(amo$raw_value)[,1],
+      pcp = scale(pcp$raw_value)[,1],
+      bassB = scale(bassB$bass_bio)[,1],
+      dollars = scale(sub_menhadenD)[,1],
+      menhadenB = scale(menhaden_b)[,1]
+    )
+    
+    soi_data <- data.frame(
+      year = model_year,
+      projection_year_id = projection_year_id,
+      amo = amo_soi,
+      pcp = pcp_soi,
+      bass_b = bassB_soi,
+      dollars = dollars_soi
+    )
+  } else{
+    scaled_data <- rbind(
+      scaled_data,
+      data.frame(
+        year = index_year,
+        projection_year_id = projection_year_id,
+        amo = scale(amo$raw_value)[,1],
+        pcp = scale(pcp$raw_value)[,1],
+        bassB = scale(bassB$bass_bio)[,1],
+        dollars = scale(sub_menhadenD)[,1],
+        menhadenB = scale(menhaden_b)[,1]
+      )
+    )
+    
+    soi_data <- rbind(
+      soi_data,
+      data.frame(
+        year = index_year,
+        projection_year_id = projection_year_id,
+        amo = amo_soi,
+        pcp = pcp_soi,
+        bass_b = bassB_soi,
+        dollars = dollars_soi
+      )
+    )
+  }
+  
+  
+  
+  # Adjusted FMSY ----------------------------------------------------
+  
+  if (projection_year_id == 1) {
+    Bt_BMSY <- ss_case02$posteriors$BtoBmsy[, length(model_year)]
+  } else {
+    Bt_BMSY <- ss_case02$posteriors$prBtoBmsy[, (projection_year_id-1), 1] 
+  }
+  
+  amo_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case02$refpts_posterior$Fmsy,
+    soi = tail(amo_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+  pcp_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case02$refpts_posterior$Fmsy,
+    soi = tail(pcp_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+  bassB_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case02$refpts_posterior$Fmsy,
+    soi = tail(bassB_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+  dollars_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case02$refpts_posterior$Fmsy,
+    soi = tail(dollars_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+  
+  if (projection_year_id == 1){
+    fmsy_data <- data.frame(
+      iter = 1:length(amo_fmsy),
+      projection_year_id = projection_year_id,
+      JABBA = ss_case02$refpts_posterior$Fmsy,
+      amo = amo_fmsy,
+      pcp = pcp_fmsy,
+      bassB = bassB_fmsy,
+      dollars = dollars_fmsy
+    )
+  } else {
+    fmsy_data <- rbind(
+      fmsy_data,
+      data.frame(
+        iter = 1:length(amo_fmsy),
+        projection_year_id = projection_year_id,
+        JABBA = ss_case02$refpts_posterior$Fmsy,
+        amo = amo_fmsy,
+        pcp = pcp_fmsy,
+        bassB = bassB_fmsy,
+        dollars = dollars_fmsy
+      )
+    )
+  }
+  
+}
 
-bass_bio <- bass_bio[bass_bio$Year %in% model_year, ]
-bassB_lm <- lm(menhaden_b ~ bass_bio$bass_bio)
-summary(bassB_lm)
-bassB_fit <- fitted(bassB_lm)
 
-plot(bass_bio$bass_bio, menhaden_b,
-     xlab = "Biomass of Striped bass",
-     ylab = "Biomass of menhaden-like species"
-)
-lines(bass_bio$bass_bio, bassB_fit, lty = 2, col = "blue")
-# bassB_rlm <- MASS::rlm(menhaden_b ~ bass_b)
-# summary(MASS::rlm(menhaden_b ~ bass_b, resid = bassB_rlm$residuals, weight = bassB_rlm$weights))
-
-# sub_menhaden_b <- menhaden_b[model_year %in% atlantic_menhaden_dollars$Year]
-# sub_atlantic_menhaden_dollars <- atlantic_menhaden_dollars$Dollars[atlantic_menhaden_dollars$Year %in% model_year]
-# dollars_lm <- lm(sub_menhaden_b ~ sub_atlantic_menhaden_dollars)
-# summary(dollars_lm)
-# dollars_fit <- fitted(dollars_lm)
-#
-# plot(sub_atlantic_menhaden_dollars, sub_menhaden_b,
-#      xlab = "Atlantic menhaden dollars",
-#      ylab = "Biomass of menhaden-like species"
-# )
-# lines(sub_atlantic_menhaden_dollars, dollars_fit, lty = 2, col = "blue")
-
-sub_menhaden_b <- menhaden_b[model_year %in% menhaden_dollars$Year]
-sub_menhaden_dollars <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% model_year]
-dollars_lm <- lm(sub_menhaden_b ~ sub_menhaden_dollars)
-summary(dollars_lm)
-dollars_fit <- fitted(dollars_lm)
-
-plot(sub_menhaden_dollars, sub_menhaden_b,
-     xlab = "Menhaden dollars",
-     ylab = "Biomass of menhaden-like species"
-)
-lines(sub_menhaden_dollars, dollars_fit, lty = 2, col = "blue")
-
-# status of indicators --------------------------------------------
-
-amo_soi <- calc_soi(
-  indicator_data = amo_unsmooth_lag1$raw_value,
-  slope = coef(amo_lm)[2]
-)
-
-pcp_soi <- calc_soi(
-  indicator_data = pcp$raw_value,
-  slope = coef(pcp_lm)[2]
-)
-
-bassB_soi <- calc_soi(
-  indicator_data = bass_bio$bass_bio,
-  slope = coef(bassB_lm)[2]
-)
-
-dollars_soi <- calc_soi(
-  indicator_data = sub_menhaden_dollars,
-  slope = coef(dollars_lm)[2]
-)
-
-scaled_data <- data.frame(
-  year = model_year,
-  amo = scale(amo_unsmooth_lag1$raw_value)[,1],
-  pcp = scale(pcp$raw_value)[,1],
-  bassB = scale(bass_bio$bass_bio)[,1],
-  dollars = scale(sub_menhaden_dollars)[,1],
-  menhadenB = scale(menhaden_b)[,1]
-)
 
 scaled_data_melt <- reshape2::melt(
   scaled_data,
-  id = "year"
+  id = c("year", "projection_year_id")
 )
+scaled_data_melt$projection_year_id <- as.factor(scaled_data_melt$projection_year_id)
 
-ggplot(scaled_data_melt, aes(x = year, y = value, color = variable)) +
+
+ggplot(scaled_data_melt, aes(x = year, y = value, color = projection_year_id)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
@@ -380,20 +486,14 @@ ggplot(scaled_data_melt, aes(x = year, y = value, color = variable)) +
   ) +
   theme_bw()
 
-soi_data <- data.frame(
-  year = model_year,
-  amo = amo_soi,
-  pcp = pcp_soi,
-  bass_b = bassB_soi,
-  dollars = dollars_soi
-)
 
 soi_data_melt <- reshape2::melt(
   soi_data,
-  id = "year"
+  id = c("year", "projection_year_id")
 )
+soi_data_melt$projection_year_id <- as.factor(soi_data_melt$projection_year_id)
 
-ggplot(soi_data_melt, aes(x = year, y = value, color = variable)) +
+ggplot(soi_data_melt, aes(x = year, y = value, color = projection_year_id)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
@@ -403,51 +503,13 @@ ggplot(soi_data_melt, aes(x = year, y = value, color = variable)) +
   ) +
   theme_bw()
 
-```
-
-## Adjusted FMSY for cases 1 - 4
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# Adjust FMSY based on estimated FMSY, soi, and Bt/BMSY values -------
-
-# 2012 Bt_BMSY
-Bt_BMSY <- ss_case02$posteriors$BtoBmsy[, length(model_year)]
-
-amo_fmsy <- adjust_projection_jabba(
-  FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(amo_soi, n = 1),
-  Bt_BMSY = Bt_BMSY
-)
-pcp_fmsy <- adjust_projection_jabba(
-  FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(pcp_soi, n = 1),
-  Bt_BMSY = Bt_BMSY
-)
-bassB_fmsy <- adjust_projection_jabba(
-  FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(bassB_soi, n = 1),
-  Bt_BMSY = Bt_BMSY
-)
-dollars_fmsy <- adjust_projection_jabba(
-  FMSY = ss_case02$refpts_posterior$Fmsy,
-  soi = tail(dollars_soi, n = 1),
-  Bt_BMSY = Bt_BMSY
-)
-
-fmsy_data <- data.frame(
-  iter = 1:length(amo_fmsy),
-  JABBA = ss_case02$refpts_posterior$Fmsy,
-  amo = amo_fmsy,
-  pcp = pcp_fmsy,
-  bassB = bassB_fmsy,
-  dollars = dollars_fmsy
-)
-
 fmsy_data_melt <- reshape2::melt(
   fmsy_data,
-  id = "iter"
+  id = c("iter", "projection_year_id")
 )
+fmsy_data_melt$projection_year_id <- as.factor(fmsy_data_melt$projection_year_id)
 
-ggplot(fmsy_data_melt, aes(x = iter, y = value, color = variable)) +
+ggplot(fmsy_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
   geom_line() +
   facet_wrap(~variable) +
   labs(
@@ -457,7 +519,7 @@ ggplot(fmsy_data_melt, aes(x = iter, y = value, color = variable)) +
   ) +
   theme_bw()
 
-ggplot(fmsy_data_melt, aes(x=variable, y = value, fill = variable)) +
+ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
   geom_boxplot()+
   labs(
     title = "FMSY",
@@ -465,6 +527,4 @@ ggplot(fmsy_data_melt, aes(x=variable, y = value, fill = variable)) +
     y = "FMSY"
   ) +
   theme_bw()
-
-
 ```
