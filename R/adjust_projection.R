@@ -18,3 +18,24 @@ adjust_projection_dbsra <- function(tac, soi, Bt_BMSY) {
 
   return(adjust_tac)
 }
+
+#' Adjust FMSY based on JABBA outputs
+#'
+#' @param FMSY A vector of FMSY estimates from JABBA outputs.
+#' @param soi Status of indicator over time.
+#' @param Bt_BMSY Biomass over BMSY estimates from JABBA outputs.
+#' @return Adjusted projection values (i.e., FMSY).
+#' @export
+adjust_projection_jabba <- function(FMSY, soi, Bt_BMSY) {
+  FMSY_lower <- min(FMSY)
+  FMSY_upper <- max(FMSY)
+  adjust_FMSY <- c()
+
+  for (i in 1:length(FMSY)) {
+    if (Bt_BMSY[i] > 1) adjust_FMSY[i] <- FMSY_lower + soi * (FMSY_upper - FMSY_lower)
+    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_FMSY[i] <- soi * Bt_BMSY[i] * FMSY[i]
+    if (Bt_BMSY[i] <= 0.5) adjust_FMSY[i] <- 0
+  }
+
+  return(adjust_FMSY)
+}
