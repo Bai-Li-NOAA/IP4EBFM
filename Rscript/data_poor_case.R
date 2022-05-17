@@ -110,6 +110,8 @@ fmsy_m <- fmsy / sa_data$biodata$natural_mortality_matrix[1, ]
 
 ss_case0@FMSY_M <- mean(fmsy_m) # 0.92
 
+#ss_case0@Mort <- 0.67 #sa_data$biodata$natural_mortality_matrix[1, ]/(1-exp(-ss_case0@vbK*(1:7-ss_case0@vbt0)))^(-3*0.305)
+
 # BMSY relative to unfished
 # Dick and MacCall (2011): use 0.4 if target biomass is 40% of unfished biomass
 ss_case0@BMSY_B0 <- 0.3 # BAM FEC30% target
@@ -378,7 +380,6 @@ ss_case03@Cat <- matrix(c(equi_catch, sa_data$fishery$obs_total_catch_biomass$fl
 
 ss_case03@Year <- (model_year[1] - length(equi_year)):tail(model_year, n=1)
 ss_case03@Dep <- tail(ss_case03@Cat[1, ], n = 1) / ss_case03@Cat[1, 1] # 0.91
-ss_case03@BMSY_B0 <- 0.3
 
 dbsra <- DLMtool::DBSRA(1, ss_case03, plot = TRUE)
 
@@ -641,6 +642,15 @@ legend("bottomright",
 
 # Projection based on case 0.1 ------------------------------------
 
+lm_slope <- data.frame(
+  case = 0.1,
+  projection_year = 1:length(projection_year),
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  dollars = NA
+)
+
 for (projection_year_id in 1:length(projection_year)){
   projection_output <- projection_output1
   menhaden_b <- apply(projection_output[[projection_year_id]]$Btrend, 2, median)
@@ -659,22 +669,34 @@ for (projection_year_id in 1:length(projection_year)){
   amo_lm <- lm(menhaden_b ~ amo$raw_value)
   summary(amo_lm)
   amo_fit <- fitted(amo_lm)
+  lm_slope$amo[projection_year_id] <- paste0(
+    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   pcp <- precipitation[year_id, ]
   pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
   summary(pcp_lm)
   pcp_fit <- fitted(pcp_lm)
+  lm_slope$pcp[projection_year_id] <- paste0(
+    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   bassB <- bass_bio[bass_bio$Year %in% index_year, ]
   bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
   summary(bassB_lm)
   bassB_fit <- fitted(bassB_lm)
+  lm_slope$bassB[projection_year_id] <- paste0(
+    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
   sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
   dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
   summary(dollars_lm)
   dollars_fit <- fitted(dollars_lm)
+  lm_slope$dollars[projection_year_id] <- paste0(
+    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
+    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   if (projection_year_id == length(projection_year)){
 
@@ -828,8 +850,6 @@ for (projection_year_id in 1:length(projection_year)){
   }
 }
 
-
-
 scaled_data_melt <- reshape2::melt(
   scaled_data,
   id = c("year", "projection_year_id")
@@ -889,8 +909,18 @@ ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
   ) +
   theme_bw()
 
+knitr::kable(lm_slope)
 
 # Projection based on case 0.4 ------------------------------------
+
+lm_slope <- data.frame(
+  case = 0.4,
+  projection_year = 1:length(projection_year),
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  dollars = NA
+)
 
 for (projection_year_id in 1:length(projection_year)){
   projection_output <- projection_output4
@@ -910,22 +940,35 @@ for (projection_year_id in 1:length(projection_year)){
   amo_lm <- lm(menhaden_b ~ amo$raw_value)
   summary(amo_lm)
   amo_fit <- fitted(amo_lm)
+  lm_slope$amo[projection_year_id] <- paste0(
+    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   pcp <- precipitation[year_id, ]
   pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
   summary(pcp_lm)
   pcp_fit <- fitted(pcp_lm)
+  lm_slope$pcp[projection_year_id] <- paste0(
+    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   bassB <- bass_bio[bass_bio$Year %in% index_year, ]
   bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
   summary(bassB_lm)
   bassB_fit <- fitted(bassB_lm)
+  lm_slope$bassB[projection_year_id] <- paste0(
+    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
   sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
   dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
   summary(dollars_lm)
   dollars_fit <- fitted(dollars_lm)
+  lm_slope$dollars[projection_year_id] <- paste0(
+    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
+    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
 
 
   if (projection_year_id == length(projection_year)){
@@ -1079,8 +1122,6 @@ for (projection_year_id in 1:length(projection_year)){
   }
 }
 
-
-
 scaled_data_melt <- reshape2::melt(
   scaled_data,
   id = c("year", "projection_year_id")
@@ -1139,3 +1180,5 @@ ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
     y = "TAC"
   ) +
   theme_bw()
+
+knitr::kable(lm_slope)
