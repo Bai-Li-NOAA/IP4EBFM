@@ -238,6 +238,15 @@ legend("topright",
 
 # Projection: cases 1 - 4 ---------------------------
 
+lm_slope <- data.frame(
+  case = 0.2,
+  projection_year = 1:length(projection_year),
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  dollars = NA
+)
+
 for (projection_year_id in 1:length(projection_year)){
 
   if (projection_year_id ==1) {
@@ -262,22 +271,34 @@ for (projection_year_id in 1:length(projection_year)){
   amo_lm <- lm(menhaden_b ~ amo$raw_value)
   summary(amo_lm)
   amo_fit <- fitted(amo_lm)
+  lm_slope$amo[projection_year_id] <- paste0(
+    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   pcp <- precipitation[year_id, ]
   pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
   summary(pcp_lm)
   pcp_fit <- fitted(pcp_lm)
+  lm_slope$pcp[projection_year_id] <- paste0(
+    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   bassB <- bass_bio[bass_bio$Year %in% index_year, ]
   bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
   summary(bassB_lm)
   bassB_fit <- fitted(bassB_lm)
+  lm_slope$bassB[projection_year_id] <- paste0(
+    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
   sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
   dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
   summary(dollars_lm)
   dollars_fit <- fitted(dollars_lm)
+  lm_slope$dollars[projection_year_id] <- paste0(
+    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
+    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   if (projection_year_id == length(projection_year)){
 
@@ -496,3 +517,5 @@ ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
     y = "FMSY"
   ) +
   theme_bw()
+
+knitr::kable(lm_slope)

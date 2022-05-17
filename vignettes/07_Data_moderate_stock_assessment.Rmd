@@ -270,51 +270,74 @@ legend("topright",
   
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
+# Projection: cases 1 - 4 ---------------------------
+
+lm_slope <- data.frame(
+  case = 0.2,
+  projection_year = 1:length(projection_year),
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  dollars = NA
+)
+
 for (projection_year_id in 1:length(projection_year)){
-  
+
   if (projection_year_id ==1) {
     menhaden_b <- ss_case02$timeseries[, "mu", "B"]
   } else {
     menhaden_b <- c(ss_case02$timeseries[, "mu", "B"], apply(as.matrix(ss_case02$posteriors$prBtoBmsy[, 1:(projection_year_id-1), 1]) * ss_case02$posteriors$SBmsy[,1], 2, median))
   }
-    
-  
+
+
   year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
-  
+
   if (projection_year_id == 1) {
     index_year = model_year
   } else {
     index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
   }
-  
-  
+
+
   # Linear regression model -----------------------------------------
-  
+
   amo <- amo_unsmooth_lag1[year_id, ]
   amo_lm <- lm(menhaden_b ~ amo$raw_value)
   summary(amo_lm)
   amo_fit <- fitted(amo_lm)
-  
+  lm_slope$amo[projection_year_id] <- paste0(
+    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
   pcp <- precipitation[year_id, ]
   pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
   summary(pcp_lm)
   pcp_fit <- fitted(pcp_lm)
-  
+  lm_slope$pcp[projection_year_id] <- paste0(
+    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
   bassB <- bass_bio[bass_bio$Year %in% index_year, ]
   bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
   summary(bassB_lm)
   bassB_fit <- fitted(bassB_lm)
-  
+  lm_slope$bassB[projection_year_id] <- paste0(
+    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
   sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
   sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
   dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
   summary(dollars_lm)
   dollars_fit <- fitted(dollars_lm)
-  
+  lm_slope$dollars[projection_year_id] <- paste0(
+    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
+    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
   if (projection_year_id == length(projection_year)){
-    
+
     par(mfrow = c(2, 2))
-    
+
     plot(amo$raw_value, menhaden_b,
          xlab = "AMO raw values",
          ylab = "Biomass of menhaden-like species"
@@ -325,7 +348,7 @@ for (projection_year_id in 1:length(projection_year)){
          xlab = "Precipitation raw values",
          ylab = "Biomass of menhaden-like species"
     )
-   lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+    lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
 
     plot(bassB$bass_bio, menhaden_b,
          xlab = "Biomass of Striped bass",
@@ -340,29 +363,30 @@ for (projection_year_id in 1:length(projection_year)){
     lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
 
   }
-  
+
+
   # status of indicators --------------------------------------------
-  
+
   amo_soi <- calc_soi(
     indicator_data = amo$raw_value,
     slope = coef(amo_lm)[2]
   )
-  
+
   pcp_soi <- calc_soi(
     indicator_data = pcp$raw_value,
     slope = coef(pcp_lm)[2]
   )
-  
+
   bassB_soi <- calc_soi(
     indicator_data = bassB$bass_bio,
     slope = coef(bassB_lm)[2]
   )
-  
+
   dollars_soi <- calc_soi(
     indicator_data = sub_menhadenD,
     slope = coef(dollars_lm)[2]
   )
-  
+
   if (projection_year_id == 1) {
     scaled_data <- data.frame(
       year = model_year,
@@ -373,7 +397,7 @@ for (projection_year_id in 1:length(projection_year)){
       dollars = scale(sub_menhadenD)[,1],
       menhadenB = scale(menhaden_b)[,1]
     )
-    
+
     soi_data <- data.frame(
       year = model_year,
       projection_year_id = projection_year_id,
@@ -395,7 +419,7 @@ for (projection_year_id in 1:length(projection_year)){
         menhadenB = scale(menhaden_b)[,1]
       )
     )
-    
+
     soi_data <- rbind(
       soi_data,
       data.frame(
@@ -408,17 +432,17 @@ for (projection_year_id in 1:length(projection_year)){
       )
     )
   }
-  
-  
-  
+
+
+
   # Adjusted FMSY ----------------------------------------------------
-  
+
   if (projection_year_id == 1) {
     Bt_BMSY <- ss_case02$posteriors$BtoBmsy[, length(model_year)]
   } else {
-    Bt_BMSY <- ss_case02$posteriors$prBtoBmsy[, (projection_year_id-1), 1] 
+    Bt_BMSY <- ss_case02$posteriors$prBtoBmsy[, (projection_year_id-1), 1]
   }
-  
+
   amo_fmsy <- adjust_projection_jabba(
     FMSY = ss_case02$refpts_posterior$Fmsy,
     soi = tail(amo_soi, n = 1),
@@ -439,7 +463,7 @@ for (projection_year_id in 1:length(projection_year)){
     soi = tail(dollars_soi, n = 1),
     Bt_BMSY = Bt_BMSY
   )
-  
+
   if (projection_year_id == 1){
     fmsy_data <- data.frame(
       iter = 1:length(amo_fmsy),
@@ -464,7 +488,7 @@ for (projection_year_id in 1:length(projection_year)){
       )
     )
   }
-  
+
 }
 
 
@@ -527,4 +551,11 @@ ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
     y = "FMSY"
   ) +
   theme_bw()
+
+```
+
+- Slope values from linear regression models
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+knitr::kable(lm_slope)
 ```
