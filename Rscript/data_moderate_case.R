@@ -239,6 +239,73 @@ legend("topright",
 # Projection: cases 1 - 4 ---------------------------
 
 lm_slope <- data.frame(
+  case = "True indices",
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  dollars = NA
+)
+
+year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
+index_year <- c(model_year, projection_year)
+
+amo <- amo_unsmooth_lag1[year_id, ]
+amo_lm <- lm(biomass_ewe[time_id] ~ amo$raw_value)
+amo_fit <- fitted(amo_lm)
+lm_slope$amo <- paste0(
+  round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+  if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+pcp <- precipitation[year_id, ]
+pcp_lm <- lm(biomass_ewe[time_id] ~ pcp$raw_value)
+pcp_fit <- fitted(pcp_lm)
+lm_slope$pcp <- paste0(
+  round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+  if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+bassB_lm <- lm(biomass_ewe[time_id] ~ bassB$bass_bio)
+bassB_fit <- fitted(bassB_lm)
+lm_slope$bassB <- paste0(
+  round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+  if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
+dollars_lm <- lm(biomass_ewe[time_id] ~ sub_menhadenD)
+dollars_fit <- fitted(dollars_lm)
+lm_slope$dollars <- paste0(
+  round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
+  if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+par(mfrow = c(2, 2))
+
+plot(amo$raw_value, biomass_ewe[time_id],
+     xlab = "AMO raw values",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
+
+plot(pcp$raw_value, biomass_ewe[time_id],
+     xlab = "Precipitation raw values",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+
+plot(bassB$bass_bio, biomass_ewe[time_id],
+     xlab = "Biomass of Striped bass",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
+
+plot(sub_menhadenD, biomass_ewe[time_id],
+     xlab = "Menhaden dollars",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
+
+knitr::kable(lm_slope)
+
+lm_slope <- data.frame(
   case = 0.2,
   projection_year = 1:length(projection_year),
   amo = NA,
