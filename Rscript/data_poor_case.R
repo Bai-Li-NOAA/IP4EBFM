@@ -840,7 +840,7 @@ for (projection_year_id in 1:length(projection_year)){
       data.frame(
         iter = 1:length(amo_tac),
         projection_year_id = projection_year_id,
-        DBSRA = projection_output[[1]]$TAC,
+        DBSRA = projection_output[[projection_year_id]]$TAC,
         amo = amo_tac,
         pcp = pcp_tac,
         bassB = bassB_tac,
@@ -1112,7 +1112,7 @@ for (projection_year_id in 1:length(projection_year)){
       data.frame(
         iter = 1:length(amo_tac),
         projection_year_id = projection_year_id,
-        DBSRA = projection_output[[1]]$TAC,
+        DBSRA = projection_output[[projection_year_id]]$TAC,
         amo = amo_tac,
         pcp = pcp_tac,
         bassB = bassB_tac,
