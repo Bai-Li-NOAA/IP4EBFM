@@ -1,5 +1,5 @@
 # Data-rich case --------------------------------------------------
-## Using Stock Synthesis 3
+## Using Stock Synthesis 3 v3.30.19.01
 ## Website: https://github.com/nmfs-stock-synthesis/stock-synthesis
 
 # Install required R packages -------------------------------------
@@ -35,7 +35,7 @@ source(here::here("Rscript", "simulation.R"))
 file_path <- here::here("data", "data_rich")
 
 depletion <- FALSE
-depletion_ratio <- 0.5 # tried values between 0.3 - 0.8
+depletion_ratio <- 0.8 # tried values between 0.3 - 0.8
 
 model_year <- 1985:2012
 projection_year <- 2013:2017
@@ -59,6 +59,7 @@ ss3_data$Nfleet <- length(sa_data$fishery$obs_total_catch_biomass)
 fleet_name <- names(sa_data$fishery$obs_total_catch_biomass)
 
 survey_id <- 1:2
+# survey_id <- 1:4
 ss3_data$Nsurveys <- length(survey_id)
 #ss3_data$Nsurveys <- length(sa_data$survey$obs_abundance_index) # all 4 surveys
 
@@ -119,7 +120,15 @@ ss3_data$CPUEinfo <- data.frame(
   Errtype = 0,
   SD_Report = 0
 )
-row.names(ss3_data$CPUEinfo) <- ss3_data$fleetnames
+
+if (any(survey_id %in% 4)) {
+  ss3_data$CPUEinfo <- data.frame(
+    Fleet = 1:ss3_data$Nfleets,
+    Units = c(1, rep(0, ss3_data$Nsurveys-1), 33),
+    Errtype = 0,
+    SD_Report = 0
+  )
+}
 
 if (depletion) {
   ss3_data$CPUEinfo <- data.frame(
@@ -128,8 +137,8 @@ if (depletion) {
     Errtype = 0,
     SD_Report = 0
   )
-  row.names(ss3_data$CPUEinfo) <- ss3_data$fleetnames
 }
+row.names(ss3_data$CPUEinfo) <- ss3_data$fleetnames
 
 cpue_data <- list()
 for (i in survey_id) {
@@ -352,11 +361,12 @@ naa_y1 <- (0.9 / (m_y1 + fmult_y1)) * ss3_data$catch$catch / (1 - exp(-m_y1 - fm
 if (naa_y1[1] %in% sort(naa_y1)[1:round(length(naa_y1)/5)]) naa_y1[1] <- 10*mean(naa_y1)
 
 ss3_ctl$SR_function <- 3 # 3: B-H
-ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- log(naa_y1[1])
-ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "INIT"] <- 0.99
+#ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- log(naa_y1[1])
+ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- 12
+ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "INIT"] <- 0.5
 ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PHASE"] <- -4
 ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PR_type"] <- 0
-ss3_ctl$SR_parms[grep("sigma", rownames(ss3_ctl$SR_parms)), "INIT"] <- 0.49
+ss3_ctl$SR_parms[grep("sigma", rownames(ss3_ctl$SR_parms)), "INIT"] <-  0.25 # recommended value from SS3
 ss3_ctl$SR_parms[grep("sigma", rownames(ss3_ctl$SR_parms)), "PHASE"] <- -2
 
 # Recruitment bias adjustment
@@ -441,14 +451,21 @@ ss3_ctl$size_selex_types <- data.frame(
 )
 row.names(ss3_ctl$size_selex_types) <- ss3_data$fleetnames
 
-
 ss3_ctl$age_selex_types <- data.frame(
   Pattern = c(19, 12, 19),
-  #Pattern = c(19, 12, 19, 19, 11),
   Discard = 0,
   Male = 0,
   Special = 0
 )
+
+if (length(survey_id) == 4){
+  ss3_ctl$age_selex_types <- data.frame(
+    Pattern = c(19, 12, 19, 19, 11),
+    Discard = 0,
+    Male = 0,
+    Special = 0
+  )
+}
 
 if (depletion) {
   ss3_ctl$age_selex_types <- data.frame(
@@ -480,7 +497,7 @@ ss3_ctl$age_selex_parms <- rbind(
   data.frame(
     Lo = c(0, 0),
     Hi = c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)),
-    INIT = c(3.0, 2.2),
+    INIT = c(3.0, 3.0),
     PRIOR = c(0, 0),
     SD = c(99, 99),
     PR_TYPE = 0,
@@ -499,31 +516,72 @@ ss3_ctl$age_selex_parms <- rbind(
     PHASE = 2,
     matrix(0, ncol = 7, nrow = 6)
   )
-
-  # # Survey 3
-  # data.frame(
-  #   Lo = rep(0, 6),
-  #   Hi = 10,
-  #   INIT = c(7.0, 0.3, 7.0, 2.0, 1, 0),
-  #   PRIOR = 0,
-  #   SD = 99,
-  #   PR_TYPE = 0,
-  #   PHASE = 2,
-  #   matrix(0, ncol = 7, nrow = 6)
-  # ),
-  #
-  # # Survey 4
-  # data.frame(
-  #   Lo = c(0, 0),
-  #   Hi = c(0, 0),
-  #   INIT = c(0, 0),
-  #   PRIOR = c(0, 0),
-  #   SD = c(99, 99),
-  #   PR_TYPE = 0,
-  #   PHASE = 0,
-  #   matrix(0, ncol = 7, nrow = 2)
-  # )
 )
+
+if (length(survey_id) == 4){
+  ss3_ctl$age_selex_parms <- rbind(
+    # Fleet 1
+    data.frame(
+      Lo = rep(0, 6),
+      Hi = max(ss3_data$agebin_vector),
+      INIT = c(2, 3, 3.5, 3, 1, 0.1),
+      PRIOR = 0,
+      SD = 99,
+      PR_TYPE = 0,
+      PHASE = 2,
+      matrix(0, ncol = 7, nrow = 6)
+    ),
+
+    # Survey 1
+    data.frame(
+      Lo = c(0, 0),
+      Hi = c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)),
+      INIT = c(3.0, 3.0),
+      PRIOR = c(0, 0),
+      SD = c(99, 99),
+      PR_TYPE = 0,
+      PHASE = 2,
+      matrix(0, ncol = 7, nrow = 2)
+    ),
+
+    # Survey 2
+    data.frame(
+      Lo = rep(0, 6),
+      Hi = max(ss3_data$agebin_vector),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
+      PRIOR = 0,
+      SD = 99,
+      PR_TYPE = 0,
+      PHASE = 2,
+      matrix(0, ncol = 7, nrow = 6)
+    ),
+
+     # Survey 3
+     data.frame(
+       Lo = rep(0, 6),
+       Hi = 10,
+       INIT = c(0.3, 7.0, 2.0, 7.0, 1, 0.1),
+       PRIOR = 0,
+       SD = 99,
+       PR_TYPE = 0,
+       PHASE = 2,
+       matrix(0, ncol = 7, nrow = 6)
+     ),
+
+     # Survey 4
+     data.frame(
+       Lo = c(1, 1),
+       Hi = c(1, 1),
+       INIT = c(1, 1),
+       PRIOR = c(0, 0),
+       SD = c(99, 99),
+       PR_TYPE = 0,
+       PHASE = 2,
+       matrix(0, ncol = 7, nrow = 2)
+     )
+  )
+}
+
 colnames(ss3_ctl$age_selex_parms) <- colname
 
 ss3_ctl$N_lambdas <- 1
@@ -593,7 +651,7 @@ ss3_forecast$ForeCatch <- data.frame(
   "Year" = projection_year,
   "Seas" = 1,
   "Fleet" =1,
-  "Catch or F" = 3.2
+  "Catch or F" = 0.8
 )
 
 r4ss::SS_writeforecast(ss3_forecast,
@@ -659,7 +717,7 @@ biomass <- read_ewe_output(
 time_id <- seq(1, nrow(biomass[[1]]), by = 12)
 biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum) * 1000000
 
-par(mfrow=c(1,2))
+par(mfrow=c(2,2))
 model_year_id <- which(ss3list$timeseries$Yr %in% model_year)
 projection_year_id <- which(ss3list$timeseries$Yr %in% projection_year)
 ylim <- range(biomass_ewe[time_id], ss3list$timeseries$Bio_all)
@@ -679,20 +737,75 @@ legend("bottomleft",
        pch=c(16, NA, NA),
        lty=c(NA, 1, 2))
 
-# Mortality
-mortality <- read_ewe_output(
+# Abundance
+waa <- read_ewe_output(
   file_path = here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp"),
-  file_names = "mortality_monthly.csv",
+  file_names = "weight_monthly.csv",
   skip_nrows = 8,
   plot = FALSE,
   figure_titles = NULL,
   functional_groups = functional_groups,
   figure_colors = NULL
 )
-mortality_ewe <- apply(mortality[[1]][, age_name], 1, max)
+
+abundance_ewe <- apply(biomass[[1]][, age_name]*1000000/waa[[1]][, age_name], 1, sum)[time_id]
+
+ylim = range(abundance_ewe, ss3list$timeseries$`SmryNum_SX:1_GP:1`*1000)
+plot(c(model_year, projection_year),
+     abundance_ewe,
+     xlab = "Year", ylab = "Abundance",
+     ylim = ylim,
+     pch = 16
+)
+
+lines(model_year, ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id]*1000)
+lines(projection_year,
+      ss3list$timeseries$`SmryNum_SX:1_GP:1`[projection_year_id]*1000,
+      lty=2)
+legend("topright",
+       c("EWE", "SS3 Estimation", "SS3 projection"),
+       bty="n",
+       pch=c(16, NA, NA),
+       lty=c(NA, 1, 2))
+
+# Recruitment
+waa <- read_ewe_output(
+  file_path = here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp"),
+  file_names = "weight_monthly.csv",
+  skip_nrows = 8,
+  plot = FALSE,
+  figure_titles = NULL,
+  functional_groups = functional_groups,
+  figure_colors = NULL
+)
+
+recruit_ewe <- biomass[[1]][, "AtlanticMenhaden0"][time_id]*1000000/waa[[1]][, "AtlanticMenhaden0"][time_id]
+
+ylim = range(recruit_ewe, ss3list$recruit$pred_recr*1000)
+plot(c(model_year, projection_year),
+     recruit_ewe,
+     xlab = "Year", ylab = "Recruitment",
+     ylim = ylim,
+     pch = 16
+)
+lines(model_year, ss3list$recruit$pred_recr[ss3list$recruit$Yr %in% model_year]*1000)
+lines(projection_year,
+      ss3list$recruit$pred_recr[ss3list$recruit$Yr %in% projection_year]*1000,
+      lty=2)
+legend("topright",
+       c("EWE", "SS3 Estimation", "SS3 projection"),
+       bty="n",
+       pch=c(16, NA, NA),
+       lty=c(NA, 1, 2))
+
+# Mortality
+mortality <- read.csv(file = here::here("data", "ewe", "7ages", "updated_faa.csv"))
+mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
+#mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, mean)
+
 ylim <- range(mortality_ewe, ss3list$timeseries$`F:_1`)
 plot(c(model_year, projection_year),
-     mortality_ewe[time_id],
+     mortality_ewe,
      xlab = "Year", ylab = "Mortality",
      ylim = ylim,
      pch = 16
@@ -702,7 +815,7 @@ lines(projection_year,
       ss3list$timeseries$`F:_1`[projection_year_id],
       lty=2)
 legend("topright",
-       c("EWE total moratlity", "SS3 F", "SS3 FMSY"),
+       c("EWE F", "SS3 F", "SS3 FMSY"),
        bty="n",
        pch=c(16, NA, NA),
        lty=c(NA, 1, 2))

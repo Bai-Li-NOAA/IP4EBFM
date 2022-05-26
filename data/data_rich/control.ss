@@ -84,11 +84,11 @@
 0 # 0/1 to use steepness in initial equ recruitment calculation
 0 # future feature: 0/1 to make realized sigmaR a function of SR curvature
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn # parm_name
-  3	31	13.6937	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
-0.2	 1	   0.99	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
-  0	 2	   0.49	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
- -5	 5	      0	   0	   1	0	 -4	0	0	0	0	0	0	0	#_SR_regime  
-  0	 0	      0	   0	   0	0	-99	0	0	0	0	0	0	0	#_SR_autocorr
+  3	31	  12	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
+0.2	 1	 0.5	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
+  0	 2	0.25	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
+ -5	 5	   0	   0	   1	0	 -4	0	0	0	0	0	0	0	#_SR_regime  
+  0	 0	   0	   0	   0	0	-99	0	0	0	0	0	0	0	#_SR_autocorr
 #_no timevary SR parameters
 1 #do_recdev:  0=none; 1=devvector (R=F(SSB)+dev); 2=deviations (R=F(SSB)+dev); 3=deviations (R=R0*dev; dev2=R-f(SSB)); 4=like 3 with sum(dev2) adding penalty
 1985 # first year of main recr_devs; early devs can preceed this era
@@ -156,7 +156,7 @@
 0	7	  1	0	99	0	2	0	0	0	0	0	0	0	#_5 
 0	7	0.1	0	99	0	2	0	0	0	0	0	0	0	#_6 
 0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_7 
-0	7	2.2	0	99	0	2	0	0	0	0	0	0	0	#_8 
+0	7	  3	0	99	0	2	0	0	0	0	0	0	0	#_8 
 0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_9 
 0	7	4.3	0	99	0	2	0	0	0	0	0	0	0	#_10
 0	7	2.3	0	99	0	2	0	0	0	0	0	0	0	#_11
