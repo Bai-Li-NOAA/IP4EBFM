@@ -3,9 +3,9 @@
 #' @param assessment_name name of the assessment
 #' @param output_dir A file path to a directory where the assessment output will be saved.
 #' @param sa_data Simulated stock assessment input data from Rscript/simulation.R.
-#' @model_year A vector of years for model fitting.
-#' @projection_year A vector of years for projection.
-#' @tacs A vector of total allowable catch values for projection.
+#' @param model_year A vector of years for model fitting.
+#' @param projection_year A vector of years for projection.
+#' @param tacs A vector of total allowable catch values for projection.
 #' @return A list of initial input values
 #' @examples
 #' \dontrun{

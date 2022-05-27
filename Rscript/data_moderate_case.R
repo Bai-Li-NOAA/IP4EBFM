@@ -210,7 +210,8 @@ mortality <- read_ewe_output(
 mortality_ewe <- apply(mortality[[1]][, age_name], 1, max)
 
 mortality <- read.csv(file = here::here("data", "ewe", "7ages", "updated_faa.csv"))
-mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
+#mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
+mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, mean)
 
 par(mfrow = c(1, 1), mar = c(4, 4, 1, 4))
 plot(c(model_year, projection_year),
@@ -219,6 +220,8 @@ plot(c(model_year, projection_year),
   xlab = "Year", ylab = "EwE Apical F",
   pch = 16
 )
+lines(model_year, ss_case01$timeseries[, "mu", "F"])
+lines(model_year, ss_case02$timeseries[, "mu", "F"], lty = 2, col = 2)
 par(new = TRUE)
 ylim <- range(ss_case01$timeseries[, "mu", "F"], ss_case02$timeseries[, "mu", "F"])
 plot(model_year, ss_case01$timeseries[, "mu", "F"],
