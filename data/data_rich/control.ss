@@ -130,8 +130,8 @@
 -9999	0	0	0	0	0	#_terminator
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
--10	10	-2.75428	0	0	0	1	0	0	0	0	0	0	0	#_1
--10	10	-3.10869	0	0	0	1	0	0	0	0	0	0	0	#_2
+-10	10	-3.43701	0	0	0	1	0	0	0	0	0	0	0	#_1
+-10	10	-2.61502	0	0	0	1	0	0	0	0	0	0	0	#_2
 #_no timevary Q parameters
 #
 #_size_selex_patterns

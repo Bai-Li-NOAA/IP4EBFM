@@ -1,6 +1,23 @@
-# Data-rich case --------------------------------------------------
-## Using Stock Synthesis 3 v3.30.19.01
-## Website: https://github.com/nmfs-stock-synthesis/stock-synthesis
+---
+title: 'Data-rich stock assessment'
+date: 'Updated on May 27, 2022'
+output:
+  html_document: 
+    code_folding: hide
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Just Another Bayesian Biomass Assessment (JABBA)
+
+- Using Stock Synthesis 3 v3.30.19.01
+- Website: https://github.com/nmfs-stock-synthesis/stock-synthesis
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+devtools::load_all()
 
 # Install required R packages -------------------------------------
 devtools::load_all()
@@ -19,7 +36,15 @@ devtools::install_github("r4ss/r4ss",
 )
 library(r4ss)
 
-# Case 0: default stock assessment run ----------------------------
+```
+
+## Case 0: stock assessment base run
+
+- SS3 estimated abundance, recruitment, and fishing mortality showed similar trends compared to "true" trends from the EwE operating model.
+
+- SS3 estimated biomass trend did not match EwE biomass trend well. Could be because the von Bertalanffy growth model and weight-length relationships from SS3 and EwE are different. 
+  
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation.R"))
 source(here::here("Rscript", "load_indices.R"))
@@ -73,6 +98,10 @@ ss3list <- SS_output(dir = file_path,
 
 # plots the results
 SS_plots(ss3list)
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
 # Compare SS3 estimate with EwE "true" values ---------------------
 # Comparisons
 functional_groups <- c(
@@ -219,8 +248,17 @@ legend("topright",
        pch=c(16, NA, NA),
        lty=c(NA, 1, 2))
 
+```
 
-# Linear regression models from cases 1 - 4 using "true" values from EwE------------------------
+## Cases 1-4 are based on the settings from case 0.2
+    - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
+    - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
+    - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
+    - Case 4: Link dollars of menhaden with menhaden biomass estimates and adjust projections 
+
+- Linear regression models from case 1 - 4
+  - True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden
+```{r,  echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 lm_slope <- data.frame(
   case = "True indices",
   amo = NA,
@@ -287,6 +325,15 @@ plot(sub_menhadenD, biomass_ewe[time_id],
 lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
 
 knitr::kable(lm_slope)
+
+```
+  
+  
+  - Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values
+  - The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
+  - Issue: could not find uncertainty information about FMSY and B/BMSY. The uncertainty around FMSY from the last figure was based on a random number of sd of FMSY = 0.5.
+  
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Projection: cases 1 - 4 ---------------------------
 
@@ -574,3 +621,11 @@ ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
     y = "FMSY"
   ) +
   theme_bw()
+
+```
+
+- Slope values from linear regression models
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+knitr::kable(lm_slope)
+```
