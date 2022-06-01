@@ -180,16 +180,22 @@ waa <- read_ewe_output(
 
 recruit_ewe <- biomass[[1]][, "AtlanticMenhaden0"][time_id]*1000000/waa[[1]][, "AtlanticMenhaden0"][time_id]
 
-ylim = range(recruit_ewe, ss3list$recruit$pred_recr*1000)
+recruit_ss3 <- data.frame(
+  year = c(model_year, projection_year),
+  recruit = ss3list$natage$`1`[which(ss3list$natage$`Beg/Mid`=="B" & ss3list$natage$Yr %in% c(model_year, projection_year))]*1000
+)
+
+
+ylim = range(recruit_ewe, recruit_ss3$recruit)
 plot(c(model_year, projection_year),
      recruit_ewe,
-     xlab = "Year", ylab = "Recruitment",
+     xlab = "Year", ylab = "Abundance of age-0 fish",
      ylim = ylim,
      pch = 16
 )
-lines(model_year, ss3list$recruit$pred_recr[ss3list$recruit$Yr %in% model_year]*1000)
+lines(model_year, recruit_ss3$recruit[recruit_ss3$year %in% model_year])
 lines(projection_year,
-      ss3list$recruit$pred_recr[ss3list$recruit$Yr %in% projection_year]*1000,
+      recruit_ss3$recruit[recruit_ss3$year %in% projection_year],
       lty=2)
 legend("topright",
        c("EWE", "SS3 Estimation", "SS3 projection"),
@@ -221,6 +227,10 @@ legend("topright",
 
 
 # Linear regression models from cases 1 - 4 using "true" values from EwE------------------------
+
+# use abundance instead of biomass
+biomass_ewe <- apply(biomass[[1]][, age_name]*1000000/waa[[1]][, age_name], 1, sum)
+
 lm_slope <- data.frame(
   case = "True indices",
   amo = NA,
@@ -301,11 +311,19 @@ lm_slope <- data.frame(
 
 for (projection_year_id in 1:length(projection_year)){
 
+  # abundance
   if (projection_year_id ==1) {
-    menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
+    menhaden_b <- ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id]
   } else {
-    menhaden_b <- c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[1:(projection_year_id-1)])
+    menhaden_b <- c(ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id], ss3list$timeseries$`SmryNum_SX:1_GP:1`[1:(projection_year_id-1)])
   }
+
+  # biomass
+  # if (projection_year_id ==1) {
+  #   menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
+  # } else {
+  #   menhaden_b <- c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[1:(projection_year_id-1)])
+  # }
 
 
   year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
@@ -556,21 +574,34 @@ fmsy_data_melt <- reshape2::melt(
 )
 fmsy_data_melt$projection_year_id <- as.factor(fmsy_data_melt$projection_year_id)
 
-ggplot(fmsy_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
-  geom_line() +
-  facet_wrap(~variable) +
-  labs(
-    title = "FMSY",
-    x = "Iteration",
-    y = "FMSY"
-  ) +
-  theme_bw()
+# ggplot(fmsy_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
+#   geom_line() +
+#   facet_wrap(~variable) +
+#   labs(
+#     title = "FMSY",
+#     x = "Iteration",
+#     y = "FMSY"
+#   ) +
+#   theme_bw()
 
 ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
   geom_boxplot()+
   labs(
-    title = "FMSY",
+    title = "FMSY from SS3 and adjusted FMSY",
     x = "",
     y = "FMSY"
   ) +
   theme_bw()
+
+fmsy_data_melt_median <- aggregate(value ~ projection_year_id+variable, data = fmsy_data_melt, median)
+fmsy_data_melt_median$projection_year_id <- as.numeric(fmsy_data_melt_median$projection_year_id)
+
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
+  geom_line() +
+  labs(
+    title = "Median FMSY from SS3 and adjusted FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
+

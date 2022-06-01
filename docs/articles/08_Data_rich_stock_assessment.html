@@ -163,7 +163,22 @@
 <ul>
 <li>Linear regression models from case 1 - 4
 <ul>
-<li>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden <img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><table class="table">
+<li><p>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden</p></li>
+<li><p>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</p></li>
+<li><p>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</p></li>
+<li><p>Issue: could not find uncertainty information about FMSY and B/BMSY. The uncertainty around FMSY from the last figure was based on a random number of sd of FMSY = 0.5</p></li>
+</ul>
+</li>
+</ul>
+<div class="section level3">
+<h3 id="status-of-indicators-soi">Status of indicators (SOI)<a class="anchor" aria-label="anchor" href="#status-of-indicators-soi"></a>
+</h3>
+<ul>
+<li><p>If stock-indicator relationship is positive, <span class="math inline">\(SOI_{y} = \frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}\)</span></p></li>
+<li><p>If stock-indicator relationship is negative, <span class="math inline">\(SOI_{y} = 1-\frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}\)</span></p></li>
+</ul>
+<p>where <span class="math inline">\(I_{y}\)</span> represents indicator value in year y. <span class="math inline">\(I_{y}^{min}\)</span> and <span class="math inline">\(I_{y}^{max}\)</span> represent the minimum and maximum values of <span class="math inline">\(I\)</span> from the time series.</p>
+<img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><table class="table">
 <thead><tr>
 <th style="text-align:left;">
 case
@@ -199,14 +214,17 @@ True indices
 </td>
 </tr></tbody>
 </table>
-</li>
-<li>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</li>
-<li>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</li>
-<li>Issue: could not find uncertainty information about FMSY and B/BMSY. The uncertainty around FMSY from the last figure was based on a random number of sd of FMSY = 0.5.</li>
+</div>
+<div class="section level3">
+<h3 id="adjust-projection">Adjust projection<a class="anchor" aria-label="anchor" href="#adjust-projection"></a>
+</h3>
+<ul>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} &gt; 1\)</span>, <span class="math inline">\(F^'_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} \le 1\)</span> and <span class="math inline">\(\frac{B2012_{i}}{BMSY} &gt; 0.5\)</span>, <span class="math inline">\(F^'_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} \le 0.5\)</span>, <span class="math inline">\(F^'_{i} = 0\)</span></p></li>
 </ul>
-</li>
-</ul>
-<p><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-2.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-3.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-4.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-5.png" width="1152"></p>
+<p>where <span class="math inline">\(i\)</span> represents individual iterations</p>
+<p><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-2.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-3.png" width="1152"><img src="08_Data_rich_stock_assessment_files/figure-html/unnamed-chunk-5-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -234,7 +252,7 @@ price
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
 1
@@ -254,7 +272,7 @@ price
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
 2
@@ -274,7 +292,7 @@ price
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
 3
@@ -294,7 +312,7 @@ price
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
 4
@@ -314,7 +332,7 @@ price
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
 5
@@ -334,6 +352,7 @@ price
 </tr>
 </tbody>
 </table>
+</div>
 </div>
   </div>
 
