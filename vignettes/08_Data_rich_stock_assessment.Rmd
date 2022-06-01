@@ -351,11 +351,11 @@ knitr::kable(lm_slope)
   
 ### Adjust projection
 
-- If $\frac{B2012_{i}}{BMSY} > 1$, $F^'_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
+- If $\frac{B2012_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
 
-- If $\frac{B2012_{i}}{BMSY} \le 1$ and $\frac{B2012_{i}}{BMSY} > 0.5$, $F^'_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}$
+- If $\frac{B2012_{i}}{BMSY} \le 1$ and $\frac{B2012_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}$
 
-- If $\frac{B2012_{i}}{BMSY} \le 0.5$, $F^'_{i} = 0$
+- If $\frac{B2012_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
 
 where $i$ represents individual iterations
   
