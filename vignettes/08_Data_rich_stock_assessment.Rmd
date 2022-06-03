@@ -11,7 +11,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Just Another Bayesian Biomass Assessment (JABBA)
+## Stock Synthesis 3 (SS3)
 
 - Using Stock Synthesis 3 v3.30.19.01
 - Website: https://github.com/nmfs-stock-synthesis/stock-synthesis
@@ -259,7 +259,7 @@ legend("topright",
     - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
     - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
     - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
-    - Case 4: Link dollars of menhaden with menhaden biomass estimates and adjust projections 
+    - Case 4: Link inflation-adjusted price of menhaden with menhaden biomass estimates and adjust projections 
 
 - Linear regression models from case 1 - 4
   - True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden
@@ -340,7 +340,7 @@ plot(bassB$bass_bio, biomass_ewe[time_id],
 lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
 
 plot(sub_menhadenD, biomass_ewe[time_id],
-     xlab = "Menhaden dollars",
+     xlab = "Menhaden price",
      ylab = "Menhaden-like species B from OM"
 )
 lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
