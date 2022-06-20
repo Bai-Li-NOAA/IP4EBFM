@@ -749,7 +749,7 @@ output <- compare_projections_dbsra(
 )
 
 soi_data_melt <- output$soi_data_melt
-ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1), ], aes(x = year, y = value)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
@@ -803,7 +803,7 @@ output <- compare_projections_dbsra(
 )
 
 soi_data_melt <- output$soi_data_melt
-ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1), ], aes(x = year, y = value)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
@@ -862,7 +862,7 @@ output <- compare_projections_dbsra(
 )
 
 soi_data_melt <- output$soi_data_melt
-ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1), ], aes(x = year, y = value)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
