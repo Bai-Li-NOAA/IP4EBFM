@@ -80,7 +80,7 @@ biomass <- read_ewe_output(
   figure_colors = NULL
 )
 
-time_id <- seq(1, nrow(biomass[[1]]), by = 12)[1:length(model_year)]
+time_id <- seq(1, nrow(biomass[[1]]), by = 12)
 biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum)[time_id] * 1000000
 
 
@@ -136,6 +136,8 @@ fmsy_m <- fmsy / sa_data$biodata$natural_mortality_matrix[1, ]
 
 ss_case0@FMSY_M <- mean(fmsy_m) # 0.92
 
+#ss_case0@Mort <- 0.67 #sa_data$biodata$natural_mortality_matrix[1, ]/(1-exp(-ss_case0@vbK*(1:7-ss_case0@vbt0)))^(-3*0.305)
+
 # BMSY relative to unfished
 # Dick and MacCall (2011): use 0.4 if target biomass is 40% of unfished biomass
 ss_case0@BMSY_B0 <- 0.3 # BAM FEC30% target
@@ -159,7 +161,7 @@ ss_case0@L50 <- ss_case0@vbLinf *
 ## 10 percent of unfished biomass.
 
 ss_case01 <- ss_case0
-dbsra <- DLMtool::DBSRA(1, ss_case01, plot = TRUE)
+dbsra <- DLMtool::DBSRA(1, ss_case01, plot = FALSE)
 # dbsra40 <- DLMtool::DBSRA_40(1, ss_case0, plot = TRUE)
 # dbsra4010 <- DLMtool::DBSRA4010(1, ss_case0, plot = TRUE)
 
@@ -264,7 +266,7 @@ points(catch_year, sa_data$fishery$obs_total_catch_biomass$fleet1[names(sa_data$
 )
 
 legend("top",
-       c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
+       c("Observed Catch (model year)", "Observed Catch (projection year)", "TAC"),
        lty = c(1, NA, NA),
        pch = c(NA, 16, NA),
        col = c("black", "blue", NA),
@@ -273,24 +275,37 @@ legend("top",
        bty = "n",
        title = "Case 0.1"
 )
+legend("bottomleft",
+       c(
+         paste0("DBSRA@Dep = ", round(ss_case01@Dep, digits = 2)),
+         paste0("DBSRA@BMSY_B0 = ", round(ss_case01@BMSY_B0, digits = 2)),
+         paste0("DBSRA@FMSY_M = ", round(ss_case01@FMSY_M, digits = 2))
+       ),
+       bty="n")
 
 # plot biomass
+dbsraB_projection <- list()
+for (i in 1:length(projection_year)){
+  dbsraB_projection[[i]] <- apply(projection_output1[[i]]$Btrend, 2, median)
+}
 
-
-dbsraB <- apply(projection_output1[[1]]$Btrend, 2, median)
-ylim <- range(biomass_ewe, dbsraB)
-plot(model_year,
+ylim <- range(biomass_ewe, unlist(dbsraB_projection))
+plot(c(model_year, projection_year),
      biomass_ewe,
      xlab = "Year", ylab = "Biomass (mt)",
      ylim = ylim,
      pch = 16
 )
-lines(model_year, dbsraB)
+for (i in 1:length(projection_year)){
+  lines(model_year[1]:(projection_year[i]-1), dbsraB_projection[[i]],
+        lty=i, col=i)
+}
 legend("bottomright",
-       c("EWE", "DBSRA"),
+       c("EWE", paste0("DBSRA", projection_year)),
        bty = "n",
-       pch = c(16, NA),
-       lty = c(NA, 1),
+       pch = c(16, rep(NA, length(projection_year))),
+       lty = c(NA, 1:length(projection_year)),
+       col = c(1, 1:length(projection_year)),
        title = "Case 0.1"
 )
 
@@ -302,36 +317,38 @@ legend("bottomright",
     
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Case 0.2 ---------------------------
-ss_case0@Dep <- 0.9
+ss_case02 <- ss_case0
+ss_case02@Dep <- 0.9
 
 msy <- c(
- 5.783313499, 5.83166065, 4.462390283, 4.322232771, 3.622124216, 4.401786498, 3.455276984
+  5.783313499, 5.83166065, 4.462390283, 4.322232771, 3.622124216, 4.401786498, 3.455276984
 )
 
 b0 <- 2000000
 
 bmsy <- c(
- 1.170854865, 1.180642591, 0.90342859, 0.875053021, 0.733313468, 0.891159071, 0.699534845
+  1.170854865, 1.180642591, 0.90342859, 0.875053021, 0.733313468, 0.891159071, 0.699534845
 )*1000000
+
 
 # BMSY relative to unfished
 # Dick and MacCall (2011): use 0.4 if target biomass is 40% of unfished biomass
-ss_case0@BMSY_B0 <- mean(bmsy/b0)
+ss_case02@BMSY_B0 <- mean(bmsy/b0)
 
-dbsra <- DLMtool::DBSRA(1, ss_case0, plot = TRUE)
+dbsra <- DLMtool::DBSRA(1, ss_case02, plot = FALSE)
 
 # Projection: case 0.2 --------------------------------------------------
 projection_output2 <- list()
 for (i in 1:length(projection_year)) {
-  ss_case <- ss_case0
+  ss_case <- ss_case02
   year <- model_year[1]:(projection_year[i] - 1)
   data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% year
   ss_case@Cat <- matrix(sa_data$fishery$obs_total_catch_biomass$fleet1[data_id],
-    nrow = 1
+                        nrow = 1
   )
   ss_case@Year <- year
   #ss_case@Dep <- tail(ss_case@Cat[1, ], n = 1) / ss_case@Cat[1, 1]
-  ss_case@Dep <- ss_case0@Dep
+  ss_case@Dep <- ss_case02@Dep
   projection_output2[[i]] <- DLMtool::DBSRA_(
     x = 1,
     Data = ss_case,
@@ -344,99 +361,214 @@ for (i in 1:length(projection_year)) {
 par(mfrow=c(1,2))
 ylim <- range(projection_output2[[1]]$C_hist, unlist(sapply(projection_output2, "[", "TAC")))
 plot(c(model_year, projection_year),
-  c(projection_output2[[1]]$C_hist, rep(NA, length(projection_year))),
-  type = "l",
-  ylim = ylim,
-  xlab = "Year", ylab = "Catch (mt)"
+     c(projection_output2[[1]]$C_hist, rep(NA, length(projection_year))),
+     type = "l",
+     ylim = ylim,
+     xlab = "Year", ylab = "Catch (mt)"
 )
 
 for (i in 1:length(projection_year)) {
   boxplot(projection_output2[[i]]$TAC,
-    add = TRUE,
-    at = projection_year[i],
-    col = "grey",
-    width = 1,
-    outline = TRUE,
-    axes = FALSE
+          add = TRUE,
+          at = projection_year[i],
+          col = "grey",
+          width = 1,
+          outline = TRUE,
+          axes = FALSE
   )
 }
 
 catch_year <- projection_year[1:length(projection_year) - 1]
 points(catch_year, sa_data$fishery$obs_total_catch_biomass$fleet1[names(sa_data$fishery$obs_total_catch_biomass$fleet1) %in% catch_year],
-  pch = 16, col = "blue"
+       pch = 16, col = "blue"
 )
 
 legend("top",
-  c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
-  lty = c(1, NA, NA),
-  pch = c(NA, 16, NA),
-  col = c("black", "blue", NA),
-  fill = c(NA, NA, "gray"),
-  border = c(NA, NA, "black"),
-  bty = "n",
-  title = "Case 0.2"
+       c("Observed Catch (model year)", "Observed Catch (projection year)", "TAC"),
+       lty = c(1, NA, NA),
+       pch = c(NA, 16, NA),
+       col = c("black", "blue", NA),
+       fill = c(NA, NA, "gray"),
+       border = c(NA, NA, "black"),
+       bty = "n",
+       title = "Case 0.2"
 )
 
+legend("left",
+       c(
+         paste0("DBSRA@Dep = ", round(ss_case02@Dep, digits = 2)),
+         paste0("DBSRA@BMSY_B0 = ", round(ss_case02@BMSY_B0, digits = 2)),
+         paste0("DBSRA@FMSY_M = ", round(ss_case02@FMSY_M, digits = 2))
+       ),
+       bty="n")
+
 # plot biomass
-dbsraB <- apply(projection_output2[[1]]$Btrend, 2, median)
-ylim <- range(biomass_ewe, dbsraB)
-plot(model_year,
-  biomass_ewe,
-  xlab = "Year", ylab = "Biomass (mt)",
-  ylim = ylim,
-  pch = 16
+dbsraB_projection <- list()
+for (i in 1:length(projection_year)){
+  dbsraB_projection[[i]] <- apply(projection_output2[[i]]$Btrend, 2, median)
+}
+
+ylim <- range(biomass_ewe, unlist(dbsraB_projection))
+plot(c(model_year, projection_year),
+     biomass_ewe,
+     xlab = "Year", ylab = "Biomass (mt)",
+     ylim = ylim,
+     pch = 16
 )
-lines(model_year, dbsraB)
+for (i in 1:length(projection_year)){
+  lines(model_year[1]:(projection_year[i]-1), dbsraB_projection[[i]],
+        lty=i, col=i)
+}
 legend("bottomright",
-  c("EWE", "DBSRA"),
-  bty = "n",
-  pch = c(16, NA),
-  lty = c(NA, 1),
-  title = "Case 0.2"
+       c("EWE", paste0("DBSRA", projection_year)),
+       bty = "n",
+       pch = c(16, rep(NA, length(projection_year))),
+       lty = c(NA, 1:length(projection_year)),
+       col = c(1, 1:length(projection_year)),
+       title = "Case 0.2"
 )
+
 ```
  
 - Case 0.3
   - Add a long sequence of equilibrium catches (2010 - 2012) to the start of the catch
+  - Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# Case 0.3: Equilibrium catch --------------------------------------
+
+time_id_model_year <- seq(1, nrow(biomass[[1]]), by = 12)[1:length(model_year)]
+biomass_ewe_model_year <- apply(biomass[[1]][, age_name], 1, sum)[time_id_model_year] * 1000000
+
 ss_case03 <- ss_case0
 equi_year <- 2000:2012
 equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
 equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
 data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% model_year
 ss_case03@Cat <- matrix(c(equi_catch, sa_data$fishery$obs_total_catch_biomass$fleet1[data_id]),
-                       nrow = 1
+                        nrow = 1
 )
 
-
 ss_case03@Year <- (model_year[1] - length(equi_year)):tail(model_year, n=1)
-ss_case03@Dep <- tail(ss_case03@Cat[1, ], n = 1) / ss_case03@Cat[1, 1] # 0.91
-ss_case03@BMSY_B0 <- 0.3
 
-dbsra <- DLMtool::DBSRA(1, ss_case03, plot = TRUE)
+dep = seq(0.1, 0.9, by = 0.05)
+# sum of squared differences
+ssd_dep <- data.frame(
+  dep = dep,
+  ssd = NA
+)
+for (i in 1:length(dep)){
+  ss_case <- ss_case03
+  ss_case@Dep <- dep[i]
+  dbsra <- DLMtool::DBSRA_(
+    x = 1,
+    Data = ss_case,
+    depo = NULL,
+    hcr = NULL
+  )
+  dbsraB <- apply(dbsra$Btrend, 2, median)
+  ssd_dep$ssd[i] <- sum((dbsraB[(length(equi_year)+1):length(dbsraB)] - biomass_ewe_model_year)^2)
+}
 
+ss_case <- ss_case03
+ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)] # dep = 0.75 has the smallest sum of squared differences: 4.7e+12
+dbsra <- DLMtool::DBSRA_(
+  x = 1,
+  Data = ss_case,
+  depo = NULL,
+  hcr = NULL
+)
+dbsra_dep <- apply(dbsra$Btrend, 2, median)
+
+bmsy_b0 <- seq(0.1, 0.9, by = 0.05)
+# sum of squared differences
+ssd_bmsy_b0 <- data.frame(
+  bmsy_b0 = bmsy_b0,
+  ssd = NA
+)
+for (i in 1:length(bmsy_b0)){
+  ss_case <- ss_case03
+  ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
+  ss_case@BMSY_B0 <- bmsy_b0[i]
+  dbsra <- DLMtool::DBSRA_(
+    x = 1,
+    Data = ss_case,
+    depo = NULL,
+    hcr = NULL
+  )
+  dbsraB <- apply(dbsra$Btrend, 2, median)
+  ssd_bmsy_b0$ssd[i] <- sum((dbsraB[(length(equi_year)+1):length(dbsraB)] - biomass_ewe_model_year)^2)
+}
+
+
+ss_case <- ss_case03
+ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
+ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)] # bmsy_b0 = 0.3 has the smallest sum of squared differences: 6.6e+12
+dbsra <- DLMtool::DBSRA_(
+  x = 1,
+  Data = ss_case,
+  depo = NULL,
+  hcr = NULL
+)
+dbsra_bmsyb0 <- apply(dbsra$Btrend, 2, median)
+
+fmsy_m <- seq(0.1, 2, by = 0.05)
+# sum of squared differences
+ssd_fmsy_m <- data.frame(
+  fmsy_m = fmsy_m,
+  ssd = NA
+)
+for (i in 1:length(fmsy_m)){
+  ss_case <- ss_case03
+  ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
+  ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)]
+  ss_case@FMSY_M <- fmsy_m[i]
+  dbsra <- DLMtool::DBSRA_(
+    x = 1,
+    Data = ss_case,
+    depo = NULL,
+    hcr = NULL
+  )
+  dbsraB <- apply(dbsra$Btrend, 2, median)
+  ssd_fmsy_m$ssd[i] <- sum((dbsraB[(length(equi_year)+1):length(dbsraB)] - biomass_ewe_model_year)^2)
+}
+
+
+ss_case <- ss_case03
+ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
+ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)]
+ss_case@FMSY_M <- ssd_fmsy_m$fmsy_m[which.min(ssd_fmsy_m$ssd)] # fmsy_m = 0.8 has the smallest sum of squared differences: 4.9e+12
+dbsra <- DLMtool::DBSRA_(
+  x = 1,
+  Data = ss_case,
+  depo = NULL,
+  hcr = NULL
+)
+dbsra_fmsym <- apply(dbsra$Btrend, 2, median)
+
+ss_case_final <- ss_case
+dbsra <- DLMtool::DBSRA(1, ss_case_final, plot = FALSE)
 
 # Projection: case 0.3 --------------------------------------------------
 projection_output3 <- list()
+equi_year_temp <- list()
 for (i in 1:length(projection_year)) {
-  ss_case <- ss_case03
+  ss_case_temp <- ss_case_final
 
-  equi_year <- 2000:2012
-  equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
-  equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
+  equi_year_temp[[i]] <- 2000:2012
+  # equi_year_temp[[i]] <- 2000:(2012+i-1)
+  equi_id_temp <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year_temp[[i]]
+  equi_catch_temp <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id_temp]
   data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% c(model_year[1]:(projection_year[i] - 1))
 
-  ss_case@Cat <- matrix(c(equi_catch, sa_data$fishery$obs_total_catch_biomass$fleet1[data_id]),
-                         nrow = 1
+  ss_case_temp@Cat <- matrix(c(equi_catch_temp, sa_data$fishery$obs_total_catch_biomass$fleet1[data_id]),
+                             nrow = 1
   )
+  ss_case_temp@Year <- ss_case_temp@Year[1]:(projection_year[i]-1)
 
-  #ss_case@Dep <- tail(ss_case@Cat[1, ], n = 1) / ss_case@Cat[1, 1]
-  ss_case@Dep <- ss_case03@Dep
+
   projection_output3[[i]] <- DLMtool::DBSRA_(
     x = 1,
-    Data = ss_case,
+    Data = ss_case_temp,
     depo = NULL, # Optional fixed depletion (single value)
     hcr = NULL # Optional harvest control rule for throttling catch as a function of B/B0.
   )
@@ -444,9 +576,10 @@ for (i in 1:length(projection_year)) {
 
 # plot figures
 par(mfrow=c(1,2))
-ylim <- range(projection_output3[[1]]$C_hist, unlist(sapply(projection_output3, "[", "TAC")))
-plot(c(ss_case@Year, projection_year),
-     c(projection_output3[[1]]$C_hist, rep(NA, length(projection_year))),
+c_hist <- projection_output3[[1]]$C_hist
+ylim <- range(c_hist[(length(equi_year_temp[[1]])+1):length(c_hist)], unlist(sapply(projection_output3, "[", "TAC")))
+plot(c(ss_case_temp@Year[(length(equi_year_temp[[1]])+1):length(c_hist)], projection_year),
+     c(c_hist[(length(equi_year_temp[[1]])+1):length(c_hist)], rep(NA, length(projection_year))),
      type = "l",
      ylim = ylim,
      xlab = "Year", ylab = "Catch (mt)"
@@ -479,211 +612,44 @@ legend("top",
        title = "Case 0.3"
 )
 
+legend("left",
+      c(
+        paste0("DBSRA@Dep = ", round(ssd_dep$dep[which.min(ssd_dep$ssd)], digits = 2)),
+        paste0("DBSRA@BMSY_B0 = ", round(ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)], digits = 2)),
+        paste0("DBSRA@FMSY_M = ", round(ssd_fmsy_m$fmsy_m[which.min(ssd_fmsy_m$ssd)], digits = 2))),
+      bty="n")
+
 # plot biomass
-dbsraB <- apply(projection_output3[[1]]$Btrend, 2, median)
-ylim <- range(biomass_ewe, dbsraB)
-plot(ss_case03@Year,
-     c(rep(NA, length(equi_year)), biomass_ewe),
-     xlab = "Year", ylab = "Biomass (mt)",
-     ylim = ylim,
-     pch = 16
-)
-lines(ss_case03@Year, dbsraB)
-legend("bottomright",
-       c("EWE", "DBSRA"),
-       bty = "n",
-       pch = c(16, NA),
-       lty = c(NA, 1),
-       title = "Case 0.3"
-)
-
-
-```
-
-- Case 0.4
-  - Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with interval of 0.05) and find the scenario that has the lowest sum of squared differences
-  - Dep = 0.75, BMSY_B0 = 0.3, FMSY_M = 1.05
-
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# case 0.4 --------------------------------------------------------
-
-dep = seq(0.1, 0.9, by = 0.05)
-
-# sum of squared differences
-ssd <- data.frame(
-  dep = dep,
-  ssd = NA
-)
-for (i in 1:length(dep)){
-  ss_case04 <- ss_case0
-  ss_case04@Dep <- dep[i]
-  dbsra <- DLMtool::DBSRA_(
-    x = 1,
-    Data = ss_case04,
-    depo = NULL,
-    hcr = NULL
-  )
-  dbsraB <- apply(dbsra$Btrend, 2, median)
-  ssd$ssd[i] <- sum((dbsraB - biomass_ewe)^2)
-}
-# dep = 0.75 has the smallest sum of squared differences: 8334088125529
-ss_case04 <- ss_case0
-ss_case04@Dep <- 0.75
-dbsra <- DLMtool::DBSRA_(
-  x = 1,
-  Data = ss_case04,
-  depo = NULL,
-  hcr = NULL
-)
-dbsraB_dep <- apply(dbsra$Btrend, 2, median)
-
-bmsy_b0 <- seq(0.1, 0.9, by = 0.05)
-# sum of squared differences
-ssd <- data.frame(
-  bmsy_b0 = bmsy_b0,
-  ssd = NA
-)
-for (i in 1:length(bmsy_b0)){
-  ss_case04 <- ss_case0
-  ss_case04@Dep <- 0.75
-  ss_case04@BMSY_B0 <- bmsy_b0[i]
-  dbsra <- DLMtool::DBSRA_(
-    x = 1,
-    Data = ss_case04,
-    depo = NULL,
-    hcr = NULL
-  )
-  dbsraB <- apply(dbsra$Btrend, 2, median)
-  ssd$ssd[i] <- sum((dbsraB - biomass_ewe)^2)
-}
-# bmsy_b0 = 0.3 has the smallest sum of squared differences: 9317919804101
-ss_case04 <- ss_case0
-ss_case04@Dep <- 0.75
-ss_case04@BMSY_B0 <- 0.3
-dbsra <- DLMtool::DBSRA_(
-  x = 1,
-  Data = ss_case04,
-  depo = NULL,
-  hcr = NULL
-)
-dbsraB_bmsyb0 <- apply(dbsra$Btrend, 2, median)
-
-
-fmsy_m <- seq(0.1, 2, by = 0.05)
-# sum of squared differences
-ssd <- data.frame(
-  fmsy_m = fmsy_m,
-  ssd = NA
-)
-for (i in 1:length(fmsy_m)){
-  ss_case04 <- ss_case0
-  ss_case04@Dep <- 0.75
-  ss_case04@BMSY_B0 <- 0.3
-  ss_case04@FMSY_M <- fmsy_m[i]
-  dbsra <- DLMtool::DBSRA_(
-    x = 1,
-    Data = ss_case04,
-    depo = NULL,
-    hcr = NULL
-  )
-  dbsraB <- apply(dbsra$Btrend, 2, median)
-  ssd$ssd[i] <- sum((dbsraB - biomass_ewe)^2)
-}
-# fmsy_m = 1.05 has the smallest sum of squared differences: 7249794744635
-ss_case04 <- ss_case0
-ss_case04@Dep <- 0.75
-ss_case04@BMSY_B0 <- 0.3
-ss_case04@FMSY_M <- 1.05
-dbsra <- DLMtool::DBSRA_(
-  x = 1,
-  Data = ss_case04,
-  depo = NULL,
-  hcr = NULL
-)
-dbsraB_fmsym <- apply(dbsra$Btrend, 2, median)
-
-# Projection: case 0.4 --------------------------------------------------
-projection_output4 <- list()
-for (i in 1:length(projection_year)) {
-  ss_case <- ss_case04
-  year <- model_year[1]:(projection_year[i] - 1)
-  data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% year
-  ss_case@Cat <- matrix(sa_data$fishery$obs_total_catch_biomass$fleet1[data_id],
-                        nrow = 1
-  )
-  ss_case@Year <- year
-  #ss_case@Dep <- tail(ss_case@Cat[1, ], n = 1) / ss_case@Cat[1, 1]
-  ss_case@Dep <- ss_case04@Dep
-  projection_output4[[i]] <- DLMtool::DBSRA_(
-    x = 1,
-    Data = ss_case,
-    depo = NULL, # Optional fixed depletion (single value)
-    hcr = NULL # Optional harvest control rule for throttling catch as a function of B/B0.
-  )
+dbsraB_projection <- list()
+for (i in 1:length(projection_year)){
+  full_dbsraB <- projection_output3[[i]]$Btrend
+  year_id <- projection_output3[[i]]
+  dbsraB_projection[[i]] <- apply(full_dbsraB[, (length(equi_year_temp[[i]])+1):ncol(full_dbsraB)], 2, median)
 }
 
-# plot figures
-par(mfrow=c(1,2))
-ylim <- range(projection_output4[[1]]$C_hist, unlist(sapply(projection_output4, "[", "TAC")))
+ylim = range(biomass_ewe, unlist(dbsraB_projection))
 plot(c(model_year, projection_year),
-     c(projection_output4[[1]]$C_hist, rep(NA, length(projection_year))),
-     type = "l",
-     ylim = ylim,
-     xlab = "Year", ylab = "Catch (mt)"
-)
-
-for (i in 1:length(projection_year)) {
-  boxplot(projection_output4[[i]]$TAC,
-          add = TRUE,
-          at = projection_year[i],
-          col = "grey",
-          width = 1,
-          outline = TRUE,
-          axes = FALSE
-  )
-}
-
-catch_year <- projection_year[1:length(projection_year) - 1]
-points(catch_year, sa_data$fishery$obs_total_catch_biomass$fleet1[names(sa_data$fishery$obs_total_catch_biomass$fleet1) %in% catch_year],
-       pch = 16, col = "blue"
-)
-
-legend("top",
-       c("Observed Catch", "Observed Catch for TAC estimates", "TAC"),
-       lty = c(1, NA, NA),
-       pch = c(NA, 16, NA),
-       col = c("black", "blue", NA),
-       fill = c(NA, NA, "gray"),
-       border = c(NA, NA, "black"),
-       bty = "n",
-       title = "Case 0.4"
-)
-
-# plot biomass
-
-
-dbsraB <- apply(projection_output4[[1]]$Btrend, 2, median)
-ylim <- range(biomass_ewe, dbsraB)
-plot(model_year,
      biomass_ewe,
      xlab = "Year", ylab = "Biomass (mt)",
      ylim = ylim,
      pch = 16
 )
-lines(model_year, dbsraB)
+for (i in 1:length(projection_year)){
+  lines(model_year[1]:(projection_year[i]-1), dbsraB_projection[[i]],
+        lty=i, col=i)
+}
 legend("bottomright",
-       c("EWE", "DBSRA"),
+       c("EWE", paste0("DBSRA", projection_year)),
        bty = "n",
-       pch = c(16, NA),
-       lty = c(NA, 1),
-       title = "Case 0.4"
+       pch = c(16, rep(NA, length(projection_year))),
+       lty = c(NA, 1:length(projection_year)),
+       col = c(1, 1:length(projection_year)),
+       title = "Case 0.3"
 )
-
-
 
 ```
 
-## Cases 1-4 are based on the settings from case 0.1
+## Linear regression models from cases 1 - 4 using "true" values from EwE
     - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
     - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
     - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
@@ -694,560 +660,241 @@ legend("bottomright",
   - The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
   
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+lm_slope <- data.frame(
+  case = "True indices",
+  amo = NA,
+  pcp = NA,
+  bassB = NA,
+  price = NA
+)
+
+year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
+index_year <- c(model_year, projection_year)
+
+amo <- amo_unsmooth_lag1[year_id, ]
+amo_lm <- lm(biomass_ewe ~ amo$raw_value)
+amo_fit <- fitted(amo_lm)
+lm_slope$amo <- paste0(
+  round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+  if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+pcp <- precipitation[year_id, ]
+pcp_lm <- lm(biomass_ewe ~ pcp$raw_value)
+pcp_fit <- fitted(pcp_lm)
+lm_slope$pcp <- paste0(
+  round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+  if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+bassB_lm <- lm(biomass_ewe ~ bassB$bass_bio)
+bassB_fit <- fitted(bassB_lm)
+lm_slope$bassB <- paste0(
+  round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+  if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
+price_lm <- lm(biomass_ewe ~ sub_menhadenP)
+price_fit <- fitted(price_lm)
+lm_slope$price <- paste0(
+  round(summary(price_lm)$coefficients[2, 1], digits = 2),
+  if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+par(mfrow = c(2, 2))
+
+plot(amo$raw_value, biomass_ewe,
+     xlab = "AMO raw values",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
+
+plot(pcp$raw_value, biomass_ewe,
+     xlab = "Precipitation raw values",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+
+plot(bassB$bass_bio, biomass_ewe,
+     xlab = "Biomass of Striped bass",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
+
+plot(sub_menhadenP, biomass_ewe,
+     xlab = "Menhaden price",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
+
+```
+
+- Slope values from linear regression models
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+knitr::kable(lm_slope)
+```
+
+## Cases 1-4 are based on the settings from case 0.1
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Projection based on case 0.1 ------------------------------------
 
-lm_slope <- data.frame(
-  case = 0.1,
-  projection_year = 1:length(projection_year),
-  amo = NA,
-  pcp = NA,
-  bassB = NA,
-  dollars = NA
+output <- compare_projections_dbsra(
+  case_name = 0.1,
+  projection_output_data = projection_output1,
+  projection_year = projection_year,
+  model_year = model_year,
+  amo = amo_unsmooth_lag1,
+  pcp = precipitation,
+  bassB = bass_bio,
+  price = menhaden_price
 )
 
-for (projection_year_id in 1:length(projection_year)){
-  projection_output <- projection_output1
-  menhaden_b <- apply(projection_output[[projection_year_id]]$Btrend, 2, median)
-  year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
-
-  if (projection_year_id == 1) {
-    index_year = model_year
-  } else {
-    index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
-  }
-
-
-  # Linear regression model -----------------------------------------
-
-  amo <- amo_unsmooth_lag1[year_id, ]
-  amo_lm <- lm(menhaden_b ~ amo$raw_value)
-  summary(amo_lm)
-  amo_fit <- fitted(amo_lm)
-  lm_slope$amo[projection_year_id] <- paste0(
-    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
-    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  pcp <- precipitation[year_id, ]
-  pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
-  summary(pcp_lm)
-  pcp_fit <- fitted(pcp_lm)
-  lm_slope$pcp[projection_year_id] <- paste0(
-    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
-    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  bassB <- bass_bio[bass_bio$Year %in% index_year, ]
-  bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
-  summary(bassB_lm)
-  bassB_fit <- fitted(bassB_lm)
-  lm_slope$bassB[projection_year_id] <- paste0(
-    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
-    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
-  sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
-  dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
-  summary(dollars_lm)
-  dollars_fit <- fitted(dollars_lm)
-  lm_slope$dollars[projection_year_id] <- paste0(
-    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
-    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  if (projection_year_id == length(projection_year)){
-
-    par(mfrow = c(2, 2))
-
-    plot(amo$raw_value, menhaden_b,
-         xlab = "AMO raw values",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
-
-    plot(pcp$raw_value, menhaden_b,
-         xlab = "Precipitation raw values",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
-
-    plot(bassB$bass_bio, menhaden_b,
-         xlab = "Biomass of Striped bass",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
-
-    plot(sub_menhadenD, sub_menhaden_b,
-         xlab = "Menhaden dollars",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
-
-  }
-
-
-  # status of indicators --------------------------------------------
-
-  amo_soi <- calc_soi(
-    indicator_data = amo$raw_value,
-    slope = coef(amo_lm)[2]
-  )
-
-  pcp_soi <- calc_soi(
-    indicator_data = pcp$raw_value,
-    slope = coef(pcp_lm)[2]
-  )
-
-  bassB_soi <- calc_soi(
-    indicator_data = bassB$bass_bio,
-    slope = coef(bassB_lm)[2]
-  )
-
-  dollars_soi <- calc_soi(
-    indicator_data = sub_menhadenD,
-    slope = coef(dollars_lm)[2]
-  )
-
-  if (projection_year_id == 1) {
-    scaled_data <- data.frame(
-      year = model_year,
-      projection_year_id = projection_year_id,
-      amo = scale(amo$raw_value)[,1],
-      pcp = scale(pcp$raw_value)[,1],
-      bassB = scale(bassB$bass_bio)[,1],
-      dollars = scale(sub_menhadenD)[,1],
-      menhadenB = scale(menhaden_b)[,1]
-    )
-
-    soi_data <- data.frame(
-      year = model_year,
-      projection_year_id = projection_year_id,
-      amo = amo_soi,
-      pcp = pcp_soi,
-      bass_b = bassB_soi,
-      dollars = dollars_soi
-    )
-  } else{
-    scaled_data <- rbind(
-      scaled_data,
-      data.frame(
-        year = index_year,
-        projection_year_id = projection_year_id,
-        amo = scale(amo$raw_value)[,1],
-        pcp = scale(pcp$raw_value)[,1],
-        bassB = scale(bassB$bass_bio)[,1],
-        dollars = scale(sub_menhadenD)[,1],
-        menhadenB = scale(menhaden_b)[,1]
-      )
-    )
-
-    soi_data <- rbind(
-      soi_data,
-      data.frame(
-        year = index_year,
-        projection_year_id = projection_year_id,
-        amo = amo_soi,
-        pcp = pcp_soi,
-        bass_b = bassB_soi,
-        dollars = dollars_soi
-      )
-    )
-  }
-
-
-
-  # Adjusted TAC ----------------------------------------------------
-
-  Bt_BMSY <- projection_output[[projection_year_id]]$Bt_Kstore / projection_output[[projection_year_id]]$BMSY_K_Mstore
-
-  amo_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(amo_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  pcp_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(pcp_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  bassB_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(bassB_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  dollars_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(dollars_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-
-  if (projection_year_id == 1){
-    tac_data <- data.frame(
-      iter = 1:length(amo_tac),
-      projection_year_id = projection_year_id,
-      DBSRA = projection_output[[projection_year_id]]$TAC,
-      amo = amo_tac,
-      pcp = pcp_tac,
-      bassB = bassB_tac,
-      dollars = dollars_tac
-    )
-  } else {
-    tac_data <- rbind(
-      tac_data,
-      data.frame(
-        iter = 1:length(amo_tac),
-        projection_year_id = projection_year_id,
-        DBSRA = projection_output[[projection_year_id]]$TAC,
-        amo = amo_tac,
-        pcp = pcp_tac,
-        bassB = bassB_tac,
-        dollars = dollars_tac
-      )
-    )
-  }
-}
-
-scaled_data_melt <- reshape2::melt(
-  scaled_data,
-  id = c("year", "projection_year_id")
-)
-scaled_data_melt$projection_year_id <- as.factor(scaled_data_melt$projection_year_id)
-
-
-ggplot(scaled_data_melt, aes(x = year, y = value, color = projection_year_id)) +
+soi_data_melt <- output$soi_data_melt
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
-    title = "Scaled Indices",
-    x = "Year",
-    y = "Scaled Indices"
-  ) +
-  theme_bw()
-
-
-soi_data_melt <- reshape2::melt(
-  soi_data,
-  id = c("year", "projection_year_id")
-)
-soi_data_melt$projection_year_id <- as.factor(soi_data_melt$projection_year_id)
-
-ggplot(soi_data_melt, aes(x = year, y = value, color = projection_year_id)) +
-  geom_line() +
-  facet_wrap(~variable, scales = "free_y") +
-  labs(
-    title = "Status of Indicators",
+    title = "Case 0.1: Status of Indicators",
     x = "Year",
     y = "Status of Indicators"
   ) +
   theme_bw()
 
-tac_data_melt <- reshape2::melt(
-  tac_data,
-  id = c("iter", "projection_year_id")
-)
-tac_data_melt$projection_year_id <- as.factor(tac_data_melt$projection_year_id)
+tac_data_melt <- output$tac_data_melt
+# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+#   geom_boxplot()+
+#   labs(
+#     title = "Case 0.1: TAC",
+#     x = "",
+#     y = "TAC"
+#   ) +
+#   theme_bw()
 
-ggplot(tac_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
+tac_data_melt_median <- output$tac_data_melt_median
+ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
   geom_line() +
-  facet_wrap(~variable) +
   labs(
-    title = "TAC",
-    x = "Iteration",
-    y = "TAC"
-  ) +
-  theme_bw()
-
-ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
-  geom_boxplot()+
-  labs(
-    title = "TAC",
+    title = "Case 0.1: Median TAC from DBSRA and adjusted TAC",
     x = "",
     y = "TAC"
   ) +
   theme_bw()
-
 
 ```
 
 - Slope values from linear regression models
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-knitr::kable(lm_slope)
+knitr::kable(output$lm_slope)
 ```
 
-## Cases 1-4 are based on the settings from case 0.4
+## Cases 1-4 are based on the settings from case 0.2
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-# Projection based on case 0.4 ------------------------------------
+# Projection based on case 0.2 ------------------------------------
 
-lm_slope <- data.frame(
-  case = 0.4,
-  projection_year = 1:length(projection_year),
-  amo = NA,
-  pcp = NA,
-  bassB = NA,
-  dollars = NA
+output <- compare_projections_dbsra(
+  case_name = 0.2,
+  projection_output_data = projection_output2,
+  projection_year = projection_year,
+  model_year = model_year,
+  amo = amo_unsmooth_lag1,
+  pcp = precipitation,
+  bassB = bass_bio,
+  price = menhaden_price
 )
 
-for (projection_year_id in 1:length(projection_year)){
-  projection_output <- projection_output4
-  menhaden_b <- apply(projection_output[[projection_year_id]]$Btrend, 2, median)
-  year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
-
-  if (projection_year_id == 1) {
-    index_year = model_year
-  } else {
-    index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
-  }
-
-
-  # Linear regression model -----------------------------------------
-
-  amo <- amo_unsmooth_lag1[year_id, ]
-  amo_lm <- lm(menhaden_b ~ amo$raw_value)
-  summary(amo_lm)
-  amo_fit <- fitted(amo_lm)
-  lm_slope$amo[projection_year_id] <- paste0(
-    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
-    if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  pcp <- precipitation[year_id, ]
-  pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
-  summary(pcp_lm)
-  pcp_fit <- fitted(pcp_lm)
-  lm_slope$pcp[projection_year_id] <- paste0(
-    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
-    if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  bassB <- bass_bio[bass_bio$Year %in% index_year, ]
-  bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
-  summary(bassB_lm)
-  bassB_fit <- fitted(bassB_lm)
-  lm_slope$bassB[projection_year_id] <- paste0(
-    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
-    if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
-  sub_menhadenD <- menhaden_dollars$Dollars[menhaden_dollars$Year %in% index_year]
-  dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
-  summary(dollars_lm)
-  dollars_fit <- fitted(dollars_lm)
-  lm_slope$dollars[projection_year_id] <- paste0(
-    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
-    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-
-
-  if (projection_year_id == length(projection_year)){
-
-    par(mfrow = c(2, 2))
-
-    plot(amo$raw_value, menhaden_b,
-         xlab = "AMO raw values",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
-
-    plot(pcp$raw_value, menhaden_b,
-         xlab = "Precipitation raw values",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
-
-    plot(bassB$bass_bio, menhaden_b,
-         xlab = "Biomass of Striped bass",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
-
-    plot(sub_menhadenD, sub_menhaden_b,
-         xlab = "Menhaden dollars",
-         ylab = "Biomass of menhaden-like species"
-    )
-    lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
-
-  }
-
-  # status of indicators --------------------------------------------
-
-  amo_soi <- calc_soi(
-    indicator_data = amo$raw_value,
-    slope = coef(amo_lm)[2]
-  )
-
-  pcp_soi <- calc_soi(
-    indicator_data = pcp$raw_value,
-    slope = coef(pcp_lm)[2]
-  )
-
-  bassB_soi <- calc_soi(
-    indicator_data = bassB$bass_bio,
-    slope = coef(bassB_lm)[2]
-  )
-
-  dollars_soi <- calc_soi(
-    indicator_data = sub_menhadenD,
-    slope = coef(dollars_lm)[2]
-  )
-
-  if (projection_year_id == 1) {
-    scaled_data <- data.frame(
-      year = model_year,
-      projection_year_id = projection_year_id,
-      amo = scale(amo$raw_value)[,1],
-      pcp = scale(pcp$raw_value)[,1],
-      bassB = scale(bassB$bass_bio)[,1],
-      dollars = scale(sub_menhadenD)[,1],
-      menhadenB = scale(menhaden_b)[,1]
-    )
-
-    soi_data <- data.frame(
-      year = model_year,
-      projection_year_id = projection_year_id,
-      amo = amo_soi,
-      pcp = pcp_soi,
-      bass_b = bassB_soi,
-      dollars = dollars_soi
-    )
-  } else{
-    scaled_data <- rbind(
-      scaled_data,
-      data.frame(
-        year = index_year,
-        projection_year_id = projection_year_id,
-        amo = scale(amo$raw_value)[,1],
-        pcp = scale(pcp$raw_value)[,1],
-        bassB = scale(bassB$bass_bio)[,1],
-        dollars = scale(sub_menhadenD)[,1],
-        menhadenB = scale(menhaden_b)[,1]
-      )
-    )
-
-    soi_data <- rbind(
-      soi_data,
-      data.frame(
-        year = index_year,
-        projection_year_id = projection_year_id,
-        amo = amo_soi,
-        pcp = pcp_soi,
-        bass_b = bassB_soi,
-        dollars = dollars_soi
-      )
-    )
-  }
-
-
-
-  # Adjusted TAC ----------------------------------------------------
-
-  Bt_BMSY <- projection_output[[projection_year_id]]$Bt_Kstore / projection_output[[projection_year_id]]$BMSY_K_Mstore
-
-  amo_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(amo_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  pcp_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(pcp_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  bassB_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(bassB_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-  dollars_tac <- adjust_projection_dbsra(
-    tac = projection_output[[projection_year_id]]$TAC,
-    soi = tail(dollars_soi, n = 1),
-    Bt_BMSY = Bt_BMSY
-  )
-
-  if (projection_year_id == 1){
-    tac_data <- data.frame(
-      iter = 1:length(amo_tac),
-      projection_year_id = projection_year_id,
-      DBSRA = projection_output[[projection_year_id]]$TAC,
-      amo = amo_tac,
-      pcp = pcp_tac,
-      bassB = bassB_tac,
-      dollars = dollars_tac
-    )
-  } else {
-    tac_data <- rbind(
-      tac_data,
-      data.frame(
-        iter = 1:length(amo_tac),
-        projection_year_id = projection_year_id,
-        DBSRA = projection_output[[projection_year_id]]$TAC,
-        amo = amo_tac,
-        pcp = pcp_tac,
-        bassB = bassB_tac,
-        dollars = dollars_tac
-      )
-    )
-  }
-}
-
-scaled_data_melt <- reshape2::melt(
-  scaled_data,
-  id = c("year", "projection_year_id")
-)
-scaled_data_melt$projection_year_id <- as.factor(scaled_data_melt$projection_year_id)
-
-
-ggplot(scaled_data_melt, aes(x = year, y = value, color = projection_year_id)) +
+soi_data_melt <- output$soi_data_melt
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
   geom_line() +
   facet_wrap(~variable, scales = "free_y") +
   labs(
-    title = "Scaled Indices",
-    x = "Year",
-    y = "Scaled Indices"
-  ) +
-  theme_bw()
-
-
-soi_data_melt <- reshape2::melt(
-  soi_data,
-  id = c("year", "projection_year_id")
-)
-soi_data_melt$projection_year_id <- as.factor(soi_data_melt$projection_year_id)
-
-ggplot(soi_data_melt, aes(x = year, y = value, color = projection_year_id)) +
-  geom_line() +
-  facet_wrap(~variable, scales = "free_y") +
-  labs(
-    title = "Status of Indicators",
+    title = "Case 0.2: Status of Indicators",
     x = "Year",
     y = "Status of Indicators"
   ) +
   theme_bw()
 
-tac_data_melt <- reshape2::melt(
-  tac_data,
-  id = c("iter", "projection_year_id")
-)
-tac_data_melt$projection_year_id <- as.factor(tac_data_melt$projection_year_id)
+tac_data_melt <- output$tac_data_melt
+# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+#   geom_boxplot()+
+#   labs(
+#     title = "Case 0.2: TAC",
+#     x = "",
+#     y = "TAC"
+#   ) +
+#   theme_bw()
 
-ggplot(tac_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
+tac_data_melt_median <- output$tac_data_melt_median
+ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
   geom_line() +
-  facet_wrap(~variable) +
   labs(
-    title = "TAC",
-    x = "Iteration",
-    y = "TAC"
-  ) +
-  theme_bw()
-
-ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
-  geom_boxplot()+
-  labs(
-    title = "TAC",
+    title = "Case 0.2: Median TAC from DBSRA and adjusted TAC",
     x = "",
     y = "TAC"
   ) +
   theme_bw()
-
 ```
 
 - Slope values from linear regression models
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-knitr::kable(lm_slope)
+knitr::kable(output$lm_slope)
+```
+
+## Cases 1-4 are based on the settings from case 0.3
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# Projection based on case 0.3 ------------------------------------
+projection_output3_clean <- list()
+
+for (i in 1:length(projection_year)){
+  temp <- projection_output3[[i]]
+  temp$Btrend <- temp$Btrend[, (length(equi_year_temp[[i]])+1): ncol(temp$Btrend)]
+  projection_output3_clean[[i]] <- temp
+}
+output <- compare_projections_dbsra(
+  case_name = 0.3,
+  projection_output_data = projection_output3_clean,
+  projection_year = projection_year,
+  model_year = model_year,
+  amo = amo_unsmooth_lag1,
+  pcp = precipitation,
+  bassB = bass_bio,
+  price = menhaden_price
+)
+
+soi_data_melt <- output$soi_data_melt
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==length(projection_year), ], aes(x = year, y = value)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Case 0.3: Status of Indicators",
+    x = "Year",
+    y = "Status of Indicators"
+  ) +
+  theme_bw()
+
+tac_data_melt <- output$tac_data_melt
+# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+#   geom_boxplot()+
+#   labs(
+#     title = "Case 0.3: TAC",
+#     x = "",
+#     y = "TAC"
+#   ) +
+#   theme_bw()
+
+tac_data_melt_median <- output$tac_data_melt_median
+ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
+  geom_line() +
+  labs(
+    title = "Case 0.3: Median TAC from DBSRA and adjusted TAC",
+    x = "",
+    y = "TAC"
+  ) +
+  theme_bw()
+```
+
+- Slope values from linear regression models
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+knitr::kable(output$lm_slope)
 ```

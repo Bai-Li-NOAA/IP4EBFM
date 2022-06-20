@@ -54,12 +54,12 @@ bass_bio <- data.frame(
 # Load economic index ---------------------------------------------
 # data were downloaded from https://www.fisheries.noaa.gov/foss/f?p=215:200:15209701672686::NO:RP::
 
-menhaden_dollars <- read.csv(
-  here::here("data", "ewe", "menhaden_dollars.csv")
+menhaden_price <- read.csv(
+  here::here("data", "ewe", "menhaden_price.csv")
 )
 
-atlantic_menhaden_dollars <- read.csv(
-  here::here("data", "ewe", "atlantic_menhaden_dollars.csv")
+atlantic_menhaden_price <- read.csv(
+  here::here("data", "ewe", "atlantic_menhaden_price.csv")
 )
 
 # Load indicators from EwE outputs
