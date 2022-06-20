@@ -46,8 +46,8 @@ adjust_projection_jabba <- function(FMSY, soi, Bt_BMSY) {
 #' @param Bt Biomass in terminal model year from JABBA outputs.
 #' @return Adjusted projection values (i.e., FMSY).
 #' @export
-adjust_projection_catcheco <- function(fmsy_melted, Bt){
-  #Calculate projected catch by multiplying biomass by Feco 
+adjust_projection_catcheco_jabba <- function(fmsy_melted, Bt){
+  #Calculate projected catch by multiplying biomass by Feco
   projection_catch <- Bt * fmsy_melted$value
   return(projection_catch)
 }
