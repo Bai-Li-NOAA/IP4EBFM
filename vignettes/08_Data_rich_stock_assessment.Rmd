@@ -312,12 +312,12 @@ lm_slope$bassB <- paste0(
   round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
   if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-sub_menhadenD <- menhaden_dollars$Inflation.Adjust.Price.Per.MT[menhaden_dollars$Year %in% index_year]
-dollars_lm <- lm(biomass_ewe[time_id] ~ sub_menhadenD)
-dollars_fit <- fitted(dollars_lm)
+sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
+price_lm <- lm(biomass_ewe[time_id] ~ sub_menhadenP)
+price_fit <- fitted(price_lm)
 lm_slope$price <- paste0(
-  round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
-  if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  round(summary(price_lm)$coefficients[2, 1], digits = 2),
+  if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
 par(mfrow = c(2, 2))
 
@@ -339,11 +339,11 @@ plot(bassB$bass_bio, biomass_ewe[time_id],
 )
 lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
 
-plot(sub_menhadenD, biomass_ewe[time_id],
+plot(sub_menhadenP, biomass_ewe[time_id],
      xlab = "Menhaden price",
      ylab = "Menhaden-like species B from OM"
 )
-lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
+lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
 
 knitr::kable(lm_slope)
 
@@ -418,14 +418,14 @@ for (projection_year_id in 1:length(projection_year)){
     round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
     if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_dollars$Year]
-  sub_menhadenD <- menhaden_dollars$Inflation.Adjust.Price.Per.MT[menhaden_dollars$Year %in% index_year]
-  dollars_lm <- lm(sub_menhaden_b ~ sub_menhadenD)
-  summary(dollars_lm)
-  dollars_fit <- fitted(dollars_lm)
+  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_price$Year]
+  sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
+  price_lm <- lm(sub_menhaden_b ~ sub_menhadenP)
+  summary(price_lm)
+  price_fit <- fitted(price_lm)
   lm_slope$price[projection_year_id] <- paste0(
-    round(summary(dollars_lm)$coefficients[2, 1], digits = 2),
-    if(summary(dollars_lm)$coefficients[2, 4] <= 0.05) {"*"})
+    round(summary(price_lm)$coefficients[2, 1], digits = 2),
+    if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
   if (projection_year_id == length(projection_year)){
 
@@ -449,11 +449,11 @@ for (projection_year_id in 1:length(projection_year)){
     )
     lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
 
-    plot(sub_menhadenD, sub_menhaden_b,
+    plot(sub_menhadenP, sub_menhaden_b,
          xlab = "Menhaden price",
          ylab = "Biomass of menhaden-like species"
     )
-    lines(sub_menhadenD, dollars_fit, lty = 2, col = "blue")
+    lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
 
   }
 
@@ -475,9 +475,9 @@ for (projection_year_id in 1:length(projection_year)){
     slope = coef(bassB_lm)[2]
   )
 
-  dollars_soi <- calc_soi(
-    indicator_data = sub_menhadenD,
-    slope = coef(dollars_lm)[2]
+  price_soi <- calc_soi(
+    indicator_data = sub_menhadenP,
+    slope = coef(price_lm)[2]
   )
 
   if (projection_year_id == 1) {
@@ -487,7 +487,7 @@ for (projection_year_id in 1:length(projection_year)){
       amo = scale(amo$raw_value)[,1],
       pcp = scale(pcp$raw_value)[,1],
       bassB = scale(bassB$bass_bio)[,1],
-      price = scale(sub_menhadenD)[,1],
+      price = scale(sub_menhadenP)[,1],
       menhadenB = scale(menhaden_b)[,1]
     )
 
@@ -497,7 +497,7 @@ for (projection_year_id in 1:length(projection_year)){
       amo = amo_soi,
       pcp = pcp_soi,
       bass_b = bassB_soi,
-      price = dollars_soi
+      price = price_soi
     )
   } else{
     scaled_data <- rbind(
@@ -508,7 +508,7 @@ for (projection_year_id in 1:length(projection_year)){
         amo = scale(amo$raw_value)[,1],
         pcp = scale(pcp$raw_value)[,1],
         bassB = scale(bassB$bass_bio)[,1],
-        price = scale(sub_menhadenD)[,1],
+        price = scale(sub_menhadenP)[,1],
         menhadenB = scale(menhaden_b)[,1]
       )
     )
@@ -521,7 +521,7 @@ for (projection_year_id in 1:length(projection_year)){
         amo = amo_soi,
         pcp = pcp_soi,
         bass_b = bassB_soi,
-        price = dollars_soi
+        price = price_soi
       )
     )
   }
@@ -556,9 +556,9 @@ for (projection_year_id in 1:length(projection_year)){
     soi = tail(bassB_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
-  dollars_fmsy <- adjust_projection_jabba(
+  price_fmsy <- adjust_projection_jabba(
     FMSY = ss3_fmsy,
-    soi = tail(dollars_soi, n = 1),
+    soi = tail(price_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
 
@@ -570,7 +570,7 @@ for (projection_year_id in 1:length(projection_year)){
       amo = amo_fmsy,
       pcp = pcp_fmsy,
       bassB = bassB_fmsy,
-      price = dollars_fmsy
+      price = price_fmsy
     )
   } else {
     fmsy_data <- rbind(
@@ -582,7 +582,7 @@ for (projection_year_id in 1:length(projection_year)){
         amo = amo_fmsy,
         pcp = pcp_fmsy,
         bassB = bassB_fmsy,
-        price = dollars_fmsy
+        price = price_fmsy
       )
     )
   }

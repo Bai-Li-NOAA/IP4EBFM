@@ -126,7 +126,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Data-moderate stock assessment</h1>
             
-            <h4 data-toc-skip class="date">Updated on May 12, 2022</h4>
+            <h4 data-toc-skip class="date">Updated on June 21, 2022</h4>
       
       
       <div class="hidden name"><code>07_Data_moderate_stock_assessment.Rmd</code></div>
@@ -148,22 +148,35 @@
 <h2 id="case-0-stock-assessment-base-run">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run"></a>
 </h2>
 <ul>
-<li>Case 0.1: K = 6500000, r = 0.6 with large CV</li>
-<li>Case 0.2: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)</li>
+<li>Case 0: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)</li>
 </ul>
 <p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
 </div>
 <div class="section level2">
-<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-2">Cases 1-4 are based on the settings from case 0.2<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-2"></a>
+<h2 id="cases-1-4-are-based-on-the-settings-from-case-0">Cases 1-4 are based on the settings from case 0<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0"></a>
 </h2>
-<pre><code>- Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
-- Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
-- Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
-- Case 4: Link dollars of menhaden with menhaden biomass estimates and adjust projections </code></pre>
 <ul>
-<li>Linear regression models from case 1 - 4
+<li><p>Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species</p></li>
+<li><p>Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading</p></li>
+<li><p>Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator</p></li>
+<li><p>Case 4: Link price of menhaden with menhaden biomass estimates and adjust projections</p></li>
+<li><p>Linear regression models from case 1 - 4</p></li>
+<li><p>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden</p></li>
+</ul>
+<div class="section level3">
+<h3 id="status-of-indicators-soi">Status of indicators (SOI)<a class="anchor" aria-label="anchor" href="#status-of-indicators-soi"></a>
+</h3>
 <ul>
-<li>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden <img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><table class="table">
+<li>
+<p>If stock-indicator relationship is positive, <span class="math inline">\(SOI_{y} = \frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}\)</span></p>
+<ul>
+<li>If stock-indicator relationship is negative, <span class="math inline">\(SOI_{y} = 1-\frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}\)</span>
+</li>
+</ul>
+<p>where <span class="math inline">\(I_{y}\)</span> represents indicator value in year y. <span class="math inline">\(I_{y}^{min}\)</span> and <span class="math inline">\(I_{y}^{max}\)</span> represent the minimum and maximum values of <span class="math inline">\(I\)</span> from the time series.</p>
+</li>
+</ul>
+<img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><table class="table">
 <thead><tr>
 <th style="text-align:left;">
 case
@@ -178,7 +191,7 @@ pcp
 bassB
 </th>
 <th style="text-align:left;">
-dollars
+price
 </th>
 </tr></thead>
 <tbody><tr>
@@ -195,17 +208,25 @@ True indices
 0.77
 </td>
 <td style="text-align:left;">
-0.01
+1466.08
 </td>
 </tr></tbody>
 </table>
-</li>
+<ul>
 <li>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</li>
 <li>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</li>
 </ul>
-</li>
+</div>
+<div class="section level3">
+<h3 id="adjust-projection">Adjust projection<a class="anchor" aria-label="anchor" href="#adjust-projection"></a>
+</h3>
+<ul>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} &gt; 1\)</span>, <span class="math inline">\(F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} \le 1\)</span> and <span class="math inline">\(\frac{B2012_{i}}{BMSY} &gt; 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} \le 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = 0\)</span></p></li>
 </ul>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-2.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-3.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-4.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-5.png" width="1152"></p>
+<p>where <span class="math inline">\(i\)</span> represents individual iterations</p>
+<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-2.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-3.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -227,112 +248,149 @@ pcp
 bassB
 </th>
 <th style="text-align:left;">
-dollars
+price
 </th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
-1
+2013
 </td>
 <td style="text-align:left;">
-537546.31*
+518880.05*
 </td>
 <td style="text-align:left;">
--30551.81
+-31499.65
 </td>
 <td style="text-align:left;">
-0.87*
+0.85*
 </td>
 <td style="text-align:left;">
-0
+-617.91
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
-2
+2014
 </td>
 <td style="text-align:left;">
-535905.39*
+518880.05*
 </td>
 <td style="text-align:left;">
--32752.74
+-31499.65
 </td>
 <td style="text-align:left;">
-0.86*
+0.85*
 </td>
 <td style="text-align:left;">
-0
+-617.91
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
-3
+2015
 </td>
 <td style="text-align:left;">
-577844.55*
+518880.05*
 </td>
 <td style="text-align:left;">
--35935.47
+-31499.65
 </td>
 <td style="text-align:left;">
-0.84*
+0.85*
 </td>
 <td style="text-align:left;">
-0
+-617.91
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
-4
+2016
 </td>
 <td style="text-align:left;">
-574347.37*
+518880.05*
 </td>
 <td style="text-align:left;">
--35941.38
+-31499.65
 </td>
 <td style="text-align:left;">
-0.81*
+0.85*
 </td>
 <td style="text-align:left;">
-0
+-617.91
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.2
+0
 </td>
 <td style="text-align:right;">
-5
+2017
 </td>
 <td style="text-align:left;">
-589233.21*
+518880.05*
 </td>
 <td style="text-align:left;">
--40360.64
+-31499.65
 </td>
 <td style="text-align:left;">
-0.77*
+0.85*
 </td>
 <td style="text-align:left;">
-0
+-617.91
 </td>
 </tr>
 </tbody>
 </table>
+<ul>
+<li>Adjust catch input and project biomass based on FMSY*B</li>
+</ul>
+<pre><code><span class="co">## Compiling model graph</span>
+<span class="co">##    Resolving undeclared variables</span>
+<span class="co">##    Allocating nodes</span>
+<span class="co">## Graph information:</span>
+<span class="co">##    Observed stochastic nodes: 111</span>
+<span class="co">##    Unobserved stochastic nodes: 124</span>
+<span class="co">##    Total graph size: 19901</span>
+<span class="co">## </span>
+<span class="co">## Initializing model</span></code></pre>
+<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
+<ul>
+<li>Adjust catch input and project biomass based on 0.5<em>FMSY</em>B</li>
+</ul>
+<pre><code><span class="co">## Compiling model graph</span>
+<span class="co">##    Resolving undeclared variables</span>
+<span class="co">##    Allocating nodes</span>
+<span class="co">## Graph information:</span>
+<span class="co">##    Observed stochastic nodes: 111</span>
+<span class="co">##    Unobserved stochastic nodes: 124</span>
+<span class="co">##    Total graph size: 19901</span>
+<span class="co">## </span>
+<span class="co">## Initializing model</span></code></pre>
+<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-7-1.png" width="1152"> - Adjust catch input and project biomass based on 0.25<em>FMSY</em>B</p>
+<pre><code><span class="co">## Compiling model graph</span>
+<span class="co">##    Resolving undeclared variables</span>
+<span class="co">##    Allocating nodes</span>
+<span class="co">## Graph information:</span>
+<span class="co">##    Observed stochastic nodes: 111</span>
+<span class="co">##    Unobserved stochastic nodes: 124</span>
+<span class="co">##    Total graph size: 19901</span>
+<span class="co">## </span>
+<span class="co">## Initializing model</span></code></pre>
+<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
+</div>
 </div>
   </div>
 

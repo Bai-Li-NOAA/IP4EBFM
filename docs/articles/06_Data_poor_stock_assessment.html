@@ -154,7 +154,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-2-1.png" width="1152"></p>
 <ul>
 <li>Case 0.2
 <ul>
@@ -164,27 +164,19 @@
 </ul>
 </li>
 </ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-2.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 <ul>
 <li>Case 0.3
 <ul>
 <li>Add a long sequence of equilibrium catches (2010 - 2012) to the start of the catch</li>
+<li>Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences</li>
 </ul>
 </li>
 </ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-2.png" width="1152"></p>
-<ul>
-<li>Case 0.4
-<ul>
-<li>Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with interval of 0.05) and find the scenario that has the lowest sum of squared differences</li>
-<li>Dep = 0.75, BMSY_B0 = 0.3, FMSY_M = 1.05</li>
-</ul>
-</li>
-</ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
 </div>
 <div class="section level2">
-<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-1">Cases 1-4 are based on the settings from case 0.1<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-1"></a>
+<h2 id="linear-regression-models-from-cases-1---4-using-true-values-from-ewe">Linear regression models from cases 1 - 4 using “true” values from EwE<a class="anchor" aria-label="anchor" href="#linear-regression-models-from-cases-1---4-using-true-values-from-ewe"></a>
 </h2>
 <pre><code>- Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
 - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
@@ -198,7 +190,51 @@
 </ul>
 </li>
 </ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-3.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-4.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-5.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
+<ul>
+<li>Slope values from linear regression models</li>
+</ul>
+<table class="table">
+<thead><tr>
+<th style="text-align:left;">
+case
+</th>
+<th style="text-align:left;">
+amo
+</th>
+<th style="text-align:left;">
+pcp
+</th>
+<th style="text-align:left;">
+bassB
+</th>
+<th style="text-align:left;">
+price
+</th>
+</tr></thead>
+<tbody><tr>
+<td style="text-align:left;">
+True indices
+</td>
+<td style="text-align:left;">
+253334.99
+</td>
+<td style="text-align:left;">
+3272.33
+</td>
+<td style="text-align:left;">
+0.77
+</td>
+<td style="text-align:left;">
+1466.08
+</td>
+</tr></tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-1">Cases 1-4 are based on the settings from case 0.1<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-1"></a>
+</h2>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-3.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -220,7 +256,7 @@ pcp
 bassB
 </th>
 <th style="text-align:left;">
-dollars
+price
 </th>
 </tr></thead>
 <tbody>
@@ -229,7 +265,7 @@ dollars
 0.1
 </td>
 <td style="text-align:right;">
-1
+2013
 </td>
 <td style="text-align:left;">
 -1400457.3*
@@ -241,7 +277,7 @@ dollars
 -4.54*
 </td>
 <td style="text-align:left;">
--0.01
+-2204.81
 </td>
 </tr>
 <tr>
@@ -249,7 +285,7 @@ dollars
 0.1
 </td>
 <td style="text-align:right;">
-2
+2014
 </td>
 <td style="text-align:left;">
 -1491409.6*
@@ -261,7 +297,7 @@ dollars
 -4.59*
 </td>
 <td style="text-align:left;">
--0.01
+-2007.07
 </td>
 </tr>
 <tr>
@@ -269,7 +305,7 @@ dollars
 0.1
 </td>
 <td style="text-align:right;">
-3
+2015
 </td>
 <td style="text-align:left;">
 -1430481.68*
@@ -281,7 +317,7 @@ dollars
 -4.63*
 </td>
 <td style="text-align:left;">
--0.01
+-1677.28
 </td>
 </tr>
 <tr>
@@ -289,7 +325,7 @@ dollars
 0.1
 </td>
 <td style="text-align:right;">
-4
+2016
 </td>
 <td style="text-align:left;">
 -1467515.58*
@@ -301,7 +337,7 @@ dollars
 -4.67*
 </td>
 <td style="text-align:left;">
--0.01
+-1302.24
 </td>
 </tr>
 <tr>
@@ -309,7 +345,7 @@ dollars
 0.1
 </td>
 <td style="text-align:right;">
-5
+2017
 </td>
 <td style="text-align:left;">
 -1407696.23*
@@ -321,16 +357,16 @@ dollars
 -4.69*
 </td>
 <td style="text-align:left;">
--0.01
+-872.12
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section level2">
-<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-4">Cases 1-4 are based on the settings from case 0.4<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-4"></a>
+<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-2">Cases 1-4 are based on the settings from case 0.2<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-2"></a>
 </h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-3.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-4.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-5.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-3.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -352,108 +388,240 @@ pcp
 bassB
 </th>
 <th style="text-align:left;">
-dollars
+price
 </th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:right;">
-0.4
+0.2
 </td>
 <td style="text-align:right;">
-1
+2013
 </td>
 <td style="text-align:left;">
-631269.82
+677649.48*
 </td>
 <td style="text-align:left;">
--77806.56
+-44931.6
 </td>
 <td style="text-align:left;">
--0.7
+1.09*
 </td>
 <td style="text-align:left;">
--0.03*
+-1207.27
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4
+0.2
 </td>
 <td style="text-align:right;">
-2
+2014
 </td>
 <td style="text-align:left;">
-633711.76
+761878.56*
 </td>
 <td style="text-align:left;">
--87400.59
+-41792.54
 </td>
 <td style="text-align:left;">
--0.85
+1.09*
 </td>
 <td style="text-align:left;">
--0.03*
+-775.59
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4
+0.2
 </td>
 <td style="text-align:right;">
-3
+2015
 </td>
 <td style="text-align:left;">
-543629.25
+921657.01*
 </td>
 <td style="text-align:left;">
--101279.21
+-45334.69
 </td>
 <td style="text-align:left;">
--1.48
+1.14*
 </td>
 <td style="text-align:left;">
--0.03*
+-314.3
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4
+0.2
 </td>
 <td style="text-align:right;">
-4
+2016
 </td>
 <td style="text-align:left;">
-594558.78
+916400.42*
 </td>
 <td style="text-align:left;">
--107766.51
+-45406.59
 </td>
 <td style="text-align:left;">
--1.54
+1.06
 </td>
 <td style="text-align:left;">
--0.03*
+-17.6
 </td>
 </tr>
 <tr>
 <td style="text-align:right;">
-0.4
+0.2
 </td>
 <td style="text-align:right;">
-5
+2017
 </td>
 <td style="text-align:left;">
-582469.85
+743830.62*
 </td>
 <td style="text-align:left;">
--102582.31
+-48702.51
 </td>
 <td style="text-align:left;">
--1.41
+1.05*
 </td>
 <td style="text-align:left;">
--0.03*
+-423.28
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
+<h2 id="cases-1-4-are-based-on-the-settings-from-case-0-3">Cases 1-4 are based on the settings from case 0.3<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-3"></a>
+</h2>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-3.png" width="1152"></p>
+<ul>
+<li>Slope values from linear regression models</li>
+</ul>
+<table class="table">
+<thead><tr>
+<th style="text-align:right;">
+case
+</th>
+<th style="text-align:right;">
+projection_year
+</th>
+<th style="text-align:left;">
+amo
+</th>
+<th style="text-align:left;">
+pcp
+</th>
+<th style="text-align:left;">
+bassB
+</th>
+<th style="text-align:left;">
+price
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:left;">
+970278.47*
+</td>
+<td style="text-align:left;">
+-75380.44
+</td>
+<td style="text-align:left;">
+-0.04
+</td>
+<td style="text-align:left;">
+-2850.3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+2014
+</td>
+<td style="text-align:left;">
+999094.79*
+</td>
+<td style="text-align:left;">
+-78347.26
+</td>
+<td style="text-align:left;">
+0.06
+</td>
+<td style="text-align:left;">
+-2805.39
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+2015
+</td>
+<td style="text-align:left;">
+1042433.67*
+</td>
+<td style="text-align:left;">
+-90493.74
+</td>
+<td style="text-align:left;">
+-0.21
+</td>
+<td style="text-align:left;">
+-2832.27
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+2016
+</td>
+<td style="text-align:left;">
+1038580.27*
+</td>
+<td style="text-align:left;">
+-90272.26
+</td>
+<td style="text-align:left;">
+-0.26
+</td>
+<td style="text-align:left;">
+-2217.86
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+0.3
+</td>
+<td style="text-align:right;">
+2017
+</td>
+<td style="text-align:left;">
+1055533.9*
+</td>
+<td style="text-align:left;">
+-95302.54
+</td>
+<td style="text-align:left;">
+-0.29
+</td>
+<td style="text-align:left;">
+-1411.66
 </td>
 </tr>
 </tbody>
