@@ -6,7 +6,6 @@ navbar:
     - articles
     - github
     - issue
-    right: github
 
   components:
     home:
@@ -29,7 +28,7 @@ navbar:
       href: https://github.com/Bai-Li-NOAA/IFA4EBFM/issues
 
     articles:
-      text: Articles
+      text: Vignettes
       icon: fas fa-file-contract fa-lg
       menu:
       - text: Forecasting review bibliography
@@ -48,4 +47,5 @@ navbar:
         href: articles/07_Data_moderate_stock_assessment.html
       - text: Data-rich stock assessment
         href: articles/08_Data_rich_stock_assessment.html
+
 

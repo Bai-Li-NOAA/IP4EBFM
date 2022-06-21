@@ -31,9 +31,6 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>/articles/test.html</loc>
-  </url>
-  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -41,6 +38,9 @@
   </url>
   <url>
     <loc>/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>/reference/adjust_projection_catcheco_jabba.html</loc>
   </url>
   <url>
     <loc>/reference/adjust_projection_dbsra.html</loc>
