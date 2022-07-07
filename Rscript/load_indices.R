@@ -78,3 +78,16 @@ atlantic_menhaden_price <- read.csv(
 #   sep = ",",
 #   col.names = col_name
 # )
+
+
+
+# Load psdi index -------------------------------------------------
+palmer_drought_severity_index <- read.csv(
+  here::here("data", "ewe", "palmer_drought_severity_index.csv")
+)
+
+# Load sst data ---------------------------------------------------
+kaplan_sst <- read.csv(
+  here::here("data", "ewe", "kaplan_sst.csv")
+)
+
