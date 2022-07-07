@@ -11,6 +11,7 @@
 #' @param projection_year A vector of years for projection.
 #' @param use_depletion A logical value.
 #' @param depletion_ratio Ratio of depletion.
+#' @param initial_equilibrium_catch
 #' @import r4ss
 #' @return Outputs from Stock Synthesis 3
 #' @examples
@@ -28,7 +29,7 @@
 generate_ss3 <- function(file_path, r0, steepness, sigmar,
                          projection_f, projection_catch = NULL,
                          sa_data, model_year, projection_year,
-                         use_depletion = FALSE, depletion_ratio = NULL) {
+                         use_depletion = FALSE, depletion_ratio = NULL, initial_equilibrium_catch=TRUE) {
   # Write data.ss  ------------------------------------------
 
   ss3_data <- r4ss::SS_readdat(
@@ -102,6 +103,8 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     catch = sa_data$fishery$obs_total_catch_biomass$fleet1[fleet_year_id],
     catch_se = sa_data$fishery$om_cv[fleet_year_id]
   )
+
+  if (initial_equilibrium_catch) ss3_data$catch <- rbind(c(-999, 1, 1, 0.1, 0.05), ss3_data$catch)
 
   ss3_data$CPUEinfo <- data.frame(
     Fleet = 1:ss3_data$Nfleets,
@@ -376,6 +379,16 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_ctl$F_Method <- 3
   ss3_ctl$maxF <- 10
   ss3_ctl$F_iter <- 4
+  if (initial_equilibrium_catch) ss3_ctl$init_F <- data.frame(
+    "LO" = 0,
+    "HI" = 1,
+    "INIT" = 0.3,
+    "PRIOR" = 0.3,
+    "PR_SD" = 0.2,
+    "PR_type" = 0,
+    "PHASE" = 1,
+    "PType" = 18
+  )
 
   # Catchability
   ss3_ctl$Q_options <- data.frame(
@@ -441,7 +454,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   row.names(ss3_ctl$size_selex_types) <- ss3_data$fleetnames
 
   ss3_ctl$age_selex_types <- data.frame(
-    Pattern = c(19, 12, 19),
+    Pattern = c(19, 19, 19),
     Discard = 0,
     Male = 0,
     Special = 0
@@ -474,7 +487,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     data.frame(
       Lo = rep(0, 6),
       Hi = max(ss3_data$agebin_vector),
-      INIT = c(2, 3, 3.5, 3, 1, 0.1),
+      INIT = c(1.8, 3.1, 0.01, 0.88, 1, 0.1),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
@@ -484,14 +497,14 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
 
     # Survey 1
     data.frame(
-      Lo = c(0, 0),
-      Hi = c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)),
-      INIT = c(3.0, 3.0),
-      PRIOR = c(0, 0),
-      SD = c(99, 99),
+      Lo = rep(0, 6),
+      Hi = max(ss3_data$agebin_vector),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
+      PRIOR = 0,
+      SD = 99,
       PR_TYPE = 0,
       PHASE = 2,
-      matrix(0, ncol = 7, nrow = 2)
+      matrix(0, ncol = 7, nrow = 6)
     ),
 
     # Survey 2
