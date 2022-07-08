@@ -381,7 +381,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_ctl$F_iter <- 4
   if (initial_equilibrium_catch) ss3_ctl$init_F <- data.frame(
     "LO" = 0,
-    "HI" = 1,
+    "HI" = 2,
     "INIT" = 0.3,
     "PRIOR" = 0.3,
     "PR_SD" = 0.2,
@@ -491,7 +491,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = 2,
+      PHASE = c(2, 2, -2, 2, 2, -2),
       matrix(0, ncol = 7, nrow = 6)
     ),
 
