@@ -62,7 +62,8 @@ generate_ss3(
   projection_f = 0.75, projection_catch = NULL,
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
-  use_depletion = FALSE, depletion_ratio = NULL
+  use_depletion = FALSE, depletion_ratio = NULL, 
+  initial_equilibrium_catch = FALSE
 )
 
 # Run SS3 ----------------------------------------------------------
@@ -84,7 +85,8 @@ generate_ss3(
   projection_f = fmsy, projection_catch = NULL,
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
-  use_depletion = FALSE, depletion_ratio = NULL
+  use_depletion = FALSE, depletion_ratio = NULL, 
+  initial_equilibrium_catch = FALSE
 )
 
 system(paste(file.path(file_path, "ss_win.exe"), file.path(file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
