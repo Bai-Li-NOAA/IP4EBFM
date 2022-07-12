@@ -370,7 +370,9 @@ options(digits = 2)
 project_path <- here::here()
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_base_run")
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_forcing_pdsi_egg_amo1")
+# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_base_run")
 ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_forcing_pdsi_egg_amo1")
+
 menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
 
 # read Atlantic menhaden Beaufort Assessment Model output data --------

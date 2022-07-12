@@ -2,7 +2,6 @@ pandoc: 2.11.4
 pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
-  009_Ecopath_with_ecosim_simulation: 009_Ecopath_with_ecosim_simulation.html
   01_001_Bibliography: 01_litreview/01_001_Bibliography.html
   02_EcosystemModelsReview: 02_EcosystemModelsReview.html
   03_Ecosystem_model_restructuring: 03_Ecosystem_model_restructuring.html
@@ -11,5 +10,6 @@ articles:
   06_Data_poor_stock_assessment: 06_Data_poor_stock_assessment.html
   07_Data_moderate_stock_assessment: 07_Data_moderate_stock_assessment.html
   08_Data_rich_stock_assessment: 08_Data_rich_stock_assessment.html
-last_built: 2022-07-08T16:24Z
+  09_Ecopath_with_ecosim_simulation: 09_Ecopath_with_ecosim_simulation.html
+last_built: 2022-07-12T12:48Z
 

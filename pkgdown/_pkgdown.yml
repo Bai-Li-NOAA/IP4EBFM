@@ -48,7 +48,7 @@ navbar:
       - text: Data-rich stock assessment
         href: articles/08_Data_rich_stock_assessment.html
       - text: New ecosystem simulation
-        href: articles/009_Ecopath_with_ecosim_simulation.html
+        href: articles/09_Ecopath_with_ecosim_simulation.html
 
 
 
