@@ -498,7 +498,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     # Survey 1
     data.frame(
       Lo = rep(0, 6),
-      Hi = max(ss3_data$agebin_vector),
+      Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
       INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
       PRIOR = 0,
       SD = 99,
@@ -510,7 +510,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     # Survey 2
     data.frame(
       Lo = rep(0, 6),
-      Hi = max(ss3_data$agebin_vector),
+      Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
       INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
       PRIOR = 0,
       SD = 99,
@@ -537,7 +537,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       # Survey 1
       data.frame(
         Lo = c(0, 0),
-        Hi = c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)),
+        Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
         INIT = c(3.0, 3.0),
         PRIOR = c(0, 0),
         SD = c(99, 99),
@@ -549,7 +549,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       # Survey 2
       data.frame(
         Lo = rep(0, 6),
-        Hi = max(ss3_data$agebin_vector),
+        Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
         INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
         PRIOR = 0,
         SD = 99,
@@ -610,11 +610,11 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_starter$sourcefile <- file.path(file_path, "starter.ss")
   ss3_starter$datfile <- "data.ss"
   ss3_starter$ctlfile <- "control.ss"
-  ss3_starter$F_age_range <- range(ss3_data$agebin_vector)
+  #ss3_starter$F_age_range <- range(ss3_data$agebin_vector)
 
   ss3_starter$F_report_units <- 3
   ss3_starter$F_report_basis <- 0
-  #ss3_starter$F_age_range <- c(sa_data$biodata$ages[1], ss3_data$Nages-2)
+  ss3_starter$F_age_range <- c(sa_data$biodata$ages[1], ss3_data$Nages-2)
 
   r4ss::SS_writestarter(ss3_starter,
                         dir = file.path(file_path),
