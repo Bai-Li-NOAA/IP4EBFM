@@ -1,6 +1,10 @@
 
 # Load AMO index --------------------------------------------------
 
+amo_unsmooth_lag0 <- read.csv(
+  here::here("data", "ewe", "amo_unsmooth_lag0.csv")
+)
+
 amo_unsmooth_lag1 <- read.csv(
   here::here("data", "ewe", "amo_unsmooth_lag1.csv")
 )
