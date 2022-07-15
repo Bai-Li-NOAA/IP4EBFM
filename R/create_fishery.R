@@ -13,7 +13,8 @@
 #' @param skip_nrows interger; the number of lines of the data file to skip before reading data.
 #' @param species The species to create fishery for. A vector of column names from the catch_annual.csv.
 #' @param species_labels Customized names for species columns.
-#' @param years A vector of years.
+#' @param ewe_years A vector of years from EwE outputs.
+#' @param data_years A vector of years for simulation.
 #' @param fleet_num Fleet number.
 #' @param selectivity Selectivity at age. A data frame defining selectivity-at-age for a species over time. Columns represent age classes and rows represent years. Provide selectivity data only if \code{fleet_num} is greater than 1.
 #' @param CV Coefficient of variation of catch. A vector of CVs for individual fleets.
@@ -22,10 +23,10 @@
 #' @return A data list that includes catch and composition data from the EwE operating model, and observed catch and composition data for each fleet. Each fleet has time series catch with lognormal error and composition data with sampling error.
 #'
 #' @export
-create_fishery <- function(file_path, skip_nrows, species, species_labels, years, fleet_num, selectivity = NULL, CV, sample_num, waa_path) {
+create_fishery <- function(file_path, skip_nrows, species, species_labels, ewe_years, data_years, fleet_num, selectivity = NULL, CV, sample_num, waa_path) {
   species_vec <- paste0("X", species)
-  names(CV) <- years
-  names(sample_num) <- years
+  names(CV) <- data_years
+  names(sample_num) <- data_years
 
   # Load catch data from catch_annual.csv
   temp <- scan(file_path, what = "", sep = "\n")
@@ -36,7 +37,9 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, years
     col.names = read.table(text = temp[skip_nrows], sep = ",")
   )
 
-  data <- data[which(data$year.group %in% years), c("year.group", species_vec)]
+  if (any(ewe_years != data_years)) data$year.group <- data_years
+
+  data <- data[which(data$year.group %in% data_years), c("year.group", species_vec)]
   data[, species_vec] <- data[, species_vec] * 1000000 # biomass in mt
   colnames(data) <- c("year", species_labels)
 
@@ -47,20 +50,21 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, years
     sep = ",",
     col.names = read.table(text = annual_weight[skip_nrows], sep = ",")
   )
-  waa <- waa[which(waa$year.group %in% years), c("year.group", species_vec)]
+  if (any(ewe_years != data_years)) waa$year.group <- data_years
+  waa <- waa[which(waa$year.group %in% data_years), c("year.group", species_vec)]
   colnames(waa) <- c("year", species_labels)
   waa[, species_labels] <- waa[, species_labels] / 1000 # weight in kg and need divide the value by 1000 to get mt
 
   catch_age_biomass <- data[, species_labels] # biomass in mt
-  row.names(catch_age_biomass) <- years
+  row.names(catch_age_biomass) <- data_years
   total_catch_biomass <- apply(catch_age_biomass, 1, sum)
-  names(total_catch_biomass) <- years
+  names(total_catch_biomass) <- data_years
 
 
   catch_age_abundance <- round(catch_age_biomass / (waa[, species_labels]))
-  row.names(catch_age_abundance) <- years
+  row.names(catch_age_abundance) <- data_years
   total_catch_abundance <- apply(catch_age_abundance, 1, sum)
-  names(total_catch_abundance) <- years
+  names(total_catch_abundance) <- data_years
 
   # create observed catch
   catch_obs <- vector(mode = "list", length = fleet_num)
@@ -68,7 +72,7 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, years
   if (fleet_num == 1) {
     n_catch <- length(total_catch_biomass)
     sd_catch <- sqrt(log(1 + CV^2)) # SD in log space, given CV in arithmetic space
-    ln_catch <- rnorm(n_catch, mean = rep(0, length(years)), sd = sd_catch) # log error
+    ln_catch <- rnorm(n_catch, mean = rep(0, length(data_years)), sd = sd_catch) # log error
     catch_obs[[1]] <- total_catch_biomass * exp(ln_catch) # multiplicative lognormal error
   }
 
@@ -86,7 +90,7 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, years
         catch_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[j], prob = probs) / sample_num[j]
       }
     }
-    row.names(catch_age_obs[[i]]) <- years
+    row.names(catch_age_obs[[i]]) <- data_years
   }
 
   output_data <- list(
