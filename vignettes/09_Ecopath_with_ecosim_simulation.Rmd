@@ -371,7 +371,8 @@ project_path <- here::here()
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_base_run")
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_forcing_pdsi_egg_amo1")
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_base_run")
-ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_forcing_pdsi_egg_amo1")
+# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_forcing_pdsi_egg_amo1")
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_fleet_dynamics_noFpattern")
 
 menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
 
@@ -468,7 +469,8 @@ fishery <- create_fishery(
   skip_nrows = 8,
   species = 4:10,
   species_labels = paste0("age", ages),
-  years = years,
+  ewe_years = 0:32,
+  data_years = years,
   fleet_num = 1,
   selectivity = NULL,
   CV = rep(0.05, length(years)),
@@ -476,6 +478,18 @@ fishery <- create_fishery(
   waa_path = file.path(ewe_output_path, "weight_annual.csv")
 )
 
+# fishery <- create_fishery(
+#   file_path = file.path(ewe_output_path, "catch_annual.csv"),
+#   skip_nrows = 10,
+#   species = 4:10,
+#   species_labels = paste0("age", ages),
+#   years = years,
+#   fleet_num = 1,
+#   selectivity = NULL,
+#   CV = rep(0.05, length(years)),
+#   sample_num = apply(fishery_sample_num, 1, sum),
+#   waa_path = file.path(ewe_output_path, "weight_annual.csv")
+# )
 # Total catch in biomass
 om <- data.frame (
   Year = years, 
