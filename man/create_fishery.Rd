@@ -9,7 +9,8 @@ create_fishery(
   skip_nrows,
   species,
   species_labels,
-  years,
+  ewe_years,
+  data_years,
   fleet_num,
   selectivity = NULL,
   CV,
@@ -26,7 +27,9 @@ create_fishery(
 
 \item{species_labels}{Customized names for species columns.}
 
-\item{years}{A vector of years.}
+\item{ewe_years}{A vector of years from EwE outputs.}
+
+\item{data_years}{A vector of years for simulation.}
 
 \item{fleet_num}{Fleet number.}
 

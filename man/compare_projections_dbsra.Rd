@@ -9,10 +9,13 @@ compare_projections_dbsra(
   projection_output_data,
   projection_year,
   model_year,
+  lag = 0,
   amo,
   pcp,
+  pdsi,
   bassB,
-  price
+  price,
+  effort
 )
 }
 \arguments{
@@ -24,13 +27,19 @@ compare_projections_dbsra(
 
 \item{model_year}{A vector of model years.}
 
+\item{lag}{Lag between biomass of menhaden-like species and indices.}
+
 \item{amo}{AMO data.}
 
 \item{pcp}{Precipitation data.}
 
+\item{pdsi}{Palmer drought severity index data.}
+
 \item{bassB}{Biomass of Striped bass data.}
 
 \item{price}{Price of menhaden data.}
+
+\item{effort}{Fishing effort of menhaden-like species from the EwE operating model.}
 }
 \value{
 A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).

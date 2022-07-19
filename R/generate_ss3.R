@@ -1,7 +1,7 @@
 #' Generate frequently used input data for Stock Synthesis 3
 #'
 #' @param file_path A file path to a directory where the assessment input and output files will be saved.
-#' @param r0 UNexploited recruitment from Beverton-Holt stock-recruitment model.
+#' @param r0 Unexploited recruitment from Beverton-Holt stock-recruitment model.
 #' @param steepness Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20% of unfished spawning biomass.
 #' @param sigmar Standard deviation of log recruitment.
 #' @param projection_f Fishing mortality inputs for projections.
@@ -11,7 +11,7 @@
 #' @param projection_year A vector of years for projection.
 #' @param use_depletion A logical value.
 #' @param depletion_ratio Ratio of depletion.
-#' @param initial_equilibrium_catch
+#' @param initial_equilibrium_catch TRUE or FALSE.
 #' @import r4ss
 #' @return Outputs from Stock Synthesis 3
 #' @examples

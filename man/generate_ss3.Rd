@@ -15,13 +15,14 @@ generate_ss3(
   model_year,
   projection_year,
   use_depletion = FALSE,
-  depletion_ratio = NULL
+  depletion_ratio = NULL,
+  initial_equilibrium_catch = TRUE
 )
 }
 \arguments{
 \item{file_path}{A file path to a directory where the assessment input and output files will be saved.}
 
-\item{r0}{UNexploited recruitment from Beverton-Holt stock-recruitment model.}
+\item{r0}{Unexploited recruitment from Beverton-Holt stock-recruitment model.}
 
 \item{steepness}{Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20\% of unfished spawning biomass.}
 
@@ -40,6 +41,8 @@ generate_ss3(
 \item{use_depletion}{A logical value.}
 
 \item{depletion_ratio}{Ratio of depletion.}
+
+\item{initial_equilibrium_catch}{TRUE or FALSE.}
 }
 \value{
 Outputs from Stock Synthesis 3
