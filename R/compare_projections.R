@@ -4,25 +4,33 @@
 #' @param projection_output_data Output data frame from different DB-SRA cases.
 #' @param projection_year A vector of projection years.
 #' @param model_year A vector of model years.
+#' @param lag Lag between biomass of menhaden-like species and indices.
 #' @param amo AMO data.
 #' @param pcp Precipitation data.
+#' @param pdsi Palmer drought severity index data.
 #' @param bassB Biomass of Striped bass data.
 #' @param price Price of menhaden data.
+#' @param effort Fishing effort of menhaden-like species from the EwE operating model.
 #' @return A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).
 #' @export
 compare_projections_dbsra <- function(case_name,
                                       projection_output_data,
                                       projection_year,
                                       model_year,
+                                      lag = 0,
                                       amo,
                                       pcp,
+                                      pdsi,
                                       bassB,
-                                      price) {
+                                      price,
+                                      effort) {
 
   amo_unsmooth_lag1 <- amo
   precipitation <- pcp
   bass_bio <- bassB
   menhaden_price <- price
+  palmer_drought_severity_index <- pdsi
+  fishing_effort <- effort
 
   lm_slope <- data.frame(
     case = case_name,
@@ -30,7 +38,9 @@ compare_projections_dbsra <- function(case_name,
     amo = NA,
     pcp = NA,
     bassB = NA,
-    price = NA
+    price = NA,
+    pdsi = NA,
+    effort = NA
   )
 
   for (projection_year_id in 1:length(projection_year)){
@@ -44,11 +54,13 @@ compare_projections_dbsra <- function(case_name,
       index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
     }
 
+    biomass_lag_id <- (1+lag):length(index_year)
+    index_lag_id <- 1:(length(index_year)-lag)
 
     # Linear regression model -----------------------------------------
 
     amo <- amo_unsmooth_lag1[year_id, ]
-    amo_lm <- lm(menhaden_b ~ amo$raw_value)
+    amo_lm <- lm(menhaden_b[biomass_lag_id] ~ amo$scaled_value[index_lag_id])
     summary(amo_lm)
     amo_fit <- fitted(amo_lm)
     lm_slope$amo[projection_year_id] <- paste0(
@@ -56,15 +68,15 @@ compare_projections_dbsra <- function(case_name,
       if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
     pcp <- precipitation[year_id, ]
-    pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
+    pcp_lm <- lm(menhaden_b[biomass_lag_id] ~ pcp$scaled_value[index_lag_id])
     summary(pcp_lm)
     pcp_fit <- fitted(pcp_lm)
     lm_slope$pcp[projection_year_id] <- paste0(
       round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
       if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-    bassB <- bass_bio[bass_bio$Year %in% index_year, ]
-    bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
+    bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+    bassB_lm <- lm(menhaden_b[biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
     summary(bassB_lm)
     bassB_fit <- fitted(bassB_lm)
     lm_slope$bassB[projection_year_id] <- paste0(
@@ -73,40 +85,66 @@ compare_projections_dbsra <- function(case_name,
 
     sub_menhaden_b <- menhaden_b[index_year %in% menhaden_price$Year]
     sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
-    price_lm <- lm(sub_menhaden_b ~ sub_menhadenP)
+    price_lm <- lm(sub_menhaden_b[biomass_lag_id] ~ sub_menhadenP[index_lag_id])
     summary(price_lm)
     price_fit <- fitted(price_lm)
     lm_slope$price[projection_year_id] <- paste0(
       round(summary(price_lm)$coefficients[2, 1], digits = 2),
       if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
+    pdsi <- palmer_drought_severity_index[year_id, ]
+    pdsi_lm <- lm(biomass_ewe[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
+    pdsi_fit <- fitted(pdsi_lm)
+    lm_slope$pdsi <- paste0(
+      round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
+      if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+    effort <- fishing_effort[1:length(year_id)]
+    effort_lm <- lm(biomass_ewe[biomass_lag_id] ~ effort[index_lag_id])
+    effort_fit <- fitted(effort_lm)
+    lm_slope$effort <- paste0(
+      round(summary(effort_lm)$coefficients[2, 1], digits = 2),
+      if(summary(effort_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
     if (projection_year_id == length(projection_year)){
 
-      par(mfrow = c(2, 2))
+      par(mfrow = c(3, 2))
 
-      plot(amo$raw_value, menhaden_b,
-           xlab = "AMO raw values",
+      plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+           xlab = "AMO values",
            ylab = "Biomass of menhaden-like species"
       )
-      lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
+      abline(amo_lm)
 
-      plot(pcp$raw_value, menhaden_b,
-           xlab = "Precipitation raw values",
+      plot(pcp$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+           xlab = "Precipitation values",
            ylab = "Biomass of menhaden-like species"
       )
-      lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+      abline(pcp_lm)
 
-      plot(bassB$bass_bio, menhaden_b,
+      plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+           xlab = "PDSI values",
+           ylab = "Biomass of menhaden-like species"
+      )
+      abline(pdsi_lm)
+
+      plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
            xlab = "Biomass of Striped bass",
            ylab = "Biomass of menhaden-like species"
       )
-      lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
+      abline(bassB_lm)
 
-      plot(sub_menhadenP, sub_menhaden_b,
+      plot(sub_menhadenP[index_lag_id], sub_menhaden_b[biomass_lag_id],
            xlab = "Menhaden price",
            ylab = "Biomass of menhaden-like species"
       )
-      lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
+      abline(price_lm)
+
+      plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
+           xlab = "Fishing effort of menhaden-like species",
+           ylab = "Biomass of menhaden-like species"
+      )
+      abline(effort_lm)
 
     }
 
@@ -114,13 +152,18 @@ compare_projections_dbsra <- function(case_name,
     # status of indicators --------------------------------------------
 
     amo_soi <- calc_soi(
-      indicator_data = amo$raw_value,
+      indicator_data = amo$scaled_value,
       slope = coef(amo_lm)[2]
     )
 
     pcp_soi <- calc_soi(
-      indicator_data = pcp$raw_value,
+      indicator_data = pcp$scaled_value,
       slope = coef(pcp_lm)[2]
+    )
+
+    pdsi_soi <- calc_soi(
+      indicator_data = pdsi$scaled_value,
+      slope = coef(pdsi_lm)[2]
     )
 
     bassB_soi <- calc_soi(
@@ -133,14 +176,21 @@ compare_projections_dbsra <- function(case_name,
       slope = coef(price_lm)[2]
     )
 
+    effort_soi <- calc_soi(
+      indicator_data = effort,
+      slope = coef(bassB_lm)[2]
+    )
+
     if (projection_year_id == 1) {
       scaled_data <- data.frame(
         year = model_year,
         projection_year_id = projection_year[projection_year_id],
-        amo = scale(amo$raw_value)[,1],
-        pcp = scale(pcp$raw_value)[,1],
+        amo = scale(amo$scaled_value)[,1],
+        pcp = scale(pcp$scaled_value)[,1],
+        pdsi = scale(pdsi$scaled_value)[,1],
         bassB = scale(bassB$bass_bio)[,1],
         price = scale(sub_menhadenP)[,1],
+        effort = scale(effort)[,1],
         menhadenB = scale(menhaden_b)[,1]
       )
 
@@ -149,8 +199,10 @@ compare_projections_dbsra <- function(case_name,
         projection_year_id = projection_year[projection_year_id],
         amo = amo_soi,
         pcp = pcp_soi,
+        pdsi = pdsi_soi,
         bass_b = bassB_soi,
-        price = price_soi
+        price = price_soi,
+        effort = effort_soi
       )
     } else{
       scaled_data <- rbind(
@@ -158,10 +210,12 @@ compare_projections_dbsra <- function(case_name,
         data.frame(
           year = index_year,
           projection_year_id = projection_year[projection_year_id],
-          amo = scale(amo$raw_value)[,1],
-          pcp = scale(pcp$raw_value)[,1],
+          amo = scale(amo$scaled_value)[,1],
+          pcp = scale(pcp$scaled_value)[,1],
+          pdsi = scale(pdsi$scaled_value)[,1],
           bassB = scale(bassB$bass_bio)[,1],
           price = scale(sub_menhadenP)[,1],
+          effort = scale(effort)[,1],
           menhadenB = scale(menhaden_b)[,1]
         )
       )
@@ -172,9 +226,11 @@ compare_projections_dbsra <- function(case_name,
           year = index_year,
           projection_year_id = projection_year[projection_year_id],
           amo = amo_soi,
+          pdsi = pdsi_soi,
           pcp = pcp_soi,
           bass_b = bassB_soi,
-          price = price_soi
+          price = price_soi,
+          effort = effort_soi
         )
       )
     }
@@ -195,6 +251,11 @@ compare_projections_dbsra <- function(case_name,
       soi = tail(pcp_soi, n = 1),
       Bt_BMSY = Bt_BMSY
     )
+    pdsi_tac <- adjust_projection_dbsra(
+      tac = projection_output[[projection_year_id]]$TAC,
+      soi = tail(pdsi_soi, n = 1),
+      Bt_BMSY = Bt_BMSY
+    )
     bassB_tac <- adjust_projection_dbsra(
       tac = projection_output[[projection_year_id]]$TAC,
       soi = tail(bassB_soi, n = 1),
@@ -205,6 +266,11 @@ compare_projections_dbsra <- function(case_name,
       soi = tail(price_soi, n = 1),
       Bt_BMSY = Bt_BMSY
     )
+    effort_tac <- adjust_projection_dbsra(
+      tac = projection_output[[projection_year_id]]$TAC,
+      soi = tail(effort_soi, n = 1),
+      Bt_BMSY = Bt_BMSY
+    )
 
     if (projection_year_id == 1){
       tac_data <- data.frame(
@@ -213,8 +279,10 @@ compare_projections_dbsra <- function(case_name,
         DBSRA = projection_output[[projection_year_id]]$TAC,
         amo = amo_tac,
         pcp = pcp_tac,
+        pdsi = pdsi_tac,
         bassB = bassB_tac,
-        price = price_tac
+        price = price_tac,
+        effort = effort_tac
       )
     } else {
       tac_data <- rbind(
@@ -225,8 +293,10 @@ compare_projections_dbsra <- function(case_name,
           DBSRA = projection_output[[projection_year_id]]$TAC,
           amo = amo_tac,
           pcp = pcp_tac,
+          pdsi = pdsi_tac,
           bassB = bassB_tac,
-          price = price_tac
+          price = price_tac,
+          effort = effort_tac
         )
       )
     }
