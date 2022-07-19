@@ -89,6 +89,12 @@
     <li>
       <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
     </li>
+    <li>
+      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
+    </li>
+    <li>
+      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -180,7 +186,8 @@
   skip_nrows <span class="op">=</span> <span class="fl">8</span>,
   species <span class="op">=</span> <span class="fl">4</span><span class="op">:</span><span class="fl">10</span>,
   species_labels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="va">ages</span><span class="op">)</span>,
-  years <span class="op">=</span> <span class="va">years</span>,
+  ewe_years <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">32</span>,
+  data_years <span class="op">=</span> <span class="va">years</span>,
   fleet_num <span class="op">=</span> <span class="fl">1</span>,
   selectivity <span class="op">=</span> <span class="cn">NULL</span>,
   CV <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0.05</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,

@@ -307,7 +307,7 @@ lm_slope$pcp <- paste0(
   round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
   if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+bassB <- bass_bio[bass_bio$Year %in% year_id, ]
 bassB_lm <- lm(biomass_ewe[time_id] ~ bassB$bass_bio)
 bassB_fit <- fitted(bassB_lm)
 lm_slope$bassB <- paste0(
@@ -412,7 +412,7 @@ for (projection_year_id in 1:length(projection_year)){
     round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
     if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-  bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+  bassB <- bass_bio[bass_bio$Year %in% year_id, ]
   bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
   summary(bassB_lm)
   bassB_fit <- fitted(bassB_lm)

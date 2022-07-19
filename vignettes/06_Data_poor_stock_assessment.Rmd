@@ -440,9 +440,18 @@ time_id_model_year <- seq(1, nrow(biomass[[1]]), by = 12)[1:length(model_year)]
 biomass_ewe_model_year <- apply(biomass[[1]][, age_name], 1, sum)[time_id_model_year] * 1000000
 
 ss_case03 <- ss_case0
-equi_year <- 2000:2012
-equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
-equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
+# equi_year <- 2000:2012
+# equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
+# equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
+
+equi_year <- 2007:2012
+catch_multiplier <- 1
+equi_catch <- rep(max(sa_data$fishery$obs_total_catch_biomass$fleet1), length = length(equi_year)) * catch_multiplier
+
+# equi_year <- 1985:1993
+# equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
+# equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
+
 data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% model_year
 ss_case03@Cat <- matrix(c(equi_catch, sa_data$fishery$obs_total_catch_biomass$fleet1[data_id]),
                         nrow = 1
@@ -470,7 +479,7 @@ for (i in 1:length(dep)){
 }
 
 ss_case <- ss_case03
-ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)] # dep = 0.75 has the smallest sum of squared differences: 4.7e+12
+ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)] # dep = 0.8 has the smallest sum of squared differences
 dbsra <- DLMtool::DBSRA_(
   x = 1,
   Data = ss_case,
@@ -502,7 +511,7 @@ for (i in 1:length(bmsy_b0)){
 
 ss_case <- ss_case03
 ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
-ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)] # bmsy_b0 = 0.3 has the smallest sum of squared differences: 6.6e+12
+ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)] # bmsy_b0 = 0.55 has the smallest sum of squared differences: 6.6e+12
 dbsra <- DLMtool::DBSRA_(
   x = 1,
   Data = ss_case,
@@ -536,7 +545,7 @@ for (i in 1:length(fmsy_m)){
 ss_case <- ss_case03
 ss_case@Dep <- ssd_dep$dep[which.min(ssd_dep$ssd)]
 ss_case@BMSY_B0 <- ssd_bmsy_b0$bmsy_b0[which.min(ssd_bmsy_b0$ssd)]
-ss_case@FMSY_M <- ssd_fmsy_m$fmsy_m[which.min(ssd_fmsy_m$ssd)] # fmsy_m = 0.8 has the smallest sum of squared differences: 4.9e+12
+ss_case@FMSY_M <- ssd_fmsy_m$fmsy_m[which.min(ssd_fmsy_m$ssd)] # fmsy_m = 1.2 has the smallest sum of squared differences
 dbsra <- DLMtool::DBSRA_(
   x = 1,
   Data = ss_case,
@@ -554,10 +563,12 @@ equi_year_temp <- list()
 for (i in 1:length(projection_year)) {
   ss_case_temp <- ss_case_final
 
-  equi_year_temp[[i]] <- 2000:2012
+  equi_year_temp[[i]] <- equi_year
   # equi_year_temp[[i]] <- 2000:(2012+i-1)
-  equi_id_temp <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year_temp[[i]]
-  equi_catch_temp <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id_temp]
+  equi_catch_temp <- rep(max(sa_data$fishery$obs_total_catch_biomass$fleet1), length = length(equi_year_temp[[i]])) * catch_multiplier
+  # equi_id_temp <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year_temp[[i]]
+  # equi_catch_temp <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id_temp]
+  
   data_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% c(model_year[1]:(projection_year[i] - 1))
 
   ss_case_temp@Cat <- matrix(c(equi_catch_temp, sa_data$fishery$obs_total_catch_biomass$fleet1[data_id]),
@@ -647,8 +658,13 @@ legend("bottomright",
        title = "Case 0.3"
 )
 
+
+
 ```
 
+```{r}
+print(cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]]))
+```
 ## Linear regression models from cases 1 - 4 using "true" values from EwE
     - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
     - Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading
@@ -685,7 +701,7 @@ lm_slope$pcp <- paste0(
   round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
   if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-bassB <- bass_bio[bass_bio$Year %in% index_year, ]
+bassB <- bass_bio[bass_bio$Year %in% year_id, ]
 bassB_lm <- lm(biomass_ewe ~ bassB$bass_bio)
 bassB_fit <- fitted(bassB_lm)
 lm_slope$bassB <- paste0(
@@ -742,10 +758,13 @@ output <- compare_projections_dbsra(
   projection_output_data = projection_output1,
   projection_year = projection_year,
   model_year = model_year,
+  lag = 0,
   amo = amo_unsmooth_lag1,
   pcp = precipitation,
+  pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
-  price = menhaden_price
+  price = menhaden_price,
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
 )
 
 soi_data_melt <- output$soi_data_melt
@@ -796,10 +815,13 @@ output <- compare_projections_dbsra(
   projection_output_data = projection_output2,
   projection_year = projection_year,
   model_year = model_year,
+  lag = 0,
   amo = amo_unsmooth_lag1,
   pcp = precipitation,
+  pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
-  price = menhaden_price
+  price = menhaden_price,
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
 )
 
 soi_data_melt <- output$soi_data_melt
@@ -855,10 +877,13 @@ output <- compare_projections_dbsra(
   projection_output_data = projection_output3_clean,
   projection_year = projection_year,
   model_year = model_year,
+  lag = 0,
   amo = amo_unsmooth_lag1,
   pcp = precipitation,
+  pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
-  price = menhaden_price
+  price = menhaden_price,
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
 )
 
 soi_data_melt <- output$soi_data_melt

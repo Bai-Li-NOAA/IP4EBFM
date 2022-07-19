@@ -89,6 +89,12 @@
     <li>
       <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
     </li>
+    <li>
+      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
+    </li>
+    <li>
+      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -155,28 +161,6 @@
 <li>SST: Kaplan sea surface temperature</li>
 </ul>
 </div>
-<div class="section level3">
-<h3 id="cases">Cases<a class="anchor" aria-label="anchor" href="#cases"></a>
-</h3>
-<ul>
-<li>case 0: base case</li>
-<li>case 1: PCP</li>
-<li>case 2: PCP+AMO0</li>
-<li>case 3: PCP+AMO1</li>
-<li>case 4: PDSI</li>
-<li>case 5: PDSI+AMO0</li>
-<li>case 6: PDSI+AMO1</li>
-<li>case 7: SPLINE11</li>
-<li>case 9: SPLINE11+AMO0</li>
-<li>case 10: SPLINE11+AMO1</li>
-<li>case 11: SPLINE33</li>
-<li>case 12: SPLINE33+AMO0</li>
-<li>case 13: SPLINE33+AMO1</li>
-<li>case 14: SST</li>
-<li>case 15: SST+AMO0</li>
-<li>case 16: SST+AMO1</li>
-</ul>
-</div>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="section"></h2>
@@ -185,27 +169,31 @@
 <h2 class="tabset" id="biomass-over-time">Biomass over time<a class="anchor" aria-label="anchor" href="#biomass-over-time"></a>
 </h2>
 <div class="section level3">
-<h3 id="biomass-trends-from-cases-that-only-use-forcing-function">Biomass trends from cases that only use forcing function<a class="anchor" aria-label="anchor" href="#biomass-trends-from-cases-that-only-use-forcing-function"></a>
+<h3 id="biomass-trends-from-cases-that-use-forcing-function-and-amo-index-through-egg-production">Biomass trends from cases that use forcing function and AMO index through egg production<a class="anchor" aria-label="anchor" href="#biomass-trends-from-cases-that-use-forcing-function-and-amo-index-through-egg-production"></a>
 </h3>
 <p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 </div>
 <div class="section level3">
-<h3 id="total-biomass-of-menhaden-like-species-from-cases-that-only-use-forcing-function">Total biomass of menhaden-like species from cases that only use forcing function<a class="anchor" aria-label="anchor" href="#total-biomass-of-menhaden-like-species-from-cases-that-only-use-forcing-function"></a>
+<h3 id="total-biomass-of-menhaden-like-species-from-cases-that-use-forcing-function-and-amo-index-through-egg-production">Total biomass of menhaden-like species from cases that use forcing function and AMO index through egg production<a class="anchor" aria-label="anchor" href="#total-biomass-of-menhaden-like-species-from-cases-that-use-forcing-function-and-amo-index-through-egg-production"></a>
 </h3>
 <p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
 </div>
 <div class="section level3">
-<h3 id="slope-of-linear-regression-model-from-cases-that-only-use-forcing-function">Slope of linear regression model from cases that only use forcing function<a class="anchor" aria-label="anchor" href="#slope-of-linear-regression-model-from-cases-that-only-use-forcing-function"></a>
+<h3 id="slope-of-linear-regression-model">Slope of linear regression model<a class="anchor" aria-label="anchor" href="#slope-of-linear-regression-model"></a>
 </h3>
+Biomass of menhaden-like species shows significant positive relationship with AMO1, PDSI, SST, FISHING_EFFORT, FISHING_MORTALITY, and BASS_BIOMASS when lag is 1.
 <table class="table">
 <caption>
-Slope of linear regression model from cases that only use forcing function
+Slope of linear regression model from case PDSI+AMO1
 </caption>
 <thead><tr>
 <th style="text-align:left;">
 </th>
 <th style="text-align:left;">
-AMO
+AMO0
+</th>
+<th style="text-align:left;">
+AMO1
 </th>
 <th style="text-align:left;">
 PCP
@@ -216,350 +204,250 @@ PDSI
 <th style="text-align:left;">
 SST
 </th>
+<th style="text-align:left;">
+FISHING_EFFORT
+</th>
+<th style="text-align:left;">
+FISHING_MORTALITY
+</th>
+<th style="text-align:left;">
+BASS_BIOMASS
+</th>
 </tr></thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-Base Case
+lag0
 </td>
 <td style="text-align:left;">
--0.23
+0.81
 </td>
 <td style="text-align:left;">
--0.11
-</td>
-<td style="text-align:left;">
--0.22
-</td>
-<td style="text-align:left;">
--0.4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PCP
-</td>
-<td style="text-align:left;">
--2.18*
+1.41*
 </td>
 <td style="text-align:left;">
 0.26
 </td>
 <td style="text-align:left;">
-1.07
+0.82
 </td>
 <td style="text-align:left;">
--3.94*
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PDSI
+1.73
 </td>
 <td style="text-align:left;">
-0.59
+0.11*
 </td>
 <td style="text-align:left;">
-0.09
+2.54*
 </td>
 <td style="text-align:left;">
-0.61
-</td>
-<td style="text-align:left;">
-0.6
+4.35*
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SPLINE11
+lag1
 </td>
 <td style="text-align:left;">
--0.35*
+1.4*
 </td>
 <td style="text-align:left;">
--0.11
+1.84*
 </td>
 <td style="text-align:left;">
--0.22
+0.16
 </td>
 <td style="text-align:left;">
--0.61*
+1.28*
+</td>
+<td style="text-align:left;">
+2.88*
+</td>
+<td style="text-align:left;">
+0.15*
+</td>
+<td style="text-align:left;">
+3.21*
+</td>
+<td style="text-align:left;">
+2.43
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SPLINE33
+lag2
 </td>
 <td style="text-align:left;">
--0.49
+1.8*
+</td>
+<td style="text-align:left;">
+1.91*
+</td>
+<td style="text-align:left;">
+-0.21
+</td>
+<td style="text-align:left;">
+1.1
+</td>
+<td style="text-align:left;">
+3.71*
+</td>
+<td style="text-align:left;">
+0.15*
+</td>
+<td style="text-align:left;">
+3.24*
+</td>
+<td style="text-align:left;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lag3
+</td>
+<td style="text-align:left;">
+1.85*
+</td>
+<td style="text-align:left;">
+0.95
+</td>
+<td style="text-align:left;">
+-0.41
 </td>
 <td style="text-align:left;">
 0.04
 </td>
 <td style="text-align:left;">
--0.19
+3.77*
 </td>
 <td style="text-align:left;">
--0.74
+0.15*
+</td>
+<td style="text-align:left;">
+3.34*
+</td>
+<td style="text-align:left;">
+0.36
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SST
+lag4
 </td>
 <td style="text-align:left;">
--4.67*
+0.89
 </td>
 <td style="text-align:left;">
--0.01
+0.81
 </td>
 <td style="text-align:left;">
--0.55
+-0.49
 </td>
 <td style="text-align:left;">
--7.87*
-</td>
-</tr>
-</tbody>
-</table>
-<table class="table">
-<caption>
-Change point detection using CPM package
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Base Case
-</th>
-<th style="text-align:right;">
-PCP
-</th>
-<th style="text-align:right;">
-PDSI
-</th>
-<th style="text-align:right;">
-SPLINE11
-</th>
-<th style="text-align:right;">
-SPLINE33
-</th>
-<th style="text-align:right;">
-SST
-</th>
-</tr></thead>
-<tbody><tr>
-<td style="text-align:left;">
-ChangePoint
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
-11
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-12
-</td>
-<td style="text-align:right;">
-21
-</td>
-<td style="text-align:right;">
-10
-</td>
-</tr></tbody>
-</table>
-</div>
-<div class="section level3">
-<h3 id="biomass-trends-from-cases-that-use-forcing-function-and-amo-index-through-egg-production">Biomass trends from cases that use forcing function and AMO index through egg production<a class="anchor" aria-label="anchor" href="#biomass-trends-from-cases-that-use-forcing-function-and-amo-index-through-egg-production"></a>
-</h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
-</div>
-<div class="section level3">
-<h3 id="total-biomass-of-menhaden-like-species-from-cases-that-use-forcing-function-and-amo-index-through-egg-production">Total biomass of menhaden-like species from cases that use forcing function and AMO index through egg production<a class="anchor" aria-label="anchor" href="#total-biomass-of-menhaden-like-species-from-cases-that-use-forcing-function-and-amo-index-through-egg-production"></a>
-</h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
-</div>
-<div class="section level3">
-<h3 id="slope-of-linear-regression-model-from-cases-that-use-forcing-function-and-amo-index-through-egg-production">Slope of linear regression model from cases that use forcing function and AMO index through egg production<a class="anchor" aria-label="anchor" href="#slope-of-linear-regression-model-from-cases-that-use-forcing-function-and-amo-index-through-egg-production"></a>
-</h3>
-<table class="table">
-<caption>
-Slope of linear regression model from cases that use forcing function and AMO index through egg production
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:left;">
-AMO
-</th>
-<th style="text-align:left;">
-PCP
-</th>
-<th style="text-align:left;">
-PDSI
-</th>
-<th style="text-align:left;">
-SST
-</th>
-</tr></thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-Base Case
+-0.47
 </td>
 <td style="text-align:left;">
--0.23
+1.91
 </td>
 <td style="text-align:left;">
--0.11
+0.1*
 </td>
 <td style="text-align:left;">
--0.22
+2.12*
 </td>
 <td style="text-align:left;">
--0.4
+0.02
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-PCP+AMO1
+lag5
 </td>
 <td style="text-align:left;">
--0.97
-</td>
-<td style="text-align:left;">
--0.02
-</td>
-<td style="text-align:left;">
-1.22
-</td>
-<td style="text-align:left;">
--2.21
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-PDSI+AMO1
-</td>
-<td style="text-align:left;">
-1.06*
-</td>
-<td style="text-align:left;">
--0.03
-</td>
-<td style="text-align:left;">
-0.54
-</td>
-<td style="text-align:left;">
-1.4
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPLINE11+AMO1
+0.76
 </td>
 <td style="text-align:left;">
 0.3
 </td>
 <td style="text-align:left;">
--0.3*
+-0.27
 </td>
 <td style="text-align:left;">
--0.25
+-0.6
 </td>
 <td style="text-align:left;">
-0.52
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-SPLINE33+AMO1
+1.6
 </td>
 <td style="text-align:left;">
-0.19
+0.07
 </td>
 <td style="text-align:left;">
--0.17
+1.5
 </td>
 <td style="text-align:left;">
--0.24
-</td>
-<td style="text-align:left;">
-0.45
+-0.85
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-SST+AMO1
+lag6
 </td>
 <td style="text-align:left;">
--1.73
+0.27
 </td>
 <td style="text-align:left;">
--0.59
+0.86
 </td>
 <td style="text-align:left;">
--0.22
+0.2
 </td>
 <td style="text-align:left;">
--3.65
+-0.39
+</td>
+<td style="text-align:left;">
+0.62
+</td>
+<td style="text-align:left;">
+0.02
+</td>
+<td style="text-align:left;">
+0.38
+</td>
+<td style="text-align:left;">
+-1.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+lag7
+</td>
+<td style="text-align:left;">
+0.83
+</td>
+<td style="text-align:left;">
+0.97
+</td>
+<td style="text-align:left;">
+0.62
+</td>
+<td style="text-align:left;">
+-0.03
+</td>
+<td style="text-align:left;">
+1.71
+</td>
+<td style="text-align:left;">
+-0.01
+</td>
+<td style="text-align:left;">
+-0.23
+</td>
+<td style="text-align:left;">
+-2.44
 </td>
 </tr>
 </tbody>
-</table>
-<table class="table">
-<caption>
-Change point detection using CPM package
-</caption>
-<thead><tr>
-<th style="text-align:left;">
-</th>
-<th style="text-align:right;">
-Base Case
-</th>
-<th style="text-align:right;">
-PCP+AMO1
-</th>
-<th style="text-align:right;">
-PDSI+AMO1
-</th>
-<th style="text-align:right;">
-SPLINE11+AMO1
-</th>
-<th style="text-align:right;">
-SPLINE33+AMO1
-</th>
-<th style="text-align:right;">
-SST+AMO1
-</th>
-</tr></thead>
-<tbody><tr>
-<td style="text-align:left;">
-ChangePoint
-</td>
-<td style="text-align:right;">
-26
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-20
-</td>
-<td style="text-align:right;">
-24
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-9
-</td>
-</tr></tbody>
 </table>
 </div>
 </div>
@@ -572,32 +460,32 @@ ChangePoint
 <div class="section level3">
 <h3 id="biomass-at-age">Biomass-at-age<a class="anchor" aria-label="anchor" href="#biomass-at-age"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-12-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="catch">Catch<a class="anchor" aria-label="anchor" href="#catch"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-13-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="catch-at-age">Catch-at-age<a class="anchor" aria-label="anchor" href="#catch-at-age"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-14-1.png" width="1152"><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-14-2.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-10-1.png" width="1152"><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-10-2.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="survey-selectivity-patterns">Survey selectivity patterns<a class="anchor" aria-label="anchor" href="#survey-selectivity-patterns"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-16-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-12-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="survey-index-over-time">Survey index over time<a class="anchor" aria-label="anchor" href="#survey-index-over-time"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-17-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-13-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="survey-length-composition">Survey length composition<a class="anchor" aria-label="anchor" href="#survey-length-composition"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-18-1.png" width="1152"><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-18-2.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-14-1.png" width="1152"><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-14-2.png" width="1152"></p>
 </div>
 </div>
 <div class="section level2 unnumbered">
@@ -609,18 +497,18 @@ ChangePoint
 <div class="section level3">
 <h3 id="compare-true-values-from-om-and-ss3-results">Compare “true” values from OM and SS3 results<a class="anchor" aria-label="anchor" href="#compare-true-values-from-om-and-ss3-results"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-21-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-17-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="linear-regression-models">Linear regression models<a class="anchor" aria-label="anchor" href="#linear-regression-models"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-22-1.png" width="1152"></p>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-23-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-18-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-19-1.png" width="1152"></p>
 </div>
 <div class="section level3">
 <h3 id="f-adjustment">F adjustment<a class="anchor" aria-label="anchor" href="#f-adjustment"></a>
 </h3>
-<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-25-1.png" width="1152"></p>
+<p><img src="09_Ecopath_with_ecosim_simulation_files/figure-html/unnamed-chunk-21-1.png" width="1152"></p>
 </div>
 </div>
 <div class="section level2 unnumbered">

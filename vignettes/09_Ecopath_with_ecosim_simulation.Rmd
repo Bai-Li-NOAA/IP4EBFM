@@ -25,31 +25,11 @@ Environmental drivers have been incorporated through either forcing function (pr
 - SPLINE33: Primary producer spline 33
 - SST: Kaplan sea surface temperature
 
-### Cases
-
-- case 0: base case 
-- case 1: PCP 
-- case 2: PCP+AMO0
-- case 3: PCP+AMO1
-- case 4: PDSI
-- case 5: PDSI+AMO0
-- case 6: PDSI+AMO1
-- case 7: SPLINE11
-- case 9: SPLINE11+AMO0
-- case 10: SPLINE11+AMO1
-- case 11: SPLINE33
-- case 12: SPLINE33+AMO0
-- case 13: SPLINE33+AMO1
-- case 14: SST
-- case 15: SST+AMO0
-- case 16: SST+AMO1
-
 ## {-}
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 devtools::load_all()
 
-# Install required R packages -------------------------------------
 required_pkg <- c(
   "here", "ggplot2", "ggcorrplot", "RColorBrewer",
   "tidyverse", "reshape2"
@@ -97,29 +77,19 @@ scenario_code <- paste0(
   "ecosim_", 
   c(
     "base_run", 
-    "forcing_pcp", "forcing_pcp_egg_amo0", "forcing_pcp_egg_amo1",
-    "forcing_pdsi", "forcing_pdsi_egg_amo0", "forcing_pdsi_egg_amo1",
-    "forcing_spline11", "forcing_spline11_egg_amo0", "forcing_spline11_egg_amo1",
-    "forcing_spline33", "forcing_spline33_egg_amo0", "forcing_spline33_egg_amo1",
-    "forcing_sst", "forcing_sst_egg_amo0", "forcing_sst_egg_amo1"
+    "forcing_pcp_egg_amo1",
+    "forcing_pdsi_egg_amo1",
+    "forcing_spline11_egg_amo1",
+    "forcing_spline33_egg_amo1",
+    "forcing_sst_egg_amo1"
   ))
 
 scenario_name <- c(
   "Base Case", 
-  "PCP", 
-  "PCP+AMO0",
   "PCP+AMO1",
-  "PDSI", 
-  "PDSI+AMO0",
   "PDSI+AMO1",
-  "SPLINE11", 
-  "SPLINE11+AMO0",
   "SPLINE11+AMO1",
-  "SPLINE33",
-  "SPLINE33+AMO0",
   "SPLINE33+AMO1",
-  "SST", 
-  "SST+AMO0",
   "SST+AMO1"
 )
 
@@ -135,133 +105,44 @@ labels <- c(
   "Anchovies", "Benthos", "Zooplkanton", "Phytoplankton", "Detritus"
 )
 
-for (id in 1:length(scenario_code)){
+reshape_ewe_data <- function(file_path, file_name, skip_nrows, functional_groups){
   
-  ewe_temp <- read_ewe_output(
-    file_path = here::here("data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", scenario_code[id]),
-    file_names = "biomass_monthly.csv",
-    skip_nrows = 8,
-    plot = FALSE,
-    figure_titles = NULL,
-    functional_groups = functional_groups,
-    figure_colors = NULL
-  )
-
-  time_id <- seq(1, nrow(ewe_temp[[1]]), by = 12)
-
-  ewe_output <- list(ewe_temp[[1]][time_id, ])
-  ewe_output[[1]]$Year <- ewe_year
+  for (id in 1:length(file_path)){
+    ewe_temp <- read_ewe_output(
+      file_path = file_path[id],
+      file_names = file_name,
+      skip_nrows = skip_nrows,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
   
-  names(ewe_output[[1]])[2:ncol(ewe_output[[1]])] <- labels
-  ewe_output_melt <- reshape2::melt(ewe_output[[1]], id.vars = "Year")
-  ewe_output_melt$Scenario <- scenario_name[id]
+    time_id <- seq(1, nrow(ewe_temp[[1]]), by = 12)
   
-  if (id==1) {
-    ewe_data <- ewe_output_melt
-  } else{
-    ewe_data <- rbind(ewe_data, ewe_output_melt)
+    ewe_output <- list(ewe_temp[[1]][time_id, ])
+    ewe_output[[1]]$Year <- ewe_year
+    
+    names(ewe_output[[1]])[2:ncol(ewe_output[[1]])] <- labels
+    ewe_output_melt <- reshape2::melt(ewe_output[[1]], id.vars = "Year")
+    ewe_output_melt$Scenario <- scenario_name[id]
+    
+    if (id==1) {
+      ewe_data <- ewe_output_melt
+    } else{
+      ewe_data <- rbind(ewe_data, ewe_output_melt)
+    }
   }
   
+  return(ewe_data)
 }
-```
 
-### Biomass trends from cases that only use forcing function
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-subscenarios <- paste0(
-  "ecosim_", 
-  c(
-    "base_run", 
-    "forcing_pcp",
-    "forcing_pdsi", 
-    "forcing_spline11", 
-    "forcing_spline33", 
-    "forcing_sst"
-  ))
-
-
-subdata <- ewe_data[which(ewe_data$Scenario %in% scenario_name[scenario_code %in% subscenarios]), ]
-biomass <- ggplot(subdata, aes(x = Year, y = value, color = Scenario)) +
-  geom_line() +
-  labs(
-    title = "Comparison between scenarios",
-    x = "Year",
-    y = "Biomass (million mt)"
-  ) +
-  theme_bw()
-
-biomass + facet_wrap(~variable, scales = "free_y") + scale_color_brewer(palette="Dark2")
-```
-
-### Total biomass of menhaden-like species from cases that only use forcing function
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-ss_biomass <- subdata[grep("Atlantic Menhaden", subdata$variable), ]
-ss_biomass <- aggregate(value~Year+Scenario, ss_biomass, sum)
-
-total_biomass <- ggplot(ss_biomass, aes(x = Year, y = value, color = Scenario)) +
-  geom_line() +
-  labs(
-    title = "Comparison between scenarios",
-    x = "Year",
-    y = "Total Biomass (million mt)"
-  ) +
-  theme_bw()
-
-total_biomass + scale_color_brewer(palette="Dark2")
-
-```
-
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-source(here::here("Rscript", "load_indices.R"))
-year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
-
-amo <- amo_unsmooth_lag1[year_id, ]
-pcp <- precipitation[year_id, ]
-pdsi <- palmer_drought_severity_index[year_id, ]
-sst <- kaplan_sst[year_id, ]
-
-indices_name <- c("AMO", "PCP", "PDSI", "SST")
-
-lm_results <- matrix(NA, nrow = length(subscenarios), ncol= length(indices_name))
-rownames(lm_results) <- scenario_name[scenario_code %in% subscenarios]
-colnames(lm_results) <- indices_name
-
-cpm_results <- matrix(NA, nrow=1, ncol = length(subscenarios))
-rownames(cpm_results) <- "ChangePoint"
-colnames(cpm_results) <- scenario_name[scenario_code %in% subscenarios]
-
-for (i in 1:length(subscenarios)){
-
-  biomass_temp <- subdata[grep("Atlantic Menhaden", subdata$variable), ]
-  biomass_temp <- biomass_temp[which(biomass_temp$Scenario == scenario_name[scenario_code %in% subscenarios[i]]), ]
-  
-  total_biomass <- aggregate(value~Year, biomass_temp, sum)$value
-  
-  temp_data <- data.frame(
-    Biomass = total_biomass,
-    AMO = amo$scaled_value,
-    PCP = pcp$scaled_value, 
-    PDSI = pdsi$scaled_value,
-    SST = sst$scaled_value
-  )
-  
-  change_dection <- cpm::detectChangePointBatch(total_biomass, cpmType = "Mann-Whitney", alpha = 0.05)
-  cpm_results[1, i] <- change_dection$changePoint
-  
-  for (j in 1:length(indices_name)){
-    lm_results[i, j] <- paste0(round(summary(lm(temp_data$Biomass ~ temp_data[,j+1]))$coefficients[2, 1], digits = 2), 
-                             if(summary(lm(temp_data$Biomass ~ temp_data[,j+1]))$coefficients[2, 4] <= 0.05) {"*"})
-  }
-  
-  
-}
-```
-
-### Slope of linear regression model from cases that only use forcing function
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-knitr::kable(lm_results, caption = "Slope of linear regression model from cases that only use forcing function")
-
-knitr::kable(cpm_results, caption = "Change point detection using CPM package")
-
+# Reshape biomass data from different scenarios
+file_path <- paste0(here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", scenario_code))
+ewe_data <- reshape_ewe_data(file_path = file_path,
+                   file_name = "biomass_monthly.csv",
+                   skip_nrows = 8,
+                   functional_groups = functional_groups)
 ```
 
 ### Biomass trends from cases that use forcing function and AMO index through egg production
@@ -309,13 +190,31 @@ total_biomass + scale_color_brewer(palette="Dark2")
 ```
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-lm_results <- matrix(NA, nrow = length(subscenarios), ncol= length(indices_name))
-rownames(lm_results) <- scenario_name[scenario_code %in% subscenarios]
-colnames(lm_results) <- indices_name
+source(here::here("Rscript", "load_indices.R"))
 
-cpm_results <- matrix(NA, nrow=1, ncol = length(subscenarios))
-rownames(cpm_results) <- "ChangePoint"
-colnames(cpm_results) <- scenario_name[scenario_code %in% subscenarios]
+# Load ewe value data
+file_path <- paste0(here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", scenario_code))
+ewe_catchability <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "qatage.csv"))
+ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+
+# Load striped bass biomass
+bass_biomass <- subdata[grep("Striped Bass", subdata$variable), ]
+bass_biomass <- aggregate(value~Year+Scenario, bass_biomass, sum)
+
+year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
+
+amo0 <- amo_unsmooth_lag0[year_id, ]
+amo1 <- amo_unsmooth_lag1[year_id, ]
+pcp <- precipitation[year_id, ]
+pdsi <- palmer_drought_severity_index[year_id, ]
+sst <- kaplan_sst[year_id, ]
+effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+fishing_mortality <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))], 1, max)
+
+
+indices_name <- c("AMO0", "AMO1", "PCP", "PDSI", "SST", "FISHING_EFFORT", "FISHING_MORTALITY", "BASS_BIOMASS")
+
+lm_results <- vector(mode = "list", length = length(subscenarios))
 
 for (i in 1:length(subscenarios)){
 
@@ -326,29 +225,37 @@ for (i in 1:length(subscenarios)){
   
   temp_data <- data.frame(
     Biomass = total_biomass,
-    AMO = amo$scaled_value,
+    AMO0 = amo0$scaled_value,
+    AMO1 = amo1$scaled_value,
     PCP = pcp$scaled_value, 
     PDSI = pdsi$scaled_value,
-    SST = sst$scaled_value
+    SST = sst$scaled_value,
+    FISHING_EFFORT = effort,
+    FISHING_MORTALITY = fishing_mortality,
+    BASS_BIOMASS = bass_biomass$value[bass_biomass$Scenario == scenario_name[scenario_code %in% subscenarios[i]]]
   )
-  
-  change_dection <- cpm::detectChangePointBatch(total_biomass, cpmType = "Mann-Whitney", alpha = 0.05)
-  cpm_results[1, i] <- change_dection$changePoint
-  
-  for (j in 1:length(indices_name)){
-    lm_results[i, j] <- paste0(round(summary(lm(temp_data$Biomass ~ temp_data[,j+1]))$coefficients[2, 1], digits = 2), 
-                             if(summary(lm(temp_data$Biomass ~ temp_data[,j+1]))$coefficients[2, 4] <= 0.05) {"*"})
+  lag <- 0:7
+  lm_results[[i]] <- matrix(NA, nrow = length(lag), ncol= length(indices_name))
+  dimnames(lm_results[[i]]) <- list(paste0("lag", lag), indices_name)
+  for (lead_time in 1:length(lag)){
+    for (j in 1:length(indices_name)){
+    lm_results[[i]][lead_time, j] <- paste0(round(summary(lm(temp_data$Biomass[(lag[lead_time]+1):nrow(temp_data)] ~ temp_data[1:(nrow(temp_data)-lag[lead_time]), j+1]))$coefficients[2, 1], digits = 2), 
+                             if(summary(lm(temp_data$Biomass[(lag[lead_time]+1):nrow(temp_data)] ~ temp_data[1:(nrow(temp_data)-lag[lead_time]), j+1]))$coefficients[2, 4] <= 0.05) {"*"})
+    }
   }
   
   
 }
+
 ```
 
-### Slope of linear regression model from cases that use forcing function and AMO index through egg production
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-knitr::kable(lm_results, caption = "Slope of linear regression model from cases that use forcing function and AMO index through egg production")
+### Slope of linear regression model 
 
-knitr::kable(cpm_results, caption = "Change point detection using CPM package")
+Biomass of menhaden-like species shows significant positive relationship with AMO1, PDSI, SST, FISHING_EFFORT, FISHING_MORTALITY, and BASS_BIOMASS when lag is 1. 
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+case_id <- 3
+knitr::kable(lm_results[[case_id]], caption = paste("Slope of linear regression model from case", scenario_name[case_id]))
 
 ```
 
@@ -368,11 +275,7 @@ options(digits = 2)
 # specify working directories ---------------------------------------------
 
 project_path <- here::here()
-# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_base_run")
-# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim", "ewe7ages_ecosim_new", "ecosim_forcing_pdsi_egg_amo1")
-# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_base_run")
-# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_forcing_pdsi_egg_amo1")
-ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_newF", "ewe7ages_ecosim_newF", "ecosim_fleet_dynamics_noFpattern")
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
 
 menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
 
@@ -394,11 +297,13 @@ fishery_sel <- IFA4EBFM::logistic(
 ) # CRS 1972 selectivity
 
 # F-at-age
-phase1_nyear <- 12
+phase1_nyear <- 15
+phase2_nyear <- 5
 set.seed(9999)
 f_full <- c(
-  seq(0.25, 0.7, length = phase1_nyear),
-  seq(0.7, 0.15, length = length(years) - phase1_nyear)
+  rep(0.15, length=phase1_nyear),
+  seq(0.25, 0.7, length = phase2_nyear),
+  seq(0.7, 0.2, length = length(years) - phase1_nyear - phase2_nyear)
 ) *
   exp(rnorm(length(years), mean = 0, sd = 0.2))
 fatage <- matrix(NA, nrow = length(f_full), ncol = length(fishery_sel))
@@ -408,7 +313,7 @@ for (i in 1:length(f_full)) {
   fatage[i, ] <- f_full[i] * fishery_sel
 }
 
-write.csv(fatage, file.path(project_path, "data", "ewe", "7ages_newsim_newF", "fatage.csv"))
+write.csv(fatage, file.path(project_path, "data", "ewe", "7ages_newsim_final", "fatage.csv"))
 
 
 ```
@@ -478,18 +383,6 @@ fishery <- create_fishery(
   waa_path = file.path(ewe_output_path, "weight_annual.csv")
 )
 
-# fishery <- create_fishery(
-#   file_path = file.path(ewe_output_path, "catch_annual.csv"),
-#   skip_nrows = 10,
-#   species = 4:10,
-#   species_labels = paste0("age", ages),
-#   years = years,
-#   fleet_num = 1,
-#   selectivity = NULL,
-#   CV = rep(0.05, length(years)),
-#   sample_num = apply(fishery_sample_num, 1, sum),
-#   waa_path = file.path(ewe_output_path, "weight_annual.csv")
-# )
 # Total catch in biomass
 om <- data.frame (
   Year = years, 
@@ -1075,7 +968,7 @@ legend("topright",
 # mortality <- read.csv(file = here::here("data", "ewe", "7ages", "updated_f.csv"))
 # mortality_ewe <- apply(mortality[seq(1, nrow(mortality), by=12), grep("AtlanticMenhaden", colnames(mortality))], 1, max)
 
-mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_newF", "fatage.csv"))
+mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
 mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
 # mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, mean)
 
@@ -1109,22 +1002,38 @@ legend("topright",
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Linear regression models from cases 1 - 4 using "true" values from EwE------------------------
 
-# use abundance instead of biomass
-biomass_ewe <- apply(biomass[[1]][, age_name] * 1000000 / waa[[1]][, age_name], 1, sum)
+# Biomass
+biomass <- read_ewe_output(
+  file_path = ewe_output_path,
+  file_names = "biomass_monthly.csv",
+  skip_nrows = 8,
+  plot = FALSE,
+  figure_titles = NULL,
+  functional_groups = functional_groups,
+  figure_colors = NULL
+)
+
+time_id <- seq(1, nrow(biomass[[1]]), by = 12)
+biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum) 
+
 
 lm_slope <- data.frame(
   case = "True indices",
   amo = NA,
-  pcp = NA,
+  pdsi = NA,
   bassB = NA,
-  price = NA
+  effort =NA
 )
+
 
 year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
 index_year <- c(model_year, projection_year)
+lag = 1
+biomass_lag_id <- (1+lag):length(index_year)
+index_lag_id <- 1:(length(index_year)-lag)
 
 amo <- amo_unsmooth_lag1[year_id, ]
-amo_lm <- lm(biomass_ewe[time_id] ~ amo$raw_value)
+amo_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ amo$scaled_value[index_lag_id])
 amo_fit <- fitted(amo_lm)
 lm_slope$amo <- paste0(
   round(summary(amo_lm)$coefficients[2, 1], digits = 2),
@@ -1133,18 +1042,18 @@ lm_slope$amo <- paste0(
   }
 )
 
-pcp <- precipitation[year_id, ]
-pcp_lm <- lm(biomass_ewe[time_id] ~ pcp$raw_value)
-pcp_fit <- fitted(pcp_lm)
-lm_slope$pcp <- paste0(
-  round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
-  if (summary(pcp_lm)$coefficients[2, 4] <= 0.05) {
+pdsi <- palmer_drought_severity_index[year_id, ]
+pdsi_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
+pdsi_fit <- fitted(pdsi_lm)
+lm_slope$pdsi <- paste0(
+  round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
+  if (summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {
     "*"
   }
 )
 
-bassB <- bass_bio[bass_bio$Year %in% index_year, ]
-bassB_lm <- lm(biomass_ewe[time_id] ~ bassB$bass_bio)
+bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+bassB_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
 bassB_fit <- fitted(bassB_lm)
 lm_slope$bassB <- paste0(
   round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
@@ -1153,41 +1062,42 @@ lm_slope$bassB <- paste0(
   }
 )
 
-sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
-price_lm <- lm(biomass_ewe[time_id] ~ sub_menhadenP)
-price_fit <- fitted(price_lm)
-lm_slope$price <- paste0(
-  round(summary(price_lm)$coefficients[2, 1], digits = 2),
-  if (summary(price_lm)$coefficients[2, 4] <= 0.05) {
+effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+lm_slope$effort <- paste0(
+  round(summary(effort_lm)$coefficients[2, 1], digits = 2),
+  if (summary(effort_lm)$coefficients[2, 4] <= 0.05) {
     "*"
   }
 )
 
+
 par(mfrow = c(2, 2))
 
-plot(amo$raw_value, biomass_ewe[time_id],
-  xlab = "AMO raw values",
+plot(amo$scaled_value[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+  xlab = "AMO values",
   ylab = "Menhaden-like species B from OM"
 )
-lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
+lines(amo$scaled_value[index_lag_id], amo_fit, lty = 2, col = "blue")
 
-plot(pcp$raw_value, biomass_ewe[time_id],
-  xlab = "Precipitation raw values",
+plot(pdsi$scaled_value[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+  xlab = "PDSI values",
   ylab = "Menhaden-like species B from OM"
 )
-lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+lines(pdsi$scaled_value[index_lag_id], pdsi_fit, lty = 2, col = "blue")
 
-plot(bassB$bass_bio, biomass_ewe[time_id],
+plot(bassB$bass_bio[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
   xlab = "Biomass of Striped bass",
   ylab = "Menhaden-like species B from OM"
 )
-lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
+lines(bassB$bass_bio[index_lag_id], bassB_fit, lty = 2, col = "blue")
 
-plot(sub_menhadenP, biomass_ewe[time_id],
-  xlab = "Menhaden price",
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+  xlab = "Menhaden fishing effort",
   ylab = "Menhaden-like species B from OM"
 )
-lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
+lines(effort[index_lag_id], effort_fit, lty = 2, col = "blue")
 
 knitr::kable(lm_slope)
 ```
@@ -1197,29 +1107,29 @@ knitr::kable(lm_slope)
 # Projection: cases 1 - 4 ---------------------------
 
 lm_slope <- data.frame(
-  case = 0.2,
+  case = "PDSI+AMO1 Case",
   projection_year = 1:length(projection_year),
   amo = NA,
-  pcp = NA,
+  pdsi = NA,
   bassB = NA,
-  price = NA
+  effort = NA
 )
 
 for (projection_year_id in 1:length(projection_year)) {
 
   # abundance
-  if (projection_year_id == 1) {
-    menhaden_b <- ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id]
-  } else {
-    menhaden_b <- c(ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id], ss3list$timeseries$`SmryNum_SX:1_GP:1`[1:(projection_year_id - 1)])
-  }
+  # if (projection_year_id == 1) {
+  #   menhaden_b <- ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id]
+  # } else {
+  #   menhaden_b <- c(ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id], ss3list$timeseries$`SmryNum_SX:1_GP:1`[1:(projection_year_id - 1)])
+  # }
 
   # biomass
-  # if (projection_year_id ==1) {
-  #   menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
-  # } else {
-  #   menhaden_b <- c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[1:(projection_year_id-1)])
-  # }
+  if (projection_year_id ==1) {
+    menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
+  } else {
+    menhaden_b <- c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[1:(projection_year_id-1)])
+  }
 
 
   year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year) + projection_year_id - 1)]
@@ -1233,47 +1143,46 @@ for (projection_year_id in 1:length(projection_year)) {
 
   # Linear regression model -----------------------------------------
 
+  lag = 1
+  biomass_lag_id <- (1+lag):length(index_year)
+  index_lag_id <- 1:(length(index_year)-lag)
+  
   amo <- amo_unsmooth_lag1[year_id, ]
-  amo_lm <- lm(menhaden_b ~ amo$raw_value)
-  summary(amo_lm)
+  amo_lm <- lm(menhaden_b[biomass_lag_id] ~ amo$scaled_value[index_lag_id])
   amo_fit <- fitted(amo_lm)
-  lm_slope$amo[projection_year_id] <- paste0(
+  lm_slope$amo <- paste0(
     round(summary(amo_lm)$coefficients[2, 1], digits = 2),
     if (summary(amo_lm)$coefficients[2, 4] <= 0.05) {
       "*"
     }
   )
-
-  pcp <- precipitation[year_id, ]
-  pcp_lm <- lm(menhaden_b ~ pcp$raw_value)
-  summary(pcp_lm)
-  pcp_fit <- fitted(pcp_lm)
-  lm_slope$pcp[projection_year_id] <- paste0(
-    round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
-    if (summary(pcp_lm)$coefficients[2, 4] <= 0.05) {
+  
+  pdsi <- palmer_drought_severity_index[year_id, ]
+  pdsi_lm <- lm(menhaden_b[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
+  pdsi_fit <- fitted(pdsi_lm)
+  lm_slope$pdsi <- paste0(
+    round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
+    if (summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {
       "*"
     }
   )
-
-  bassB <- bass_bio[bass_bio$Year %in% index_year, ]
-  bassB_lm <- lm(menhaden_b ~ bassB$bass_bio)
-  summary(bassB_lm)
+  
+  bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+  bassB_lm <- lm(menhaden_b[biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
   bassB_fit <- fitted(bassB_lm)
-  lm_slope$bassB[projection_year_id] <- paste0(
+  lm_slope$bassB <- paste0(
     round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
     if (summary(bassB_lm)$coefficients[2, 4] <= 0.05) {
       "*"
     }
   )
-
-  sub_menhaden_b <- menhaden_b[index_year %in% menhaden_price$Year]
-  sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
-  price_lm <- lm(sub_menhaden_b ~ sub_menhadenP)
-  summary(price_lm)
-  price_fit <- fitted(price_lm)
-  lm_slope$price[projection_year_id] <- paste0(
-    round(summary(price_lm)$coefficients[2, 1], digits = 2),
-    if (summary(price_lm)$coefficients[2, 4] <= 0.05) {
+  
+  effort <- apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+  effort_lm <- lm(menhaden_b[biomass_lag_id] ~ effort[index_lag_id])
+  effort_fit <- fitted(effort_lm)
+  lm_slope$effort <- paste0(
+    round(summary(effort_lm)$coefficients[2, 1], digits = 2),
+    if (summary(effort_lm)$coefficients[2, 4] <= 0.05) {
       "*"
     }
   )
@@ -1281,42 +1190,42 @@ for (projection_year_id in 1:length(projection_year)) {
   if (projection_year_id == length(projection_year)) {
     par(mfrow = c(2, 2))
 
-    plot(amo$raw_value, menhaden_b,
-      xlab = "AMO raw values",
+    plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "AMO values",
       ylab = "Biomass of menhaden-like species"
     )
-    lines(amo$raw_value, amo_fit, lty = 2, col = "blue")
+    lines(amo$scaled_value[index_lag_id], amo_fit, lty = 2, col = "blue")
 
-    plot(pcp$raw_value, menhaden_b,
-      xlab = "Precipitation raw values",
+    plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "PDSI values",
       ylab = "Biomass of menhaden-like species"
     )
-    lines(pcp$raw_value, pcp_fit, lty = 2, col = "blue")
+    lines(pdsi$scaled_value[index_lag_id], pdsi_fit, lty = 2, col = "blue")
 
-    plot(bassB$bass_bio, menhaden_b,
+    plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
       xlab = "Biomass of Striped bass",
       ylab = "Biomass of menhaden-like species"
     )
-    lines(bassB$bass_bio, bassB_fit, lty = 2, col = "blue")
+    lines(bassB$bass_bio[index_lag_id], bassB_fit, lty = 2, col = "blue")
 
-    plot(sub_menhadenP, sub_menhaden_b,
-      xlab = "Menhaden price",
+    plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "Menhaden fishing effort",
       ylab = "Biomass of menhaden-like species"
     )
-    lines(sub_menhadenP, price_fit, lty = 2, col = "blue")
+    lines(effort[index_lag_id], effort_fit, lty = 2, col = "blue")
   }
 
 
   # status of indicators --------------------------------------------
 
   amo_soi <- calc_soi(
-    indicator_data = amo$raw_value,
+    indicator_data = amo$scaled_value,
     slope = coef(amo_lm)[2]
   )
 
-  pcp_soi <- calc_soi(
-    indicator_data = pcp$raw_value,
-    slope = coef(pcp_lm)[2]
+  pdsi_soi <- calc_soi(
+    indicator_data = pdsi$scaled_value,
+    slope = coef(pdsi_lm)[2]
   )
 
   bassB_soi <- calc_soi(
@@ -1324,19 +1233,19 @@ for (projection_year_id in 1:length(projection_year)) {
     slope = coef(bassB_lm)[2]
   )
 
-  price_soi <- calc_soi(
-    indicator_data = sub_menhadenP,
-    slope = coef(price_lm)[2]
+  effort_soi <- calc_soi(
+    indicator_data = effort,
+    slope = coef(effort_lm)[2]
   )
 
   if (projection_year_id == 1) {
     scaled_data <- data.frame(
       year = model_year,
       projection_year_id = projection_year_id,
-      amo = scale(amo$raw_value)[, 1],
-      pcp = scale(pcp$raw_value)[, 1],
+      amo = scale(amo$scaled_value)[, 1],
+      pdsi = scale(pdsi$scaled_value)[, 1],
       bassB = scale(bassB$bass_bio)[, 1],
-      price = scale(sub_menhadenP)[, 1],
+      effort = scale(effort)[, 1],
       menhadenB = scale(menhaden_b)[, 1]
     )
 
@@ -1344,9 +1253,9 @@ for (projection_year_id in 1:length(projection_year)) {
       year = model_year,
       projection_year_id = projection_year_id,
       amo = amo_soi,
-      pcp = pcp_soi,
+      pdsi = pdsi_soi,
       bass_b = bassB_soi,
-      price = price_soi
+      effort = effort_soi
     )
   } else {
     scaled_data <- rbind(
@@ -1354,10 +1263,10 @@ for (projection_year_id in 1:length(projection_year)) {
       data.frame(
         year = index_year,
         projection_year_id = projection_year_id,
-        amo = scale(amo$raw_value)[, 1],
-        pcp = scale(pcp$raw_value)[, 1],
+        amo = scale(amo$scaled_value)[, 1],
+        pdsi = scale(pdsi$scaled_value)[, 1],
         bassB = scale(bassB$bass_bio)[, 1],
-        price = scale(sub_menhadenP)[, 1],
+        effort = scale(effort)[, 1],
         menhadenB = scale(menhaden_b)[, 1]
       )
     )
@@ -1368,9 +1277,9 @@ for (projection_year_id in 1:length(projection_year)) {
         year = index_year,
         projection_year_id = projection_year_id,
         amo = amo_soi,
-        pcp = pcp_soi,
+        pdsi = pdsi_soi,
         bass_b = bassB_soi,
-        price = price_soi
+        effort = effort_soi
       )
     )
   }
@@ -1394,9 +1303,9 @@ for (projection_year_id in 1:length(projection_year)) {
     soi = tail(amo_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
-  pcp_fmsy <- adjust_projection_jabba(
+  pdsi_fmsy <- adjust_projection_jabba(
     FMSY = ss3_fmsy,
-    soi = tail(pcp_soi, n = 1),
+    soi = tail(pdsi_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
   bassB_fmsy <- adjust_projection_jabba(
@@ -1404,9 +1313,9 @@ for (projection_year_id in 1:length(projection_year)) {
     soi = tail(bassB_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
-  price_fmsy <- adjust_projection_jabba(
+  effort_fmsy <- adjust_projection_jabba(
     FMSY = ss3_fmsy,
-    soi = tail(price_soi, n = 1),
+    soi = tail(effort_soi, n = 1),
     Bt_BMSY = ss3_Bt_BMSY
   )
 
@@ -1416,9 +1325,9 @@ for (projection_year_id in 1:length(projection_year)) {
       projection_year_id = projection_year_id,
       ss3 = ss3_fmsy,
       amo = amo_fmsy,
-      pcp = pcp_fmsy,
+      pdsi = pdsi_fmsy,
       bassB = bassB_fmsy,
-      price = price_fmsy
+      effort = effort_fmsy
     )
   } else {
     fmsy_data <- rbind(
@@ -1428,9 +1337,9 @@ for (projection_year_id in 1:length(projection_year)) {
         projection_year_id = projection_year_id,
         ss3 = ss3_fmsy,
         amo = amo_fmsy,
-        pcp = pcp_fmsy,
+        pdsi = pdsi_fmsy,
         bassB = bassB_fmsy,
-        price = price_fmsy
+        effort = effort_fmsy
       )
     )
   }
