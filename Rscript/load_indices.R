@@ -18,8 +18,8 @@ precipitation <- read.csv(
 # Load Striped bass biomass index ---------------------------------
 
 ewe_output <- read_ewe_output(
-  file_path = here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp"),
-  file_names = "biomass_annual.csv",
+  file_path = here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1"),
+  file_names = "biomass_monthly.csv",
   skip_nrows = 8,
   plot = FALSE,
   figure_titles = NULL,
@@ -94,4 +94,12 @@ palmer_drought_severity_index <- read.csv(
 kaplan_sst <- read.csv(
   here::here("data", "ewe", "kaplan_sst.csv")
 )
+
+# Load catchability data ------------------------------------------
+ewe_catchability <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "qatage.csv"))
+
+
+# Load fishing mortality at age data ------------------------------
+ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+
 
