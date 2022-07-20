@@ -78,13 +78,6 @@
     </li>
   </ul></li>
 <li>
-  <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-    Source Code
-  </a>
-</li>
-<li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/issues" class="external-link">
     <span class="fas fa-question-circle fa-lg"></span>
      
@@ -122,7 +115,8 @@
   <span class="va">skip_nrows</span>,
   <span class="va">species</span>,
   <span class="va">species_labels</span>,
-  <span class="va">years</span>,
+  <span class="va">ewe_years</span>,
+  <span class="va">data_years</span>,
   <span class="va">fleet_num</span>,
   selectivity <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">CV</span>,
@@ -141,8 +135,10 @@
 <dd><p>The species to create fishery for. A vector of column names from the catch_annual.csv.</p></dd>
 <dt>species_labels</dt>
 <dd><p>Customized names for species columns.</p></dd>
-<dt>years</dt>
-<dd><p>A vector of years.</p></dd>
+<dt>ewe_years</dt>
+<dd><p>A vector of years from EwE outputs.</p></dd>
+<dt>data_years</dt>
+<dd><p>A vector of years for simulation.</p></dd>
 <dt>fleet_num</dt>
 <dd><p>Fleet number.</p></dd>
 <dt>selectivity</dt>

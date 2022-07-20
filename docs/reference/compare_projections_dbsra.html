@@ -78,13 +78,6 @@
     </li>
   </ul></li>
 <li>
-  <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-    Source Code
-  </a>
-</li>
-<li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/issues" class="external-link">
     <span class="fas fa-question-circle fa-lg"></span>
      
@@ -122,10 +115,14 @@
   <span class="va">projection_output_data</span>,
   <span class="va">projection_year</span>,
   <span class="va">model_year</span>,
+  lag <span class="op">=</span> <span class="fl">0</span>,
   <span class="va">amo</span>,
   <span class="va">pcp</span>,
+  <span class="va">pdsi</span>,
   <span class="va">bassB</span>,
-  <span class="va">price</span>
+  <span class="va">price</span>,
+  <span class="va">effort</span>,
+  <span class="va">indices</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -139,14 +136,22 @@
 <dd><p>A vector of projection years.</p></dd>
 <dt>model_year</dt>
 <dd><p>A vector of model years.</p></dd>
+<dt>lag</dt>
+<dd><p>Lag between biomass of menhaden-like species and indices.</p></dd>
 <dt>amo</dt>
 <dd><p>AMO data.</p></dd>
 <dt>pcp</dt>
 <dd><p>Precipitation data.</p></dd>
+<dt>pdsi</dt>
+<dd><p>Palmer drought severity index data.</p></dd>
 <dt>bassB</dt>
 <dd><p>Biomass of Striped bass data.</p></dd>
 <dt>price</dt>
 <dd><p>Price of menhaden data.</p></dd>
+<dt>effort</dt>
+<dd><p>Fishing effort of menhaden-like species from the EwE operating model.</p></dd>
+<dt>indices</dt>
+<dd><p>Indices will be used in the analysis.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

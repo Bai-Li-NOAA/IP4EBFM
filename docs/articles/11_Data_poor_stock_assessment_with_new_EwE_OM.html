@@ -98,13 +98,6 @@
   </ul>
 </li>
 <li>
-  <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-    Source Code
-  </a>
-</li>
-<li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/issues" class="external-link">
     <span class="fas fa-question-circle fa-lg"></span>
      
@@ -156,21 +149,31 @@
 <h2 id="case-0-stock-assessment-base-run">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run"></a>
 </h2>
 <ul>
-<li>Case 0.1</li>
+<li>Case 0.1
+<ul>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is -0.39</li>
+</ul>
+</li>
 </ul>
 <p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-1.png" width="1152"></p>
 <ul>
-<li>Case 0.2</li>
+<li>Case 0.2
+<ul>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is -0.66</li>
+</ul>
+</li>
 </ul>
 <p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 <ul>
-<li>Case 0.3</li>
-<li>Add a long sequence of equilibrium catches (8 years of max catch) to the start of the catch</li>
+<li>Case 0.3
+<ul>
+<li>Add 8 years of equilibrium catches (max catch) to the start of the catch</li>
+<li>Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences</li>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is 0.59</li>
+</ul>
+</li>
 </ul>
 <p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">biomass_ewe</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_year</span><span class="op">)</span><span class="op">]</span>, <span class="va">dbsraB_projection</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.59</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="linear-regression-models-from-cases-1---4-using-true-values-from-ewe">Linear regression models from cases 1 - 4 using “true” values from EwE<a class="anchor" aria-label="anchor" href="#linear-regression-models-from-cases-1---4-using-true-values-from-ewe"></a>
@@ -180,9 +183,9 @@
 <li><p>Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation</p></li>
 <li><p>Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator</p></li>
 <li><p>Case 4: Link fishing effort of menhaden with menhaden biomass estimates and adjust projections</p></li>
-<li><p>Linear regression models from case 1 - 4</p></li>
+<li><p>Linear regression models from case 1 - 4 (Lag = 1)</p></li>
 </ul>
-<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
+<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -195,13 +198,7 @@ case
 amo
 </th>
 <th style="text-align:left;">
-pcp
-</th>
-<th style="text-align:left;">
 bassB
-</th>
-<th style="text-align:left;">
-price
 </th>
 <th style="text-align:left;">
 pdsi
@@ -218,13 +215,7 @@ True indices
 1840700.21*
 </td>
 <td style="text-align:left;">
-158898.07
-</td>
-<td style="text-align:left;">
 2.43
-</td>
-<td style="text-align:left;">
-677.29
 </td>
 <td style="text-align:left;">
 1280539.35*
@@ -238,7 +229,7 @@ True indices
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-1">Cases 1-4 are based on the settings from case 0.1<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-1"></a>
 </h2>
-<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-8-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-8-3.png" width="1152"></p>
+<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-3.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -254,16 +245,10 @@ projection_year
 amo
 </th>
 <th style="text-align:left;">
-pcp
+pdsi
 </th>
 <th style="text-align:left;">
 bassB
-</th>
-<th style="text-align:left;">
-price
-</th>
-<th style="text-align:left;">
-pdsi
 </th>
 <th style="text-align:left;">
 effort
@@ -281,19 +266,13 @@ effort
 -559683.68*
 </td>
 <td style="text-align:left;">
-19804.51
+1205735.45*
 </td>
 <td style="text-align:left;">
 -2.66*
 </td>
 <td style="text-align:left;">
-2252.7
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+143509.49*
 </td>
 </tr>
 <tr>
@@ -307,19 +286,13 @@ effort
 -610852.81*
 </td>
 <td style="text-align:left;">
-39132.7
+1210507.96*
 </td>
 <td style="text-align:left;">
 -2.72*
 </td>
 <td style="text-align:left;">
-2294.59
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140200.98*
 </td>
 </tr>
 <tr>
@@ -333,19 +306,13 @@ effort
 -634035.25*
 </td>
 <td style="text-align:left;">
-57099.16
+1216708.34*
 </td>
 <td style="text-align:left;">
 -2.85*
 </td>
 <td style="text-align:left;">
-2503.75
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140254.14*
 </td>
 </tr>
 <tr>
@@ -359,19 +326,13 @@ effort
 -597326.68*
 </td>
 <td style="text-align:left;">
-59108.33
+1216673.47*
 </td>
 <td style="text-align:left;">
 -2.71*
 </td>
 <td style="text-align:left;">
-2229.74
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140534.03*
 </td>
 </tr>
 <tr>
@@ -385,16 +346,10 @@ effort
 -657630.8*
 </td>
 <td style="text-align:left;">
-72433.45
+1220186.71*
 </td>
 <td style="text-align:left;">
 -2.99*
-</td>
-<td style="text-align:left;">
-2050.41
-</td>
-<td style="text-align:left;">
-1220186.71*
 </td>
 <td style="text-align:left;">
 142014.86*
@@ -406,7 +361,7 @@ effort
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-2">Cases 1-4 are based on the settings from case 0.2<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-2"></a>
 </h2>
-<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-10-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-10-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-10-3.png" width="1152"></p>
+<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-3.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -422,16 +377,10 @@ projection_year
 amo
 </th>
 <th style="text-align:left;">
-pcp
+pdsi
 </th>
 <th style="text-align:left;">
 bassB
-</th>
-<th style="text-align:left;">
-price
-</th>
-<th style="text-align:left;">
-pdsi
 </th>
 <th style="text-align:left;">
 effort
@@ -449,19 +398,13 @@ effort
 -500372.17
 </td>
 <td style="text-align:left;">
--163706.47
+1205735.45*
 </td>
 <td style="text-align:left;">
 0.09
 </td>
 <td style="text-align:left;">
--9803.36*
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+143509.49*
 </td>
 </tr>
 <tr>
@@ -475,19 +418,13 @@ effort
 -452966.44
 </td>
 <td style="text-align:left;">
--175197.57
+1210507.96*
 </td>
 <td style="text-align:left;">
 -0.21
 </td>
 <td style="text-align:left;">
--7011.16*
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140200.98*
 </td>
 </tr>
 <tr>
@@ -501,19 +438,13 @@ effort
 -380499.39
 </td>
 <td style="text-align:left;">
--182877.54
+1216708.34*
 </td>
 <td style="text-align:left;">
 -0.41
 </td>
 <td style="text-align:left;">
--5586.35
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140254.14*
 </td>
 </tr>
 <tr>
@@ -527,19 +458,13 @@ effort
 -317384.46
 </td>
 <td style="text-align:left;">
--166772.48
+1216673.47*
 </td>
 <td style="text-align:left;">
 -0.58
 </td>
 <td style="text-align:left;">
--3651.78
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140534.03*
 </td>
 </tr>
 <tr>
@@ -553,16 +478,10 @@ effort
 -549918.45
 </td>
 <td style="text-align:left;">
-229426.87
+1220186.71*
 </td>
 <td style="text-align:left;">
 -0.47
-</td>
-<td style="text-align:left;">
--6709.22
-</td>
-<td style="text-align:left;">
-1220186.71*
 </td>
 <td style="text-align:left;">
 142014.86*
@@ -574,7 +493,7 @@ effort
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-3">Cases 1-4 are based on the settings from case 0.3<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-3"></a>
 </h2>
-<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-12-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-12-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-12-3.png" width="1152"></p>
+<p><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-1.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-2.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-3.png" width="1152"><img src="11_Data_poor_stock_assessment_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -590,16 +509,10 @@ projection_year
 amo
 </th>
 <th style="text-align:left;">
-pcp
+pdsi
 </th>
 <th style="text-align:left;">
 bassB
-</th>
-<th style="text-align:left;">
-price
-</th>
-<th style="text-align:left;">
-pdsi
 </th>
 <th style="text-align:left;">
 effort
@@ -617,19 +530,13 @@ effort
 1029179.63*
 </td>
 <td style="text-align:left;">
--95720.24
+1205735.45*
 </td>
 <td style="text-align:left;">
 2.75*
 </td>
 <td style="text-align:left;">
--1026.64
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+143509.49*
 </td>
 </tr>
 <tr>
@@ -643,19 +550,13 @@ effort
 956923*
 </td>
 <td style="text-align:left;">
--100604.81
+1210507.96*
 </td>
 <td style="text-align:left;">
 2.49*
 </td>
 <td style="text-align:left;">
--740.09
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140200.98*
 </td>
 </tr>
 <tr>
@@ -669,19 +570,13 @@ effort
 917518.94*
 </td>
 <td style="text-align:left;">
--112990.85
+1216708.34*
 </td>
 <td style="text-align:left;">
 2.5*
 </td>
 <td style="text-align:left;">
--773.13
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140254.14*
 </td>
 </tr>
 <tr>
@@ -695,19 +590,13 @@ effort
 863244.51*
 </td>
 <td style="text-align:left;">
--109503.67
+1216673.47*
 </td>
 <td style="text-align:left;">
 2.18*
 </td>
 <td style="text-align:left;">
--130.83
-</td>
-<td style="text-align:left;">
-1220186.71*
-</td>
-<td style="text-align:left;">
-142014.86*
+140534.03*
 </td>
 </tr>
 <tr>
@@ -721,16 +610,10 @@ effort
 795157.15*
 </td>
 <td style="text-align:left;">
--100852.55
+1220186.71*
 </td>
 <td style="text-align:left;">
 2.07*
-</td>
-<td style="text-align:left;">
-676.78
-</td>
-<td style="text-align:left;">
-1220186.71*
 </td>
 <td style="text-align:left;">
 142014.86*

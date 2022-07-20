@@ -78,13 +78,6 @@
     </li>
   </ul></li>
 <li>
-  <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-    Source Code
-  </a>
-</li>
-<li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/issues" class="external-link">
     <span class="fas fa-question-circle fa-lg"></span>
      
@@ -128,7 +121,8 @@
   <span class="va">model_year</span>,
   <span class="va">projection_year</span>,
   use_depletion <span class="op">=</span> <span class="cn">FALSE</span>,
-  depletion_ratio <span class="op">=</span> <span class="cn">NULL</span>
+  depletion_ratio <span class="op">=</span> <span class="cn">NULL</span>,
+  initial_equilibrium_catch <span class="op">=</span> <span class="cn">TRUE</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -137,7 +131,7 @@
     <dl><dt>file_path</dt>
 <dd><p>A file path to a directory where the assessment input and output files will be saved.</p></dd>
 <dt>r0</dt>
-<dd><p>UNexploited recruitment from Beverton-Holt stock-recruitment model.</p></dd>
+<dd><p>Unexploited recruitment from Beverton-Holt stock-recruitment model.</p></dd>
 <dt>steepness</dt>
 <dd><p>Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20% of unfished spawning biomass.</p></dd>
 <dt>sigmar</dt>
@@ -156,6 +150,8 @@
 <dd><p>A logical value.</p></dd>
 <dt>depletion_ratio</dt>
 <dd><p>Ratio of depletion.</p></dd>
+<dt>initial_equilibrium_catch</dt>
+<dd><p>TRUE or FALSE.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

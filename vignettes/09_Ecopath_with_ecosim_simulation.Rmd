@@ -190,6 +190,7 @@ total_biomass + scale_color_brewer(palette="Dark2")
 ```
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+file_path <- paste0(here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", scenario_code[1]))
 source(here::here("Rscript", "load_indices.R"))
 
 # Load ewe value data
@@ -753,6 +754,7 @@ library(r4ss)
 
 # Case 0: default stock assessment run ----------------------------
 # Load simulated input data
+file_path <- paste0(here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", scenario_code[1]))
 source(here::here("Rscript", "load_indices.R"))
 file_path <- here::here("data", "data_rich")
 originalwd <- getwd()

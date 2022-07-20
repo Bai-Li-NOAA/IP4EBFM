@@ -98,13 +98,6 @@
   </ul>
 </li>
 <li>
-  <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM" class="external-link">
-    <span class="fab fa-github fa-lg"></span>
-     
-    Source Code
-  </a>
-</li>
-<li>
   <a href="https://github.com/Bai-Li-NOAA/IFA4EBFM/issues" class="external-link">
     <span class="fas fa-question-circle fa-lg"></span>
      
@@ -160,6 +153,7 @@
 <ul>
 <li>Depletion relative to unfished: 0.27 (assume catch is proportional to biomass and use <span class="math inline">\(catch_{2012}/catch_{1985}\)</span>)</li>
 <li>BMSY relative to unfished: 0.3 (based on fecundity target value from Beaufort Stock Assessment report)</li>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is -0.38</li>
 </ul>
 </li>
 </ul>
@@ -169,23 +163,23 @@
 <ul>
 <li>Depletion relative to unfished: 0.9 based on ballpark values from EwE</li>
 <li>
-<span class="math inline">\(B_{MSY}\)</span> relative to unfished: 0.3 (based on fecundity target value from Beaufort Stock Assessment report)</li>
+<span class="math inline">\(B_{MSY}\)</span> relative to unfished: 0.46 (based on fecundity target value from Beaufort Stock Assessment report)</li>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is 0.27</li>
 </ul>
 </li>
 </ul>
 <p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 <ul>
-<li>Case 0.3
+<li>
+<p>Case 0.3</p>
 <ul>
-<li>Add a long sequence of equilibrium catches (2010 - 2012) to the start of the catch</li>
+<li>Add six years of equilibrium catches (<span class="math inline">\(Catch_{1985}\)</span>) to the start of the catch</li>
 <li>Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences</li>
+<li>The correlation coefficient value between “true” biomass and estimated biomass of menhaden-like species is 0.37</li>
 </ul>
 </li>
 </ul>
 <p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"></p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html" class="external-link">cor</a></span><span class="op">(</span><span class="va">biomass_ewe</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">model_year</span><span class="op">)</span><span class="op">]</span>, <span class="va">dbsraB_projection</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.37</span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="linear-regression-models-from-cases-1---4-using-true-values-from-ewe">Linear regression models from cases 1 - 4 using “true” values from EwE<a class="anchor" aria-label="anchor" href="#linear-regression-models-from-cases-1---4-using-true-values-from-ewe"></a>
@@ -197,12 +191,11 @@
 <ul>
 <li>Linear regression models from case 1 - 4
 <ul>
-<li>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</li>
-<li>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</li>
+<li>The four indices do not show significant relationship with biomass of menhaden-like species when lag is 0</li>
 </ul>
 </li>
 </ul>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -229,13 +222,13 @@ price
 True indices
 </td>
 <td style="text-align:left;">
-253334.99
+118940.78
 </td>
 <td style="text-align:left;">
-3272.33
+7162.48
 </td>
 <td style="text-align:left;">
-0.46
+0.72
 </td>
 <td style="text-align:left;">
 1466.08
@@ -246,7 +239,7 @@ True indices
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-1">Cases 1-4 are based on the settings from case 0.1<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-1"></a>
 </h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-8-3.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-7-3.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -269,12 +262,6 @@ bassB
 </th>
 <th style="text-align:left;">
 price
-</th>
-<th style="text-align:left;">
-pdsi
-</th>
-<th style="text-align:left;">
-effort
 </th>
 </tr></thead>
 <tbody>
@@ -292,16 +279,10 @@ effort
 -139868.43
 </td>
 <td style="text-align:left;">
--0.84
+-4.34*
 </td>
 <td style="text-align:left;">
 -2204.81
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -318,16 +299,10 @@ effort
 -132747.32
 </td>
 <td style="text-align:left;">
--0.94
+-4.4*
 </td>
 <td style="text-align:left;">
 -2007.07
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -344,16 +319,10 @@ effort
 -130092.58
 </td>
 <td style="text-align:left;">
--1.02
+-4.45*
 </td>
 <td style="text-align:left;">
 -1677.28
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -370,16 +339,10 @@ effort
 -126907.28
 </td>
 <td style="text-align:left;">
--1.04
+-4.5*
 </td>
 <td style="text-align:left;">
 -1302.24
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -396,16 +359,10 @@ effort
 -142385.74
 </td>
 <td style="text-align:left;">
--0.93
+-4.5*
 </td>
 <td style="text-align:left;">
 -872.12
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 </tbody>
@@ -414,7 +371,7 @@ effort
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-2">Cases 1-4 are based on the settings from case 0.2<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-2"></a>
 </h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-10-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-10-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-10-3.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-9-3.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -437,12 +394,6 @@ bassB
 </th>
 <th style="text-align:left;">
 price
-</th>
-<th style="text-align:left;">
-pdsi
-</th>
-<th style="text-align:left;">
-effort
 </th>
 </tr></thead>
 <tbody>
@@ -460,16 +411,10 @@ effort
 -98346.28
 </td>
 <td style="text-align:left;">
-0.94*
+1.1*
 </td>
 <td style="text-align:left;">
 -1207.27
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -486,16 +431,10 @@ effort
 -91475.51
 </td>
 <td style="text-align:left;">
-1.05*
+1.13*
 </td>
 <td style="text-align:left;">
 -775.59
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -512,16 +451,10 @@ effort
 -99228.56
 </td>
 <td style="text-align:left;">
-1.25*
+1.21*
 </td>
 <td style="text-align:left;">
 -314.3
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -538,16 +471,10 @@ effort
 -99385.93
 </td>
 <td style="text-align:left;">
-1.31*
+1.14*
 </td>
 <td style="text-align:left;">
 -17.6
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -564,16 +491,10 @@ effort
 -106600.04
 </td>
 <td style="text-align:left;">
-1.05*
+1.09*
 </td>
 <td style="text-align:left;">
 -423.28
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 </tbody>
@@ -582,7 +503,7 @@ effort
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0-3">Cases 1-4 are based on the settings from case 0.3<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0-3"></a>
 </h2>
-<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-12-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-12-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-12-3.png" width="1152"></p>
+<p><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-1.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-2.png" width="1152"><img src="06_Data_poor_stock_assessment_files/figure-html/unnamed-chunk-11-3.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -606,12 +527,6 @@ bassB
 <th style="text-align:left;">
 price
 </th>
-<th style="text-align:left;">
-pdsi
-</th>
-<th style="text-align:left;">
-effort
-</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -628,16 +543,10 @@ effort
 -47960.64
 </td>
 <td style="text-align:left;">
-3.35*
+4.52*
 </td>
 <td style="text-align:left;">
 -307.45
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -654,16 +563,10 @@ effort
 -67718.62
 </td>
 <td style="text-align:left;">
-3.5*
+4.63*
 </td>
 <td style="text-align:left;">
 -467.95
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -680,16 +583,10 @@ effort
 -235669.45
 </td>
 <td style="text-align:left;">
-4.91*
+4.23*
 </td>
 <td style="text-align:left;">
 -2805.65
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -706,16 +603,10 @@ effort
 -156401.04
 </td>
 <td style="text-align:left;">
-4.43*
+4.74*
 </td>
 <td style="text-align:left;">
 -176.07
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 <tr>
@@ -732,16 +623,10 @@ effort
 -118625.85
 </td>
 <td style="text-align:left;">
-3.85*
+4.52*
 </td>
 <td style="text-align:left;">
 1420.31
-</td>
-<td style="text-align:left;">
-19230.15
-</td>
-<td style="text-align:left;">
--3152.65
 </td>
 </tr>
 </tbody>

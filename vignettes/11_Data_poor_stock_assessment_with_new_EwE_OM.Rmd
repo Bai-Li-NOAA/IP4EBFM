@@ -31,10 +31,12 @@ lapply(required_pkg, library, character.only = TRUE)
 ## Case 0: stock assessment base run
 
 - Case 0.1
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.39
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation_newEcosim.R"))
+file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
 source(here::here("Rscript", "load_indices.R"))
 
 # Load EwE biomass----------------------------
@@ -69,7 +71,7 @@ functional_groups <- c(
 age_name <- paste0("AtlanticMenhaden", 0:6)
 
 biomass <- read_ewe_output(
-  file_path = here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1"),
+  file_path = file_path,
   file_names = "biomass_monthly.csv",
   skip_nrows = 8,
   plot = FALSE,
@@ -252,9 +254,12 @@ legend("bottomright",
        title = "Case 0.1"
 )
 
+cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]])
+
 ```
 
 - Case 0.2
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.66
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
@@ -372,10 +377,14 @@ legend("bottomright",
        title = "Case 0.2"
 )
 
+cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]])
+
 ```
 
 - Case 0.3
-- Add a long sequence of equilibrium catches (8 years of max catch) to the start of the catch
+  - Add 8 years of equilibrium catches (max catch) to the start of the catch
+  - Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is 0.59
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
@@ -607,24 +616,21 @@ legend("bottomright",
 
 ```
 
-```{r}
-print(cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]]))
-```
 ## Linear regression models from cases 1 - 4 using "true" values from EwE
 - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
 - Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation
 - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
 - Case 4: Link fishing effort of menhaden with menhaden biomass estimates and adjust projections 
 
-- Linear regression models from case 1 - 4
+- Linear regression models from case 1 - 4 (Lag = 1)
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 lm_slope <- data.frame(
   case = "True indices",
   amo = NA,
-  pcp = NA,
+  #pcp = NA,
   bassB = NA,
-  price = NA,
+  #price = NA,
   pdsi = NA,
   effort = NA
 )
@@ -645,26 +651,12 @@ lm_slope$amo <- paste0(
   }
 )
 
-pcp <- precipitation[year_id, ]
-pcp_lm <- lm(biomass_ewe[biomass_lag_id] ~ pcp$scaled_value[index_lag_id])
-pcp_fit <- fitted(pcp_lm)
-lm_slope$pcp <- paste0(
-  round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
-  if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-bassB <- bass_bio[bass_bio$Year %in% year_id, ]
-bassB_lm <- lm(biomass_ewe[biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
-bassB_fit <- fitted(bassB_lm)
-lm_slope$bassB <- paste0(
-  round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
-  if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
-sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
-price_lm <- lm(biomass_ewe[biomass_lag_id] ~ sub_menhadenP[index_lag_id])
-price_fit <- fitted(price_lm)
-lm_slope$price <- paste0(
-  round(summary(price_lm)$coefficients[2, 1], digits = 2),
-  if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
+# pcp <- precipitation[year_id, ]
+# pcp_lm <- lm(biomass_ewe[biomass_lag_id] ~ pcp$scaled_value[index_lag_id])
+# pcp_fit <- fitted(pcp_lm)
+# lm_slope$pcp <- paste0(
+#   round(summary(pcp_lm)$coefficients[2, 1], digits = 2),
+#   if(summary(pcp_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
 pdsi <- palmer_drought_severity_index[year_id, ]
 pdsi_lm <- lm(biomass_ewe[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
@@ -673,6 +665,20 @@ lm_slope$pdsi <- paste0(
   round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
   if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
+bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+bassB_lm <- lm(biomass_ewe[biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
+bassB_fit <- fitted(bassB_lm)
+lm_slope$bassB <- paste0(
+  round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+  if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
+# sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
+# price_lm <- lm(biomass_ewe[biomass_lag_id] ~ sub_menhadenP[index_lag_id])
+# price_fit <- fitted(price_lm)
+# lm_slope$price <- paste0(
+#   round(summary(price_lm)$coefficients[2, 1], digits = 2),
+#   if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
+
 effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
 effort_lm <- lm(biomass_ewe[biomass_lag_id] ~ effort[index_lag_id])
 effort_fit <- fitted(effort_lm)
@@ -680,7 +686,7 @@ lm_slope$effort <- paste0(
   round(summary(effort_lm)$coefficients[2, 1], digits = 2),
   if(summary(effort_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-par(mfrow = c(3, 2))
+par(mfrow = c(2, 2))
 
 plot(amo$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
      xlab = "AMO values",
@@ -688,11 +694,11 @@ plot(amo$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
 )
 abline(amo_lm)
 
-plot(pcp$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
-     xlab = "Precipitation values",
-     ylab = "Biomass of menhaden-like species from OM"
-)
-abline(pcp_lm)
+# plot(pcp$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
+#      xlab = "Precipitation values",
+#      ylab = "Biomass of menhaden-like species from OM"
+# )
+# abline(pcp_lm)
 
 plot(pdsi$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
      xlab = "PDSI values",
@@ -706,11 +712,11 @@ plot(bassB$bass_bio[index_lag_id], biomass_ewe[biomass_lag_id],
 )
 abline(bassB_lm)
 
-plot(sub_menhadenP[index_lag_id], biomass_ewe[biomass_lag_id],
-     xlab = "Menhaden price",
-     ylab = "Biomass of menhaden-like species from OM"
-)
-abline(price_lm)
+# plot(sub_menhadenP[index_lag_id], biomass_ewe[biomass_lag_id],
+#      xlab = "Menhaden price",
+#      ylab = "Biomass of menhaden-like species from OM"
+# )
+# abline(price_lm)
 
 plot(effort[index_lag_id], biomass_ewe[biomass_lag_id],
      xlab = "Fishing effort of menhaden-like species from OM",
@@ -741,7 +747,8 @@ output <- compare_projections_dbsra(
   pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
   price = menhaden_price,
-  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum),
+  indices = c("amo", "pdsi", "bassB", "effort")
 )
 
 soi_data_melt <- output$soi_data_melt
@@ -756,14 +763,14 @@ ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1
   theme_bw()
 
 tac_data_melt <- output$tac_data_melt
-# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
-#   geom_boxplot()+
-#   labs(
-#     title = "Case 0.1: TAC",
-#     x = "",
-#     y = "TAC"
-#   ) +
-#   theme_bw()
+ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+  geom_boxplot()+
+  labs(
+    title = "Case 0.1: TAC",
+    x = "",
+    y = "TAC"
+  ) +
+  theme_bw()
 
 tac_data_melt_median <- output$tac_data_melt_median
 ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
@@ -798,7 +805,8 @@ output <- compare_projections_dbsra(
   pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
   price = menhaden_price,
-  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum),
+  indices = c("amo", "pdsi", "bassB", "effort")
 )
 
 soi_data_melt <- output$soi_data_melt
@@ -813,14 +821,14 @@ ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1
   theme_bw()
 
 tac_data_melt <- output$tac_data_melt
-# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
-#   geom_boxplot()+
-#   labs(
-#     title = "Case 0.2: TAC",
-#     x = "",
-#     y = "TAC"
-#   ) +
-#   theme_bw()
+ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+  geom_boxplot()+
+  labs(
+    title = "Case 0.2: TAC",
+    x = "",
+    y = "TAC"
+  ) +
+  theme_bw()
 
 tac_data_melt_median <- output$tac_data_melt_median
 ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
@@ -860,7 +868,8 @@ output <- compare_projections_dbsra(
   pdsi = palmer_drought_severity_index,
   bassB = bass_bio,
   price = menhaden_price,
-  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+  effort = apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)] , grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum),
+  indices = c("amo", "pdsi", "bassB", "effort")
 )
 
 soi_data_melt <- output$soi_data_melt
@@ -875,14 +884,14 @@ ggplot(soi_data_melt[soi_data_melt$projection_year_id==tail(projection_year, n=1
   theme_bw()
 
 tac_data_melt <- output$tac_data_melt
-# ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
-#   geom_boxplot()+
-#   labs(
-#     title = "Case 0.3: TAC",
-#     x = "",
-#     y = "TAC"
-#   ) +
-#   theme_bw()
+ggplot(tac_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+  geom_boxplot()+
+  labs(
+    title = "Case 0.3: TAC",
+    x = "",
+    y = "TAC"
+  ) +
+  theme_bw()
 
 tac_data_melt_median <- output$tac_data_melt_median
 ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +

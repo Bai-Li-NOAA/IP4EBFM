@@ -47,6 +47,7 @@ library(r4ss)
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation.R"))
+file_path <- here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp")
 source(here::here("Rscript", "load_indices.R"))
 file_path <- here::here("data", "data_rich")
 
