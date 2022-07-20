@@ -11,6 +11,7 @@
 #' @param bassB Biomass of Striped bass data.
 #' @param price Price of menhaden data.
 #' @param effort Fishing effort of menhaden-like species from the EwE operating model.
+#' @param indices Indices will be used in the analysis.
 #' @return A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).
 #' @export
 compare_projections_dbsra <- function(case_name,
@@ -23,7 +24,8 @@ compare_projections_dbsra <- function(case_name,
                                       pdsi,
                                       bassB,
                                       price,
-                                      effort) {
+                                      effort,
+                                      indices) {
 
   amo_unsmooth_lag1 <- amo
   precipitation <- pcp
@@ -95,59 +97,70 @@ compare_projections_dbsra <- function(case_name,
     pdsi <- palmer_drought_severity_index[year_id, ]
     pdsi_lm <- lm(biomass_ewe[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
     pdsi_fit <- fitted(pdsi_lm)
-    lm_slope$pdsi <- paste0(
+    lm_slope$pdsi[projection_year_id] <- paste0(
       round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
       if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
     effort <- fishing_effort[1:length(year_id)]
     effort_lm <- lm(biomass_ewe[biomass_lag_id] ~ effort[index_lag_id])
     effort_fit <- fitted(effort_lm)
-    lm_slope$effort <- paste0(
+    lm_slope$effort[projection_year_id] <- paste0(
       round(summary(effort_lm)$coefficients[2, 1], digits = 2),
       if(summary(effort_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
     if (projection_year_id == length(projection_year)){
 
-      par(mfrow = c(3, 2))
+      par(mfrow = c(ceiling(length(indices)/2), 2))
 
-      plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-           xlab = "AMO values",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(amo_lm)
+      if ("amo" %in% indices){
+        plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+             xlab = "AMO values",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(amo_lm)
+      }
 
-      plot(pcp$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-           xlab = "Precipitation values",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(pcp_lm)
+      if ("pcp" %in% indices){
+        plot(pcp$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+             xlab = "Precipitation values",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(pcp_lm)
+      }
 
-      plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-           xlab = "PDSI values",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(pdsi_lm)
+      if ("pdsi" %in% indices){
+        plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+             xlab = "PDSI values",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(pdsi_lm)
+      }
 
-      plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
-           xlab = "Biomass of Striped bass",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(bassB_lm)
+      if ("bassB" %in% indices){
+        plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
+             xlab = "Biomass of Striped bass",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(bassB_lm)
+      }
 
-      plot(sub_menhadenP[index_lag_id], sub_menhaden_b[biomass_lag_id],
-           xlab = "Menhaden price",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(price_lm)
+      if ("price" %in% indices){
+        plot(sub_menhadenP[index_lag_id], sub_menhaden_b[biomass_lag_id],
+             xlab = "Menhaden price",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(price_lm)
+      }
 
-      plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
-           xlab = "Fishing effort of menhaden-like species",
-           ylab = "Biomass of menhaden-like species"
-      )
-      abline(effort_lm)
+      if ("effort" %in% indices){
+        plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
+             xlab = "Fishing effort of menhaden-like species",
+             ylab = "Biomass of menhaden-like species"
+        )
+        abline(effort_lm)
+      }
 
     }
-
 
     # status of indicators --------------------------------------------
 
@@ -200,7 +213,7 @@ compare_projections_dbsra <- function(case_name,
         amo = amo_soi,
         pcp = pcp_soi,
         pdsi = pdsi_soi,
-        bass_b = bassB_soi,
+        bassB = bassB_soi,
         price = price_soi,
         effort = effort_soi
       )
@@ -228,14 +241,12 @@ compare_projections_dbsra <- function(case_name,
           amo = amo_soi,
           pdsi = pdsi_soi,
           pcp = pcp_soi,
-          bass_b = bassB_soi,
+          bassB = bassB_soi,
           price = price_soi,
           effort = effort_soi
         )
       )
     }
-
-
 
     # Adjusted TAC ----------------------------------------------------
 
@@ -301,6 +312,11 @@ compare_projections_dbsra <- function(case_name,
       )
     }
   }
+
+  lm_slope <- lm_slope[, c("case", "projection_year", indices)]
+  scaled_data <- scaled_data[, c("year", "projection_year_id", indices, "menhadenB")]
+  soi_data <- soi_data[, c("year", "projection_year_id", indices)]
+  tac_data <- tac_data[, c("iter", "projection_year_id", "DBSRA", indices)]
 
   soi_data_melt <- reshape2::melt(
     soi_data,

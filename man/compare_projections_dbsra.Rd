@@ -15,7 +15,8 @@ compare_projections_dbsra(
   pdsi,
   bassB,
   price,
-  effort
+  effort,
+  indices
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ compare_projections_dbsra(
 \item{price}{Price of menhaden data.}
 
 \item{effort}{Fishing effort of menhaden-like species from the EwE operating model.}
+
+\item{indices}{Indices will be used in the analysis.}
 }
 \value{
 A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).
