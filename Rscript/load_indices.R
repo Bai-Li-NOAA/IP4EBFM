@@ -18,7 +18,7 @@ precipitation <- read.csv(
 # Load Striped bass biomass index ---------------------------------
 
 ewe_output <- read_ewe_output(
-  file_path = here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1"),
+  file_path = file_path,
   file_names = "biomass_monthly.csv",
   skip_nrows = 8,
   plot = FALSE,
