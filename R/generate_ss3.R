@@ -260,7 +260,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     Gender = 0,
     Part = 0,
     Ageerr = 1,
-    Lbin_lo = 1,
+    Lbin_lo = -1,
     Lbin_hi = -1,
     Nsamp = sa_data$fishery$om_sample_number[as.character(year_id)]
   )
@@ -491,7 +491,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, -2, 2, 2, -2),
+      PHASE = c(2, 2, -2, 2, 2, 2),
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -503,7 +503,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = 2,
+      PHASE = c(2, 2, 2, 2, 2, 2),
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -515,7 +515,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = 2,
+      PHASE = c(2, 2, 2, 2, 2, 2),
       matrix(0, ncol = 7, nrow = 6)
     )
   )
