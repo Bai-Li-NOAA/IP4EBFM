@@ -288,10 +288,10 @@ ageerror_definitions_as_read
 0 1e-07 1 0 0 0 0.001  #_fleet: 3 survey2
 number of D-M parameters needed for length and age comp data: 0
 1 Lbin method for defined size ranges 
-age_obs_#:1 #  1985 1 1 0 0 1 1 -1 852 0.252347 0.325117 0.342723 0.0446009 0.0258216 0.00586854 0.00352113
-age_obs_#:2 #  1986 1 1 0 0 1 1 -1 583 0.171527 0.180103 0.506003 0.0960549 0.0360206 0.00686106 0.00343053
+age_obs_#:1 #  1985 1 1 0 0 1 -1 -1 852 0.252347 0.325117 0.342723 0.0446009 0.0258216 0.00586854 0.00352113
+age_obs_#:2 #  1986 1 1 0 0 1 -1 -1 583 0.171527 0.180103 0.506003 0.0960549 0.0360206 0.00686106 0.00343053
 28 N age comp observations 
-age_obs_#:28 #  2012 1 1 0 0 1 1 -1 370 0.224324 0.305405 0.459459 0.00810811 0.0027027 0 0
+age_obs_#:28 #  2012 1 1 0 0 1 -1 -1 370 0.224324 0.305405 0.459459 0.00810811 0.0027027 0 0
 
 Age_Data Nobs by fleet  28 0 0
 Age_Data superperiods by fleet  0 0 0
@@ -627,7 +627,7 @@ Q_parm_RD:
 3 ##  0 7 0.01 0 99 0 -2 0 0 0 0 0 0 0 ## AgeSel_P3_fleet1(1)
 4 ##  0 7 0.88 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P4_fleet1(1)
 5 ##  0 7 1 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P5_fleet1(1)
-6 ##  0 7 0.1 0 99 0 -2 0 0 0 0 0 0 0 ## AgeSel_P6_fleet1(1)
+6 ##  0 7 0.1 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P6_fleet1(1)
 7 ##  0 7 2.3 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P1_survey1(2)
 8 ##  0 14 4.3 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P2_survey1(2)
 9 ##  0 7 2.3 0 99 0 2 0 0 0 0 0 0 0 ## AgeSel_P3_survey1(2)
@@ -647,7 +647,7 @@ check on conversion of retention parameter
 3 sel  0 7 0.01 0 99 0 -2 0 0 0 0 0 0 0
 4 sel  0 7 0.88 0 99 0 2 0 0 0 0 0 0 0
 5 sel  0 7 1 0 99 0 2 0 0 0 0 0 0 0
-6 sel  0 7 0.1 0 99 0 -2 0 0 0 0 0 0 0
+6 sel  0 7 0.1 0 99 0 2 0 0 0 0 0 0 0
 7 sel  0 7 2.3 0 99 0 2 0 0 0 0 0 0 0
 8 sel  0 14 4.3 0 99 0 2 0 0 0 0 0 0 0
 9 sel  0 7 2.3 0 99 0 2 0 0 0 0 0 0 0
@@ -689,28 +689,28 @@ Parameters plus derived quant: 271
 Adjust the phases 
  requested turn_off phase: 10
 Fcast_dev_phase (read and adjusted): 0 4
-ParCount 72   Active parameters: 55
+ParCount 72   Active parameters: 56
 Turn_off_phase 10
  max_phase 3
 271
-parm 72 covar 55
-deriv_start 72 55
-parm 107 covar 90
-parm 142 covar 125
-parm 175 covar 158
-parm 208 covar 191
-parm 241 covar 224
-parm 258 covar 241  after benchmark 
-parm 268 covar 251  after forecast 
+parm 72 covar 56
+deriv_start 72 56
+parm 107 covar 91
+parm 142 covar 126
+parm 175 covar 159
+parm 208 covar 192
+parm 241 covar 225
+parm 258 covar 242  after benchmark 
+parm 268 covar 252  after forecast 
  do ln(SPB) std labels for 3 years
  do Svy_sdreport labels 0
-parm 271 covar 254  after all derived quantities 
-Active parameters plus derived quantities:  254
+parm 271 covar 255  after all derived quantities 
+Active parameters plus derived quantities:  255
 now in PARAMETER_SECTION 
  now dimension the selectivity arrays 18
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  7 7 7 7 7 7 7 14 7 14 7 14 7 14 7 14 7 14
- 2 2 -2 2 2 -2 2 2 2 2 2 2 2 2 2 2 2 2
+ 2 2 -2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
  OK after dimension the selectivity arrays 
  check 0 
  OK after dimension the 2dar arrays 
