@@ -45,7 +45,8 @@ generate_jabba <- function(assessment_name, output_dir,
 
   # Set up JABBA input data
   if (is.null(tacs)) {
-    catch_last <- tail(catch$Total, n = 1)
+    # catch_last <- tail(catch$Total, n = 1) # Catch from last year
+    catch_last <- mean(tail(catch$Total, n = 3)) # Mean catch from last three years
     tacs <- c(catch_last * 0.5, catch_last, catch_last * 1.5)
   }
 
