@@ -52,6 +52,8 @@ navbar:
         href: articles/10_EwE_fleet_dynamics_simulation.html
       - text: Data-poor stock assessment with new EwE OM
         href: articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html
+      - text: Data-moderate stock assessment with new EwE OM
+        href: articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html
 
 
 

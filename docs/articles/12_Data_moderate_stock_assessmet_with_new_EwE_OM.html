@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data-moderate stock assessment • IFA4EBFM</title>
+<title>Data-moderate stock assessment with new EwE OM • IFA4EBFM</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Data-moderate stock assessment">
+<meta property="og:title" content="Data-moderate stock assessment with new EwE OM">
 <meta property="og:description" content="IFA4EBFM">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -129,12 +129,12 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Data-moderate stock assessment</h1>
+      <h1 data-toc-skip>Data-moderate stock assessment with new EwE OM</h1>
             
-            <h4 data-toc-skip class="date">Updated on June 21, 2022</h4>
+            <h4 data-toc-skip class="date">Updated on July 22, 2022</h4>
       
       
-      <div class="hidden name"><code>07_Data_moderate_stock_assessment.Rmd</code></div>
+      <div class="hidden name"><code>12_Data_moderate_stock_assessmet_with_new_EwE_OM.Rmd</code></div>
 
     </div>
 
@@ -155,18 +155,18 @@
 <ul>
 <li>Case 0: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)</li>
 </ul>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="cases-1-4-are-based-on-the-settings-from-case-0">Cases 1-4 are based on the settings from case 0<a class="anchor" aria-label="anchor" href="#cases-1-4-are-based-on-the-settings-from-case-0"></a>
 </h2>
 <ul>
-<li><p>Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species</p></li>
-<li><p>Case 2: Link precipitation index with menhaden biomass estimates and adjust projections: precipitation alters availability of high-salinity habitat and may affect menhaden-like species through nutrient loading</p></li>
-<li><p>Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator</p></li>
-<li><p>Case 4: Link price of menhaden with menhaden biomass estimates and adjust projections</p></li>
-<li><p>Linear regression models from case 1 - 4</p></li>
-<li><p>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden</p></li>
+<li>Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species</li>
+<li>Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation</li>
+<li>Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator</li>
+<li>Case 4: Link fishing effort of menhaden with menhaden biomass estimates and adjust projections</li>
+<li>Linear regression models from case 1 - 4</li>
+<li>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden</li>
 </ul>
 <div class="section level3">
 <h3 id="status-of-indicators-soi">Status of indicators (SOI)<a class="anchor" aria-label="anchor" href="#status-of-indicators-soi"></a>
@@ -181,42 +181,7 @@
 <p>where <span class="math inline">\(I_{y}\)</span> represents indicator value in year y. <span class="math inline">\(I_{y}^{min}\)</span> and <span class="math inline">\(I_{y}^{max}\)</span> represent the minimum and maximum values of <span class="math inline">\(I\)</span> from the time series.</p>
 </li>
 </ul>
-<img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-3-1.png" width="1152"><table class="table">
-<thead><tr>
-<th style="text-align:left;">
-case
-</th>
-<th style="text-align:left;">
-amo
-</th>
-<th style="text-align:left;">
-pcp
-</th>
-<th style="text-align:left;">
-bassB
-</th>
-<th style="text-align:left;">
-price
-</th>
-</tr></thead>
-<tbody><tr>
-<td style="text-align:left;">
-True indices
-</td>
-<td style="text-align:left;">
-253334.99
-</td>
-<td style="text-align:left;">
-3272.33
-</td>
-<td style="text-align:left;">
-0.72
-</td>
-<td style="text-align:left;">
-1466.08
-</td>
-</tr></tbody>
-</table>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 <ul>
 <li>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</li>
 <li>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</li>
@@ -231,13 +196,13 @@ True indices
 <li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} \le 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = 0\)</span></p></li>
 </ul>
 <p>where <span class="math inline">\(i\)</span> represents individual iterations</p>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-2.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-3.png" width="1152"><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-4-4.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-4-2.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-4-3.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-4-4.png" width="1152"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
 <table class="table">
 <thead><tr>
-<th style="text-align:right;">
+<th style="text-align:left;">
 case
 </th>
 <th style="text-align:right;">
@@ -247,114 +212,114 @@ projection_year
 amo
 </th>
 <th style="text-align:left;">
-pcp
+pdsi
 </th>
 <th style="text-align:left;">
 bassB
 </th>
 <th style="text-align:left;">
-price
+effort
 </th>
 </tr></thead>
 <tbody>
 <tr>
+<td style="text-align:left;">
+PDSI+AMO1 Case
+</td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2013
+1
 </td>
 <td style="text-align:left;">
-518880.05*
+1148616.98*
 </td>
 <td style="text-align:left;">
--31499.65
+313198.43
 </td>
 <td style="text-align:left;">
-0.86*
+2.72*
 </td>
 <td style="text-align:left;">
--617.91
+64985.72*
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+PDSI+AMO1 Case
+</td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2014
+2
 </td>
 <td style="text-align:left;">
-518880.05*
+1148616.98*
 </td>
 <td style="text-align:left;">
--31499.65
+313198.43
 </td>
 <td style="text-align:left;">
-0.86*
+2.72*
 </td>
 <td style="text-align:left;">
--617.91
+64985.72*
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+PDSI+AMO1 Case
+</td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2015
+3
 </td>
 <td style="text-align:left;">
-518880.05*
+1148616.98*
 </td>
 <td style="text-align:left;">
--31499.65
+313198.43
 </td>
 <td style="text-align:left;">
-0.86*
+2.72*
 </td>
 <td style="text-align:left;">
--617.91
+64985.72*
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+PDSI+AMO1 Case
+</td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2016
+4
 </td>
 <td style="text-align:left;">
-518880.05*
+1148616.98*
 </td>
 <td style="text-align:left;">
--31499.65
+313198.43
 </td>
 <td style="text-align:left;">
-0.86*
+2.72*
 </td>
 <td style="text-align:left;">
--617.91
+64985.72*
 </td>
 </tr>
 <tr>
+<td style="text-align:left;">
+PDSI+AMO1 Case
+</td>
 <td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-2017
+5
 </td>
 <td style="text-align:left;">
-518880.05*
+1148616.98*
 </td>
 <td style="text-align:left;">
--31499.65
+313198.43
 </td>
 <td style="text-align:left;">
-0.86*
+2.72*
 </td>
 <td style="text-align:left;">
--617.91
+64985.72*
 </td>
 </tr>
 </tbody>
@@ -368,25 +333,22 @@ price
 <span class="co">## Graph information:</span>
 <span class="co">##    Observed stochastic nodes: 111</span>
 <span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19901</span>
+<span class="co">##    Total graph size: 19802</span>
 <span class="co">## </span>
 <span class="co">## Initializing model</span></code></pre>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
-<ul>
-<li>Adjust catch input and project biomass based on 0.5<em>FMSY</em>B</li>
-</ul>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-1.png" width="1152"> - Adjust catch input and project biomass based on 0.5<em>FMSY</em>B</p>
 <pre><code><span class="co">## Compiling model graph</span>
 <span class="co">##    Resolving undeclared variables</span>
 <span class="co">##    Allocating nodes</span>
 <span class="co">## Graph information:</span>
 <span class="co">##    Observed stochastic nodes: 111</span>
 <span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19901</span>
+<span class="co">##    Total graph size: 19802</span>
 <span class="co">## </span>
 <span class="co">## Initializing model</span></code></pre>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
 <ul>
 <li>Adjust catch input and project biomass based on 0.25<em>FMSY</em>B</li>
 </ul>
@@ -396,11 +358,11 @@ price
 <span class="co">## Graph information:</span>
 <span class="co">##    Observed stochastic nodes: 111</span>
 <span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19901</span>
+<span class="co">##    Total graph size: 19802</span>
 <span class="co">## </span>
 <span class="co">## Initializing model</span></code></pre>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
-<p><img src="07_Data_moderate_stock_assessment_files/figure-html/unnamed-chunk-11-1.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-1.png" width="1152"></p>
 </div>
 </div>
   </div>
