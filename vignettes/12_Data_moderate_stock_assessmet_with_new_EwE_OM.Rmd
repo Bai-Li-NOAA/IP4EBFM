@@ -324,7 +324,7 @@ lm_slope$effort <- paste0(
 
 par(mfrow = c(2, 2))
 
-plot(amo$scaled_value[index_lag_id], biomass_ewe[biomass_lag_id],
+plot(amo$scaled_value[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
      xlab = "AMO values",
      ylab = "Biomass of menhaden-like species from OM"
 )
