@@ -43,7 +43,8 @@ library(JABBA)
 ```
 
 ## Case 0: stock assessment base run
-- Case 0: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)
+- Input: K = 3500000, r = 0.2, B1985/K = 0.7
+- Output: K = 3973319.89, r = 0.2, B1985/K = 0.69
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
@@ -248,7 +249,7 @@ legend("topright",
 - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
 - Case 4: Link fishing effort of menhaden with menhaden biomass estimates and adjust projections 
 - Linear regression models from case 1 - 4
-- True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden
+  - True biomass of menhaden-like species as functions of AMO, PDSI, biomass of striped bass, and fishing effort of menhaden
 
 ### Status of indicators (SOI)
 
@@ -360,9 +361,6 @@ plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
 abline(effort_lm)
 
 ```
-
-- Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values
-- The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions
 
 ### Adjust projection
 
@@ -714,17 +712,18 @@ om_fmsy <- c(
   1.569404483, 0.988227546, 0.72328496
 )
 
-
-
-
 evaluation_table <- data.frame(
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy), 
-  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year])
+  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
+  Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year)))
 )
 
+
 for (i in 1:length(levels(biomass_projection$tac))){
+  
+  projected_biomass <- aggregate(biomass~year+tac, data=biomass_projection, median) 
   evaluation_table <- rbind(
   evaluation_table, 
   c(
@@ -734,7 +733,9 @@ for (i in 1:length(levels(biomass_projection$tac))){
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
     median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n=1) & 
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
-    as.numeric(levels(biomass_projection$tac)[i])
+    as.numeric(levels(biomass_projection$tac)[i]),
+    
+    mean(projected_biomass$biomass[projected_biomass$tac == as.numeric(levels(biomass_projection$tac)[i])])
     
   )
 )
@@ -811,17 +812,18 @@ om_fmsy <- c(
   1.569404483, 0.988227546, 0.72328496
 )
 
-
-
-
 evaluation_table <- data.frame(
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy), 
-  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year])
+  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
+  Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year)))
 )
 
+
 for (i in 1:length(levels(biomass_projection$tac))){
+  
+  projected_biomass <- aggregate(biomass~year+tac, data=biomass_projection, median) 
   evaluation_table <- rbind(
   evaluation_table, 
   c(
@@ -831,7 +833,9 @@ for (i in 1:length(levels(biomass_projection$tac))){
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
     median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n=1) & 
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
-    as.numeric(levels(biomass_projection$tac)[i])
+    as.numeric(levels(biomass_projection$tac)[i]),
+    
+    mean(projected_biomass$biomass[projected_biomass$tac == as.numeric(levels(biomass_projection$tac)[i])])
     
   )
 )
@@ -909,17 +913,18 @@ om_fmsy <- c(
   1.569404483, 0.988227546, 0.72328496
 )
 
-
-
-
 evaluation_table <- data.frame(
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy), 
-  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year])
+  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
+  Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year)))
 )
 
+
 for (i in 1:length(levels(biomass_projection$tac))){
+  
+  projected_biomass <- aggregate(biomass~year+tac, data=biomass_projection, median) 
   evaluation_table <- rbind(
   evaluation_table, 
   c(
@@ -929,12 +934,13 @@ for (i in 1:length(levels(biomass_projection$tac))){
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
     median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n=1) & 
                      biomass_projection$tac == as.numeric(levels(biomass_projection$tac)[i])]),
-    as.numeric(levels(biomass_projection$tac)[i])
+    as.numeric(levels(biomass_projection$tac)[i]),
+    
+    mean(projected_biomass$biomass[projected_biomass$tac == as.numeric(levels(biomass_projection$tac)[i])])
     
   )
 )
 }
-
 evaluation_table <- rbind(
   apply(evaluation_table, 2, max),
   rep(0, ncol(evaluation_table)),

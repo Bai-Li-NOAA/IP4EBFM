@@ -153,7 +153,8 @@
 <h2 id="case-0-stock-assessment-base-run">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run"></a>
 </h2>
 <ul>
-<li>Case 0: K = 4000000, r = 0.8 with small CV (update input values based on known ballpark values from EwE)</li>
+<li>Input: K = 3500000, r = 0.2, B1985/K = 0.7</li>
+<li>Output: K = 3973319.89, r = 0.2, B1985/K = 0.69</li>
 </ul>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
 </div>
@@ -165,8 +166,11 @@
 <li>Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation</li>
 <li>Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator</li>
 <li>Case 4: Link fishing effort of menhaden with menhaden biomass estimates and adjust projections</li>
-<li>Linear regression models from case 1 - 4</li>
-<li>True biomass of menhaden-like species as functions of AMO, precipitation, biomass of striped bass, and price of menhaden</li>
+<li>Linear regression models from case 1 - 4
+<ul>
+<li>True biomass of menhaden-like species as functions of AMO, PDSI, biomass of striped bass, and fishing effort of menhaden</li>
+</ul>
+</li>
 </ul>
 <div class="section level3">
 <h3 id="status-of-indicators-soi">Status of indicators (SOI)<a class="anchor" aria-label="anchor" href="#status-of-indicators-soi"></a>
@@ -182,10 +186,6 @@
 </li>
 </ul>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
-<ul>
-<li>Using scaled or raw AMO and precipitation values do not make a difference. Here we used raw environmental values</li>
-<li>The quantity of economic data for Atlantic menhaden is low. Here we used economic data for menhaden from New England, Middle Atlantic, and South Atlantic regions</li>
-</ul>
 </div>
 <div class="section level3">
 <h3 id="adjust-projection">Adjust projection<a class="anchor" aria-label="anchor" href="#adjust-projection"></a>
