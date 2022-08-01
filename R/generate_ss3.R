@@ -267,6 +267,32 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   agecomp <- cbind(agecomp, sa_data$fishery$obs_caa_prop$fleet1[as.character(year_id), ])
   ss3_data$agecomp <- agecomp
 
+  # survey_agecomp <- list()
+  # for (i in survey_id) {
+  #   year <- as.numeric(row.names(na.omit(sa_data$survey$obs_lencomp_num_ss3[[i]])))
+  #   year_id <- year[year %in% model_year]
+  #   if (length(year_id) == 0) {
+  #     survey_agecomp[[i]] <- NA
+  #   } else {
+  #     survey_agecomp[[i]] <- data.frame(
+  #       Yr = year_id,
+  #       Seas = unique(sa_data$survey$om_baa[[i]]$month),
+  #       FltSvy = i + 1,
+  #       Gender = 0,
+  #       Part = 0,
+  #       Ageerr = 1,
+  #       Lbin_lo = -1,
+  #       Lbin_hi = -1,
+  #       Nsamp = sa_data$survey$om_sample_number[[i]][as.character(year_id)]
+  #     )
+  #     survey_agecomp[[i]] <- cbind(survey_agecomp[[i]], sa_data$survey$obs_survey_agecomp_prop[[i]][as.character(year_id), ])
+  #   }
+  # }
+  # survey_agecomp_data <- do.call(rbind, survey_agecomp)
+  #
+  # ss3_data$agecomp <- rbind(agecomp, survey_agecomp_data)
+
+
   ss3_data$use_MeanSize_at_Age_obs <-
     ss3_data$N_environ_variables <-
     ss3_data$N_sizefreq_methods <-
@@ -492,6 +518,8 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       SD = 99,
       PR_TYPE = 0,
       PHASE = c(2, 2, -2, 2, 2, 2),
+      # PHASE = c(2, 2, 2, 2, 2, 2),
+      # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -504,6 +532,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       SD = 99,
       PR_TYPE = 0,
       PHASE = c(2, 2, 2, 2, 2, 2),
+      # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -516,6 +545,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
       SD = 99,
       PR_TYPE = 0,
       PHASE = c(2, 2, 2, 2, 2, 2),
+      # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     )
   )
@@ -615,6 +645,8 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_starter$F_report_units <- 3
   ss3_starter$F_report_basis <- 0
   ss3_starter$F_age_range <- c(sa_data$biodata$ages[1], ss3_data$Nages-2)
+  ss3_starter$MCMCburn <- 10000
+  ss3_starter$MCMCthin <- 1000
 
   r4ss::SS_writestarter(ss3_starter,
                         dir = file.path(file_path),
