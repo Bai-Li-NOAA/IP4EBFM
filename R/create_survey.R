@@ -116,6 +116,33 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
     obs_abundance_index[[i]] <- om_abundance_index[[survey_name[i]]] * exp(ln) # multiplicative lognormal error
   }
 
+  # create observed abundance-at-age
+  survey_age_obs <- vector(mode = "list", length = survey_num)
+  names(survey_age_obs) <- paste("survey", 1:survey_num, sep = "")
+
+  for (i in 1:survey_num) {
+    survey_age_obs[[i]] <- om_naa[[survey_name[i]]][species_labels]
+
+    survey_age_obs[[i]] <- t(sapply(1:nrow(survey_age_obs[[i]]), function(x) {
+      as.numeric(as.character(survey_age_obs[[i]][x,]))
+    }))
+
+    for (j in 1:length(obs_abundance_index[[i]])) {
+      if (obs_abundance_index[[i]][j] == 0) {
+        probs <- rep(0, length(survey_age_obs[[i]][j, ]))
+        survey_age_obs[[i]][j, ] <- rep(0, length(survey_age_obs[[i]][j, ]))
+      } else {
+
+        probs <- survey_age_obs[[i]][j, ] / sum(survey_age_obs[[i]][j, ])
+
+        survey_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])], prob = probs) / sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])]
+      }
+    }
+    row.names(survey_age_obs[[i]]) <- om_naa[[survey_name[i]]]$year
+    colnames(survey_age_obs[[i]]) <- species_labels
+  }
+
+
   # create observed length composition data (compute matrix of length at age, based on the normal distribution)
   # create variation in length-at-age
   sigma_at_age <- vector(mode = "list", length = survey_num)
@@ -264,6 +291,7 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
     om_waa_mt = waa,
     om_laa = laa,
     obs_abundance_index = obs_abundance_index,
+    obs_survey_agecomp_prop = survey_age_obs,
     obs_lencomp_proportion_ss3 = len_dist_ss3,
     obs_lencomp_proportion_bam = len_dist_bam,
     obs_lencomp_num_ss3 = laa_num_ss3,
