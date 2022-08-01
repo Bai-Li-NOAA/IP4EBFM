@@ -1,4 +1,4 @@
-# Number of parameters = 4 Objective function value = 54009.2983291725  Maximum gradient component = 5.32185490522725
+# Number of parameters = 4 Objective function value = 54009.2989836027  Maximum gradient component = 6.33637273448554
 # dummy_parm:
 1.00000000000
 # MGparm[1]:
@@ -28,7 +28,7 @@
 # MGparm[13]:
 0.500000000000
 # SR_parm[1]:
-17.8754027455
+17.8741689995
 # SR_parm[2]:
 0.500000000000
 # SR_parm[3]:
@@ -42,11 +42,11 @@
 # Fcast_recruitments:
  0.00000000000 0.00000000000 0.00000000000 0.00000000000 0.00000000000
 # init_F[1]:
-1.13591737150e-06
+1.89748251167e-06
 # Q_parm[1]:
--0.574522670970
+-0.573321680413
 # Q_parm[2]:
--2.37797779756
+-2.37672934515
 # selparm[1]:
 1.80000000000
 # selparm[2]:
