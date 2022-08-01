@@ -24,8 +24,8 @@ control.ss
 3 # Number of datafiles to produce:  0 turns off all *.ss_new; 1st is data_echo.ss_new, 2nd is data_expval.ss, 3rd and higher are data_boot_**N.ss,
 10 # Turn off estimation for parameters entering after this phase
 #
-0 # MCeval burn interval
-1 # MCeval thin interval
+1000 # MCeval burn interval
+100 # MCeval thin interval
 0 # jitter initial parm value by this fraction
 -1 # min yr for sdreport outputs (-1 for styr); #_1983
 -2 # max yr for sdreport outputs (-1 for endyr+1; -2 for endyr+Nforecastyrs); #_2017
@@ -43,5 +43,5 @@ control.ss
 0 # F_std_basis: 0=raw_annual_F; 1=F/Fspr; 2=F/Fmsy; 3=F/Fbtgt; where F means annual_F; values >=11 invoke N multiyr (up to 9!) with 10's digit; >100 invokes log(ratio)
 0 # MCMC output detail: integer part (0=default; 1=adds obj func components; 2= +write_report_for_each_mceval); and decimal part (added to SR_LN(R0) on first call to mcmc)
 0 # ALK tolerance ***disabled in code (example 0.0001)
--1 # random number seed for bootstrap data (-1 to use long(time) as seed): # 1658850903
+-1 # random number seed for bootstrap data (-1 to use long(time) as seed): # 1659103066
 3.30 # check value for end of file and for version control

@@ -15,8 +15,8 @@ control.ss #_ctlfile
 1 #_soft_bounds
 3 #_N_bootstraps
 10 #_last_estimation_phase
-0 #_MCMCburn
-1 #_MCMCthin
+1000 #_MCMCburn
+100 #_MCMCthin
 0 #_jitter_fraction
 -1 #_minyr_sdreport
 -2 #_maxyr_sdreport

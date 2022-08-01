@@ -1,7 +1,7 @@
 #V3.30.19.01;_safe;_compile_date:_
 Apr 15 2022
 ;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.3
-Tue Jul 26 11:54:28 2022
+Fri Jul 29 09:58:47 2022
 Bmark_relF(by_fleet_&seas) (excluding non-scaled bycatch fleets)
  1 0 0
 #
@@ -250,6 +250,3 @@ pop year ABC_Loop season Ramp&Buffer bio-all bio-Smry SpawnBio Depletion recruit
 1 2015 3 1 0.75 0 1.05288e+06 208805 0.592575 40191.6  257233 257233 257233 2558.34 2558.34 2558.34 0.49 C  NA  257233 0.49
 1 2016 3 1 0.75 0 931884 196867 0.558693 39332.9  229540 229540 229540 2362.94 2362.94 2362.94 0.49 C  NA  229540 0.49
 1 2017 3 1 0.75 0 860055 171369 0.486332 37261.2  207187 207187 207187 2258.5 2258.5 2258.5 0.49 C  NA  207187 0.49
-THIS FORECAST FOR PURPOSES OF GETTING DISPLAY QUANTITIES
-#
- FORECAST: in Bzero report with fishery onoff= 0

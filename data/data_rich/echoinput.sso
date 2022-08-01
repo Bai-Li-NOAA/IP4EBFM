@@ -66,8 +66,8 @@
 1  SoftBound
 3  N_nudata
 10  Turn_off_phase
-0  MCeval burn_intvl
-1  MCeval thin_intvl
+1000  MCeval burn_intvl
+100  MCeval thin_intvl
 0  jitter fraction for initial parm values
 -1  STD_Yr_min
 -2  STD_Yr_max (-1 for endyr; -2 for YrMax)
