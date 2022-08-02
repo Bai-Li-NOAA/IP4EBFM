@@ -1,7 +1,7 @@
 .Rproj.user
-.Rhistory
-.zip
-.exe
+**/.Rhistory
+**/*.zip
+**/*.exe
 data/ewe
 data/data_moderate
 
