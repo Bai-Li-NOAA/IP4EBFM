@@ -63,8 +63,8 @@
     1	  15	    6	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amin_Fem_GP_1       
    40	  50	   43	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amax_Fem_GP_1       
  0.05	0.99	0.331	    0	 99	0	-3	0	0	0	0	0	0	0	#_VonBert_K_Fem_GP_1       
- 0.05	 0.3	 0.25	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_young_Fem_GP_1        
- 0.05	 0.2	 0.09	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_old_Fem_GP_1          
+ 0.05	 0.5	  0.5	    0	 99	0	-3	0	0	0	0	0	0	0	#_CV_young_Fem_GP_1        
+ 0.01	 0.2	 0.09	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_old_Fem_GP_1          
    -3	   3	 0.01	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_1_Fem_GP_1         
    -3	   4	    3	    0	 99	0	-3	0	0	0	0	0	0	0	#_Wtlen_2_Fem_GP_1         
    50	  60	   55	   55	0.8	0	-3	0	0	0	0	0	0	0	#_Mat50%_Fem_GP_1          
@@ -85,8 +85,8 @@
 0 # future feature: 0/1 to make realized sigmaR a function of SR curvature
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn # parm_name
   3	31	  12	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
-0.2	 1	 0.5	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
-  0	 2	0.25	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
+0.2	 1	0.55	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
+  0	 2	 0.5	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
  -5	 5	   0	   0	   1	0	 -4	0	0	0	0	0	0	0	#_SR_regime  
   0	 0	   0	   0	   0	0	-99	0	0	0	0	0	0	0	#_SR_autocorr
 #_no timevary SR parameters
@@ -123,7 +123,7 @@
 #
 #_initial_F_parms
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE
-0	2	0.3	0.3	0.2	0	1	#_1
+0	2	0.1	0.1	0.2	0	-1	#_1
 #
 #_Q_setup for fleets with cpue or survey data
 #_fleet	link	link_info	extra_se	biasadj	float  #  fleetname
@@ -132,8 +132,8 @@
 -9999	0	0	0	0	0	#_terminator
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
--10	10	-3.91079	0	0	0	1	0	0	0	0	0	0	0	#_1
--10	10	-2.78657	0	0	0	1	0	0	0	0	0	0	0	#_2
+-10	10	-3.56085	0	0	0	1	0	0	0	0	0	0	0	#_1
+-10	10	-3.20059	0	0	0	1	0	0	0	0	0	0	0	#_2
 #_no timevary Q parameters
 #
 #_size_selex_patterns
@@ -155,20 +155,20 @@
 0	 7	 3.1	0	99	0	 2	0	0	0	0	0	0	0	#_2 
 0	 7	0.01	0	99	0	-2	0	0	0	0	0	0	0	#_3 
 0	 7	0.88	0	99	0	 2	0	0	0	0	0	0	0	#_4 
-0	 7	   1	0	99	0	 2	0	0	0	0	0	0	0	#_5 
-0	 7	 0.1	0	99	0	 2	0	0	0	0	0	0	0	#_6 
-0	 7	 2.3	0	99	0	 2	0	0	0	0	0	0	0	#_7 
+0	 7	   1	0	99	0	-2	0	0	0	0	0	0	0	#_5 
+0	 7	   0	0	99	0	-2	0	0	0	0	0	0	0	#_6 
+0	 7	 2.3	0	99	0	-2	0	0	0	0	0	0	0	#_7 
 0	14	 4.3	0	99	0	 2	0	0	0	0	0	0	0	#_8 
 0	 7	 2.3	0	99	0	 2	0	0	0	0	0	0	0	#_9 
 0	14	 3.5	0	99	0	 2	0	0	0	0	0	0	0	#_10
-0	 7	   1	0	99	0	 2	0	0	0	0	0	0	0	#_11
-0	14	 0.1	0	99	0	 2	0	0	0	0	0	0	0	#_12
-0	 7	 2.3	0	99	0	 2	0	0	0	0	0	0	0	#_13
+0	 7	   1	0	99	0	-2	0	0	0	0	0	0	0	#_11
+0	14	   0	0	99	0	-2	0	0	0	0	0	0	0	#_12
+0	 7	 2.3	0	99	0	-2	0	0	0	0	0	0	0	#_13
 0	14	 4.3	0	99	0	 2	0	0	0	0	0	0	0	#_14
 0	 7	 2.3	0	99	0	 2	0	0	0	0	0	0	0	#_15
 0	14	 3.5	0	99	0	 2	0	0	0	0	0	0	0	#_16
-0	 7	   1	0	99	0	 2	0	0	0	0	0	0	0	#_17
-0	14	 0.1	0	99	0	 2	0	0	0	0	0	0	0	#_18
+0	 7	   1	0	99	0	-2	0	0	0	0	0	0	0	#_17
+0	14	   0	0	99	0	-2	0	0	0	0	0	0	0	#_18
 #_no timevary selex parameters
 #
 0 #  use 2D_AR1 selectivity(0/1):  experimental feature
