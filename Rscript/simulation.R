@@ -64,7 +64,8 @@ fishery <- create_fishery(
     fleet_num = 1,
     selectivity = NULL,
     CV = rep(0.05, length(years)),
-    sample_num = apply(fishery_sample_num, 1, sum),
+    # sample_num = apply(fishery_sample_num, 1, sum),
+    sample_num = rep(800, length(years)),
     waa_path = file.path(ewe_output_path, "weight_annual.csv")
 )
 
@@ -176,17 +177,28 @@ survey_CV <- list(
 survey_CV <- lapply(survey_CV, setNames, years)
 
 # set up sample number
+# survey_sample_num <- list(
+#     survey1 = menhadenSA_output$t.series$lcomp.nad.nfish[which(menhadenSA_output$t.series$year %in% years)],
+#     survey2 = menhadenSA_output$t.series$lcomp.mad.nfish[which(menhadenSA_output$t.series$year %in% years)],
+#     survey3 = rep(NA, length = length(years)),
+#     survey4 = rep(NA, length = length(years))
+# )
+
 survey_sample_num <- list(
-    survey1 = menhadenSA_output$t.series$lcomp.nad.nfish[which(menhadenSA_output$t.series$year %in% years)],
-    survey2 = menhadenSA_output$t.series$lcomp.mad.nfish[which(menhadenSA_output$t.series$year %in% years)],
-    survey3 = rep(NA, length = length(years)),
-    survey4 = rep(NA, length = length(years))
+    # survey1 = menhadenSA_output$t.series$lcomp.nad.nfish[which(menhadenSA_output$t.series$year %in% years)],
+    #survey2 = menhadenSA_output$t.series$lcomp.mad.nfish[which(menhadenSA_output$t.series$year %in% years)]
+    survey1 = rep(800, length= length(years)),
+    survey2 = rep(800, length= length(years)),
+    survey3 = rep(800, length= length(years)),
+    survey4 = rep(800, length= length(years))
 )
 survey_sample_num <- lapply(survey_sample_num, setNames, years)
 
 for (i in 1:length(survey_sample_num)){
     survey_sample_num[[i]][survey_sample_num[[i]] == -99999] <- NA
 }
+
+
 
 # set up age-length population structure
 length_bin <- seq(10.0, 500, 10)/10 # in cm
