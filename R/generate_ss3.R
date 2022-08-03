@@ -163,7 +163,8 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_data$maximum_size <- tail(sa_data$biodata$length_bin, n = 1)
   ss3_data$lbin_vector <- sa_data$biodata$length_bin
   ss3_data$N_lbins <- length(ss3_data$lbin_vector)
-  ss3_data$use_lencomp <- 1
+  # ss3_data$use_lencomp <- 1
+  ss3_data$use_lencomp <- 0
   ss3_data$comp_tail_compression <- rep(-0.0001, times = ss3_data$Nfleets)
   ss3_data$add_to_comp <- rep(1e-5, times = ss3_data$Nfleets)
   ss3_data$len_info <- data.frame(
@@ -265,32 +266,32 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     Nsamp = sa_data$fishery$om_sample_number[as.character(year_id)]
   )
   agecomp <- cbind(agecomp, sa_data$fishery$obs_caa_prop$fleet1[as.character(year_id), ])
-  ss3_data$agecomp <- agecomp
+  # ss3_data$agecomp <- agecomp
 
-  # survey_agecomp <- list()
-  # for (i in survey_id) {
-  #   year <- as.numeric(row.names(na.omit(sa_data$survey$obs_lencomp_num_ss3[[i]])))
-  #   year_id <- year[year %in% model_year]
-  #   if (length(year_id) == 0) {
-  #     survey_agecomp[[i]] <- NA
-  #   } else {
-  #     survey_agecomp[[i]] <- data.frame(
-  #       Yr = year_id,
-  #       Seas = unique(sa_data$survey$om_baa[[i]]$month),
-  #       FltSvy = i + 1,
-  #       Gender = 0,
-  #       Part = 0,
-  #       Ageerr = 1,
-  #       Lbin_lo = -1,
-  #       Lbin_hi = -1,
-  #       Nsamp = sa_data$survey$om_sample_number[[i]][as.character(year_id)]
-  #     )
-  #     survey_agecomp[[i]] <- cbind(survey_agecomp[[i]], sa_data$survey$obs_survey_agecomp_prop[[i]][as.character(year_id), ])
-  #   }
-  # }
-  # survey_agecomp_data <- do.call(rbind, survey_agecomp)
-  #
-  # ss3_data$agecomp <- rbind(agecomp, survey_agecomp_data)
+  survey_agecomp <- list()
+  for (i in survey_id) {
+    year <- as.numeric(row.names(na.omit(sa_data$survey$obs_lencomp_num_ss3[[i]])))
+    year_id <- year[year %in% model_year]
+    if (length(year_id) == 0) {
+      survey_agecomp[[i]] <- NA
+    } else {
+      survey_agecomp[[i]] <- data.frame(
+        Yr = year_id,
+        Seas = unique(sa_data$survey$om_baa[[i]]$month),
+        FltSvy = i + 1,
+        Gender = 0,
+        Part = 0,
+        Ageerr = 1,
+        Lbin_lo = -1,
+        Lbin_hi = -1,
+        Nsamp = sa_data$survey$om_sample_number[[i]][as.character(year_id)]
+      )
+      survey_agecomp[[i]] <- cbind(survey_agecomp[[i]], sa_data$survey$obs_survey_agecomp_prop[[i]][as.character(year_id), ])
+    }
+  }
+  survey_agecomp_data <- do.call(rbind, survey_agecomp)
+
+  ss3_data$agecomp <- rbind(agecomp, survey_agecomp_data)
 
 
   ss3_data$use_MeanSize_at_Age_obs <-
@@ -315,6 +316,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     datlist = dir(utils::tail(dir(system.file("extdata", package = "r4ss"), pattern = "simple", full.names = TRUE), 1), pattern = "data", full.names = TRUE)
   )
 
+  ss3_ctl$EmpiricalWAA <- 0
   ss3_ctl$recr_dist_method <- 4
   ss3_ctl$recr_dist_pattern$age <- 1
   ss3_ctl$N_Block_Designs <- 0 # Change to 0?
@@ -358,10 +360,14 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     c(40, 50, l_at_amax, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("VonBert_K", rownames(ss3_ctl$MG_parms)), ] <-
     c(5e-02, 0.99, sa_data$biodata$k, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 2)
+  # ss3_ctl$MG_parms[grep("CV_young", rownames(ss3_ctl$MG_parms)), ] <-
+  #   c(0.05, 0.3, 0.25, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
+  # ss3_ctl$MG_parms[grep("CV_old", rownames(ss3_ctl$MG_parms)), ] <-
+  #   c(0.05, 0.2, 0.09, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("CV_young", rownames(ss3_ctl$MG_parms)), ] <-
-    c(0.05, 0.3, 0.25, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
+    c(0.05, 0.5, 0.5, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("CV_old", rownames(ss3_ctl$MG_parms)), ] <-
-    c(0.05, 0.2, 0.09, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
+    c(0.01, 0.2, 0.09, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("Wtlen_1", rownames(ss3_ctl$MG_parms)), ] <-
     c(-3, 3, sa_data$biodata$lw_a, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 3)
   ss3_ctl$MG_parms[grep("Wtlen_2", rownames(ss3_ctl$MG_parms)), ] <-
@@ -408,11 +414,11 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   if (initial_equilibrium_catch) ss3_ctl$init_F <- data.frame(
     "LO" = 0,
     "HI" = 2,
-    "INIT" = 0.3,
-    "PRIOR" = 0.3,
+    "INIT" = 0.1,
+    "PRIOR" = 0.1,
     "PR_SD" = 0.2,
     "PR_type" = 0,
-    "PHASE" = 1,
+    "PHASE" = -1,
     "PType" = 18
   )
 
@@ -513,12 +519,12 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     data.frame(
       Lo = rep(0, 6),
       Hi = max(ss3_data$agebin_vector),
-      INIT = c(1.8, 3.1, 0.01, 0.88, 1, 0.1),
+      INIT = c(1.8, 3.1, 0.01, 0.88, 1, 0),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, -2, 2, 2, 2),
-      # PHASE = c(2, 2, 2, 2, 2, 2),
+      PHASE = c(2, 2, -2, 2, -2, -2),
+      # PHASE = c(-2, -2, -2, -2, 2, 2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
@@ -527,11 +533,12 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     data.frame(
       Lo = rep(0, 6),
       Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
-      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, 2, 2, 2, 2),
+      # PHASE = c(2, 2, 2, 2, -2, -2),
+      PHASE = c(-2, 2, 2, 2, -2, -2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
@@ -540,11 +547,12 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
     data.frame(
       Lo = rep(0, 6),
       Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
-      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0.1),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, 2, 2, 2, 2),
+      PHASE = c(-2, 2, 2, 2, -2, -2),
+      # PHASE = c(2, 2, 2, 2, -2, -2),
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     )
@@ -684,7 +692,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_forecast$ForeCatch <- data.frame(
     "Year" = projection_year,
     "Seas" = 1,
-    "Fleet" =1,
+    "Fleet" = 1,
     "Catch or F" = projection_f
   )
 
@@ -693,5 +701,116 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
                          overwrite = TRUE, verbose = FALSE
   )
 
+
+  # Write ss.wtatage ------------------------------------------------
+  wt_conversion <- 1000000 #g
+  waa.new <- do.call(
+    "rbind",
+    replicate((length(survey_id) + 3), data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = 1,
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+  waa.new$Fleet <- rep(-1:(length(survey_id) + 1),
+                       each = length(c(model_year, projection_year))
+  )
+
+  waa.new[waa.new$Fleet==-1,] <- do.call(
+    "rbind",
+    replicate(1, data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = -1,
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+
+  waa.new[waa.new$Fleet==0,] <- do.call(
+    "rbind",
+    replicate(1, data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = 0,
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+
+  waa.new[waa.new$Fleet==1,] <- do.call(
+    "rbind",
+    replicate(1, data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = 1,
+      "0" = sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+
+  waa.new[waa.new$Fleet==2,] <- do.call(
+    "rbind",
+    replicate(1, data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = 2,
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+
+  waa.new[waa.new$Fleet==3,] <- do.call(
+    "rbind",
+    replicate(1, data.frame(
+      "Yr" = c(model_year, projection_year),
+      "Seas" = 1,
+      "Sex" = 1,
+      "Bio_Pattern" = 1,
+      "BirthSeas" = 1,
+      "Fleet" = 3,
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages)]*wt_conversion
+    ), simplify = FALSE)
+  )
+
+
+
+  # waa.new[NROW(waa.new), "Yr"] <- waa.new[NROW(waa.new), "Yr"] * -1
+  maturity_matrix <- cbind(0, sa_data$biodata$maturity_matrix)
+  fecmat <- waa.new[waa.new$Fleet==0,7:ncol(waa.new)] * maturity_matrix
+  waa.fec <- data.frame(
+    "Yr" = c(model_year, projection_year),
+    "Seas" = 1,
+    "Sex" = 1,
+    "Bio_Pattern" = 1,
+    "BirthSeas" = 1,
+    "Fleet" = -2,
+    fecmat
+  )
+
+  waa.new <- rbind(waa.new, waa.fec)
+
+  r4ss::SS_writewtatage(
+    mylist = waa.new, dir = file.path(file_path),
+    verbose = FALSE, overwrite = TRUE
+  )
 
 }
