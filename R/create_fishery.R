@@ -87,7 +87,9 @@ create_fishery <- function(file_path, skip_nrows, species, species_labels, ewe_y
         catch_age_obs[[i]][j, ] <- rep(0, length(catch_age_obs[[i]][j, ]))
       } else {
         probs <- catch_age_obs[[i]][j, ] / sum(catch_age_obs[[i]][j, ])
-        catch_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[j], prob = probs) / sample_num[j]
+        # catch_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[j], prob = probs) / sample_num[j]
+        # use number instead of proportion
+        catch_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[j], prob = probs)
       }
     }
     row.names(catch_age_obs[[i]]) <- data_years

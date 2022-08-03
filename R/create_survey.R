@@ -135,7 +135,9 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
 
         probs <- survey_age_obs[[i]][j, ] / sum(survey_age_obs[[i]][j, ])
 
-        survey_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])], prob = probs) / sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])]
+        # survey_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])], prob = probs) / sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])]
+        # number instead of proportion
+        survey_age_obs[[i]][j, ] <- rmultinom(n = 1, size = sample_num[[i]][as.character(om_naa[[survey_name[i]]]$year[j])], prob = probs)
       }
     }
     row.names(survey_age_obs[[i]]) <- om_naa[[survey_name[i]]]$year
