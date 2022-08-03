@@ -711,11 +711,16 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Price")
 
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
+evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+
 colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
 colors_in <- alpha(colors_border,0.3)
 
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,)
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
 legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
 
 ```
@@ -816,11 +821,16 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Price")
 
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
+evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+
 colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
 colors_in <- alpha(colors_border,0.3)
 
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,)
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
 legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
 
 ```
@@ -921,11 +931,16 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Price")
 
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
+evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+
 colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
 colors_in <- alpha(colors_border,0.3)
 
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,)
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
 legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
 
 ```

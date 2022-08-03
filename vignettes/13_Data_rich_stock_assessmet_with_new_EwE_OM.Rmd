@@ -1,5 +1,5 @@
 ---
-title: 'Data-moderate stock assessment with new EwE OM'
+title: 'Data-rich stock assessment with new EwE OM'
 date: 'Updated on July 28, 2022'
 output:
   html_document: 
@@ -22,7 +22,8 @@ devtools::load_all()
 required_pkg <- c(
   "devtools", "here", "reshape",
   "ggplot2", "reshape2",
-  "RColorBrewer", "scales", "fmsb"
+  "RColorBrewer", "scales", "fmsb", 
+  "PBSadmb"
 )
 
 pkg_to_install <- required_pkg[!(required_pkg %in%
@@ -55,7 +56,7 @@ projection_year <- 2013:2017
 
 generate_ss3(
   file_path = file_path,
-  r0 = 12, steepness = 0.5, sigmar = 0.25,
+  r0 = 12, steepness = 0.55, sigmar = 0.5,
   projection_f = 0.75, projection_catch = NULL,
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
@@ -80,7 +81,7 @@ fmsy <- ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"]
 # Re-run SS3 with projection_f = fmsy
 generate_ss3(
   file_path = file_path,
-  r0 = 12, steepness = 0.5, sigmar = 0.25,
+  r0 = 12, steepness = 0.55, sigmar = 0.5,
   projection_f = fmsy, projection_catch = NULL,
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
@@ -101,7 +102,7 @@ ss3list <- SS_output(
 )
 
 # plots the results
-SS_plots(ss3list)
+# SS_plots(ss3list)
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
@@ -176,7 +177,7 @@ legend("topleft",
   pch = c(16, NA, NA),
   lty = c(NA, 1, 2)
 )
-cor(biomass_ewe[time_id], c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[projection_year_id]))
+# cor(biomass_ewe[time_id], c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[projection_year_id]))
 
 # Abundance
 waa <- read_ewe_output(
@@ -194,7 +195,7 @@ abundance_ewe <- apply(biomass[[1]][, age_name] * 1000000 / waa[[1]][, age_name]
 ylim <- range(abundance_ewe, ss3list$timeseries$`SmryNum_SX:1_GP:1` * 1000)
 plot(c(model_year, projection_year),
   abundance_ewe,
-  xlab = "Year", ylab = "Abundance",
+  xlab = "Year", ylab = "Abundance (x1000 fish)",
   ylim = ylim,
   pch = 16
 )
@@ -213,7 +214,7 @@ legend("topright",
   lty = c(NA, 1, 2)
 )
 
-cor(abundance_ewe, c(ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id] * 1000, ss3list$timeseries$`SmryNum_SX:1_GP:1`[projection_year_id] * 1000))
+# cor(abundance_ewe, c(ss3list$timeseries$`SmryNum_SX:1_GP:1`[model_year_id] * 1000, ss3list$timeseries$`SmryNum_SX:1_GP:1`[projection_year_id] * 1000))
 # Recruitment
 waa <- read_ewe_output(
   file_path = ewe_output_path,
@@ -236,7 +237,7 @@ recruit_ss3 <- data.frame(
 ylim <- range(recruit_ewe, recruit_ss3$recruit)
 plot(c(model_year, projection_year),
   recruit_ewe,
-  xlab = "Year", ylab = "Abundance of age-0 fish",
+  xlab = "Year", ylab = "Abundance of age-0 fish (x1000 fish)",
   ylim = ylim,
   pch = 16
 )
@@ -612,12 +613,19 @@ for (projection_year_id in 1:length(projection_year)) {
 
 
   # Adjusted FMSY ----------------------------------------------------
+  # if (projection_year_id == 1) {
+  #   Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)]
+  #   Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", tail(model_year, n = 1))]
+  # } else {
+  #   Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year) + projection_year_id - 1]
+  #   Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", projection_year[projection_year_id] - 1)]
+  # }
+  
   if (projection_year_id == 1) {
     Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)]
-    Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", tail(model_year, n = 1))]
+
   } else {
-    Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year) + projection_year_id - 1]
-    Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", projection_year[projection_year_id] - 1)]
+    Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)+projection_year_id-1]
   }
 
   # randomly draw 1000 values
@@ -626,6 +634,7 @@ for (projection_year_id in 1:length(projection_year)) {
 
   ss3_fmsy_mean <- ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"]
   ss3_fmsy_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == "annF_MSY"]
+  
   ss3_fmsy <- c(ss3_fmsy_mean - 1.96 * ss3_fmsy_sd, ss3_fmsy_mean, ss3_fmsy_mean + 1.96 * ss3_fmsy_sd)
   ss3_Bt_BMSY <- rep(Bt_BMSY, length(ss3_fmsy))
 
@@ -739,7 +748,7 @@ ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = var
 knitr::kable(lm_slope)
 ```
 
-- Project biomass based on adjusted FMSY
+- Project biomass based on adjusted $FMSY$
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Re-run SS3 with adjusted FMSY
 
@@ -751,7 +760,7 @@ fmsy_vec <- aggregate(value ~ variable, fmsy_data_melt_median, median)
 for (i in 1:nrow(fmsy_vec)) {
   generate_ss3(
     file_path = projection_file_path,
-    r0 = 12, steepness = 0.5, sigmar = 0.25,
+    r0 = 12, steepness = 0.55, sigmar = 0.5,
     projection_f = fmsy_vec$value[i], projection_catch = NULL,
     sa_data = sa_data, model_year = model_year,
     projection_year = projection_year,
@@ -803,11 +812,22 @@ for (i in 1:nrow(fmsy_vec)){
 ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = ssb, color = variable))+
   geom_line() +
   geom_point()+
-  facet_wrap(~variable) +
+  #facet_wrap(~variable) +
   labs(
     title = "",
     x = "",
     y = "SSB"
+  ) +
+  theme_bw()
+
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = recruit, color = variable))+
+  geom_line() +
+  geom_point()+
+  #facet_wrap(~variable) +
+  labs(
+    title = "",
+    x = "",
+    y = "Recruit"
   ) +
   theme_bw()
 
@@ -865,11 +885,17 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "SS3+Bass Biomass",
                                  "SS3+Effort")
 
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
+evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+
 colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
 colors_in <- alpha(colors_border,0.3)
 
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,)
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
 legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
 
 ```
+

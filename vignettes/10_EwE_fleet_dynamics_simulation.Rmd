@@ -771,7 +771,7 @@ library(r4ss)
 # Load simulated input data
 file_path <- paste0(here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", scenario_code[1]))
 source(here::here("Rscript", "load_indices.R"))
-file_path <- here::here("data", "data_rich")
+file_path <- here::here("data", "data_rich", "OM1")
 originalwd <- getwd()
 
 depletion <- FALSE
@@ -807,7 +807,7 @@ fmsy <- ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"]
 # Re-run SS3 with projection_f = fmsy
 generate_ss3(
   file_path = file_path,
-  r0 = 12, steepness = 0.5, sigmar = 0.25,
+  r0 = 12, steepness = 0.55, sigmar = 0.5,
   projection_f = fmsy, projection_catch = NULL,
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,

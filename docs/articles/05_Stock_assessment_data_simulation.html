@@ -98,6 +98,9 @@
     <li>
       <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
     </li>
+    <li>
+      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -330,11 +333,18 @@
 <span class="va">survey_CV</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_CV</span>, <span class="va">setNames</span>, <span class="va">years</span><span class="op">)</span>
 
 <span class="co"># set up sample number</span>
+<span class="co"># survey_sample_num &lt;- list(</span>
+<span class="co">#   survey1 = menhadenSA_output$t.series$lcomp.nad.nfish[which(menhadenSA_output$t.series$year %in% years)],</span>
+<span class="co">#   survey2 = menhadenSA_output$t.series$lcomp.mad.nfish[which(menhadenSA_output$t.series$year %in% years)],</span>
+<span class="co">#   survey3 = rep(NA, length = length(years)),</span>
+<span class="co">#   survey4 = rep(NA, length = length(years))</span>
+<span class="co"># )</span>
+
 <span class="va">survey_sample_num</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-  survey1 <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">lcomp.nad.nfish</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
-  survey2 <span class="op">=</span> <span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">lcomp.mad.nfish</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">menhadenSA_output</span><span class="op">$</span><span class="va">t.series</span><span class="op">$</span><span class="va">year</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">years</span><span class="op">)</span><span class="op">]</span>,
-  survey3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
-  survey4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="cn">NA</span>, length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>
+    survey1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">800</span>, length<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
+    survey2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">800</span>, length<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
+    survey3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">800</span>, length<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>,
+    survey4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">800</span>, length<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">years</span><span class="op">)</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">survey_sample_num</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">survey_sample_num</span>, <span class="va">setNames</span>, <span class="va">years</span><span class="op">)</span>
 
