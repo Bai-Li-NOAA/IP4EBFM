@@ -77,7 +77,7 @@
  40 50 43 0 99 0 -3 0 0 0 0 0 0 0 # L_at_Amax_Fem_GP_1
  0.05 0.99 0.331 0 99 0 -3 0 0 0 0 0 0 0 # VonBert_K_Fem_GP_1
  0.05 0.5 0.5 0 99 0 -3 0 0 0 0 0 0 0 # CV_young_Fem_GP_1
- 0.01 0.2 0.0384994 0 99 0 3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
+ 0.01 0.2 0.0384996 0 99 0 3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
 # Sex: 1  BioPattern: 1  WtLen
  -3 3 0.01 0 99 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Fem_GP_1
  -3 4 3 0 99 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Fem_GP_1
@@ -244,9 +244,9 @@
              0            14             0             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P6_survey1(2)
 # 3   survey2 AgeSelex
              0             7           2.3             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P1_survey2(3)
-             0            14      0.446081             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey2(3)
-             0             7       3.20924             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey2(3)
-             0            14      0.527804             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey2(3)
+             0            14       0.44608             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey2(3)
+             0             7       3.20925             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey2(3)
+             0            14      0.527805             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey2(3)
              0             7             1             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P5_survey2(3)
              0            14             0             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P6_survey2(3)
 #_No_Dirichlet parameters
