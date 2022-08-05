@@ -2,6 +2,7 @@
 #'
 #' @param file_path A file path to a directory where the assessment input and output files will be saved.
 #' @param r0 Unexploited recruitment from Beverton-Holt stock-recruitment model.
+#' @param r0_phase Phase for Unexploited recruitment from Beverton-Holt stock-recruitment model. Default value is 1.
 #' @param steepness Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20% of unfished spawning biomass.
 #' @param sigmar Standard deviation of log recruitment.
 #' @param projection_f Fishing mortality inputs for projections.
@@ -26,7 +27,7 @@
 #' )
 #' }
 #' @export
-generate_ss3 <- function(file_path, r0, steepness, sigmar,
+generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
                          projection_f, projection_catch = NULL,
                          sa_data, model_year, projection_year,
                          use_depletion = FALSE, depletion_ratio = NULL, initial_equilibrium_catch=TRUE) {
@@ -319,6 +320,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_ctl$EmpiricalWAA <- 0
   ss3_ctl$recr_dist_method <- 4
   ss3_ctl$recr_dist_pattern$age <- 1
+  # ss3_ctl$recr_dist_pattern$age <- 0
   ss3_ctl$N_Block_Designs <- 0 # Change to 0?
   #ss3_ctl$Block_Design[[1]] <- c(model_year[1], model_year[1])
 
@@ -326,6 +328,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   #Age specific M
   ss3_ctl$natM_type <- 3
   ss3_ctl$natM <- as.data.frame(c(sa_data$biodata$natural_mortality_matrix[1, 1], sa_data$biodata$natural_mortality_matrix[1, ]))
+  # ss3_ctl$natM <- as.data.frame(c(0, sa_data$biodata$natural_mortality_matrix[1, ]))
 
   # Growth model
   ss3_ctl$GrowthModel <- 1 # vonBert with L1 &L2
@@ -387,6 +390,7 @@ generate_ss3 <- function(file_path, r0, steepness, sigmar,
   ss3_ctl$SR_function <- 3 # 3: B-H
   #ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- log(naa_y1[1])
   ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- r0
+  ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "PHASE"] <- r0_phase
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "INIT"] <- steepness
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PHASE"] <- -4
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PR_type"] <- 0
