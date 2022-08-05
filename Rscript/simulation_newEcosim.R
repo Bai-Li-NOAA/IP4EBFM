@@ -10,7 +10,9 @@ options(digits = 2)
 # specify working directories ---------------------------------------------
 
 project_path <- here::here()
+
 ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final_fleetdynamics", "ecosim_forcing_pdsi_egg_amo1")
 
 menhadenSA_output_path <- file.path(project_path, "data", "AtlanticMenhadenSA")
 

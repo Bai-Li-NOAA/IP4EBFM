@@ -101,5 +101,3 @@ ewe_catchability <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "qa
 
 # Load fishing mortality at age data ------------------------------
 ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
-
-

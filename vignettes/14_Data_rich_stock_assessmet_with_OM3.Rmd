@@ -1,5 +1,5 @@
 ---
-title: 'Data-rich stock assessment with new EwE OM'
+title: 'Data-rich stock assessment based on OM3'
 date: 'Updated on July 28, 2022'
 output:
   html_document: 
@@ -43,9 +43,9 @@ library(r4ss)
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation_newEcosim.R"))
-file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final_fleetdynamics", "ecosim_forcing_pdsi_egg_amo1")
 source(here::here("Rscript", "load_indices.R"))
-file_path <- here::here("data", "data_rich", "OM2")
+file_path <- here::here("data", "data_rich", "OM3")
 originalwd <- getwd()
 
 depletion <- FALSE
@@ -110,7 +110,7 @@ ss3list <- SS_output(
 # Compare SS3 estimate with EwE "true" values ---------------------
 # Comparisons
 project_path <- here::here()
-ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final_fleetdynamics", "ecosim_forcing_pdsi_egg_amo1")
 # Comparisons
 functional_groups <- c(
   "StripedBass0",
@@ -264,7 +264,7 @@ legend("topright",
 # mortality <- read.csv(file = here::here("data", "ewe", "7ages", "updated_f.csv"))
 # mortality_ewe <- apply(mortality[seq(1, nrow(mortality), by=12), grep("AtlanticMenhaden", colnames(mortality))], 1, max)
 
-mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_final", "fatage_fleetdynamics.csv"))
 mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
 # mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, mean)
 
@@ -813,7 +813,7 @@ knitr::kable(lm_slope)
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Re-run SS3 with adjusted FMSY
 
-projection_file_path <- here::here("data", "data_rich", "OM2_projections")
+projection_file_path <- here::here("data", "data_rich", "OM3_projections")
 originalwd <- getwd()
 setwd(projection_file_path)
 ss3_projection <- list()
