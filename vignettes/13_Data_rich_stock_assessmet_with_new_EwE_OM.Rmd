@@ -295,7 +295,7 @@ legend("topright",
 )
 ```
 
-## Cases 1-4 are based on the settings from case 0
+## Cases 1-5 are based on the settings from case 0
 - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species
 - Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation
 - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator
@@ -442,6 +442,7 @@ plot(meanage[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
 )
 abline(meanage_lm)
 ```
+
 ### Status of indicators (SOI)
 
 - If stock-indicator relationship is positive, $SOI_{y} = \frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}$
@@ -543,7 +544,7 @@ for (projection_year_id in 1:length(projection_year)) {
     }
   )
   
-  meanage <- obs_caa[as.character(model_year), "meanage"]
+  meanage <- obs_caa[1:length(year_id), "meanage"]
   meanage_lm <- lm(menhaden_b[biomass_lag_id] ~ meanage[index_lag_id])
   meanage_fit <- fitted(meanage_lm)
   lm_slope$meanage <- paste0(
@@ -684,11 +685,12 @@ for (projection_year_id in 1:length(projection_year)) {
 
   # randomly draw 1000 values
   # ss3_fmsy <- rnorm(1000, ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"], 0.5)
-  # ss3_Bt_BMSY <- rep(Bt_BMSY, 1000)
+  # ss3_Bt_BMSY <- rnorm(1000, Bt_BMSY, 1.0)
+  # ss3_Bt_BMSY[ss3_Bt_BMSY<0] <- 0.0001
 
   ss3_fmsy_mean <- ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"]
   ss3_fmsy_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == "annF_MSY"]
-  
+
   ss3_fmsy <- c(ss3_fmsy_mean - 1.96 * ss3_fmsy_sd, ss3_fmsy_mean, ss3_fmsy_mean + 1.96 * ss3_fmsy_sd)
   ss3_Bt_BMSY <- rep(Bt_BMSY, length(ss3_fmsy))
 
@@ -948,7 +950,7 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "SS3+Effort", 
                                  "SS3+Mean Age")
 
-evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 5)))
 evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
 
 colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
@@ -957,8 +959,511 @@ colors_in <- alpha(colors_border,0.3)
 radarchart(evaluation_table,
            pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
            axistype = 5, axislabcol="blue", 
-           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2, seg = 5)
 legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
 
 ```
 
+## If we can get FMSY and BMSY MCMC outputs
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+# Projection: cases 1 - 5 ---------------------------
+
+lm_slope <- data.frame(
+  case = "PDSI+AMO1 Case",
+  projection_year = 1:length(projection_year),
+  amo = NA,
+  pdsi = NA,
+  bassB = NA,
+  effort = NA, 
+  meanage = NA
+)
+
+for (projection_year_id in 1:length(projection_year)) {
+
+  # if (projection_year_id ==1) {
+  #   menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
+  # } else {
+  #   menhaden_b <- c(ss3list$timeseries$Bio_all[model_year_id], ss3list$timeseries$Bio_all[1:(projection_year_id-1)])
+  # }
+  #
+  #
+  # year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
+  #
+  # if (projection_year_id == 1) {
+  #   index_year = model_year
+  # } else {
+  #   index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
+  # }
+
+  menhaden_b <- ss3list$timeseries$Bio_all[model_year_id]
+
+  year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:length(model_year)]
+
+  index_year <- model_year
+
+  # Linear regression model -----------------------------------------
+
+  lag <- 1
+  biomass_lag_id <- (1 + lag):length(index_year)
+  index_lag_id <- 1:(length(index_year) - lag)
+
+  amo <- amo_unsmooth_lag1[year_id, ]
+  amo_lm <- lm(menhaden_b[biomass_lag_id] ~ amo$scaled_value[index_lag_id])
+  amo_fit <- fitted(amo_lm)
+  lm_slope$amo <- paste0(
+    round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+    if (summary(amo_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+
+  pdsi <- palmer_drought_severity_index[year_id, ]
+  pdsi_lm <- lm(menhaden_b[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
+  pdsi_fit <- fitted(pdsi_lm)
+  lm_slope$pdsi <- paste0(
+    round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
+    if (summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+
+  bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+  bassB_lm <- lm(menhaden_b[biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
+  bassB_fit <- fitted(bassB_lm)
+  lm_slope$bassB <- paste0(
+    round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
+    if (summary(bassB_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+
+  effort <- apply(ewe_faa[ewe_faa$X %in% ewe_faa$X[1:length(year_id)], grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+  effort_lm <- lm(menhaden_b[biomass_lag_id] ~ effort[index_lag_id])
+  effort_fit <- fitted(effort_lm)
+  lm_slope$effort <- paste0(
+    round(summary(effort_lm)$coefficients[2, 1], digits = 2),
+    if (summary(effort_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+  
+  meanage <- obs_caa[1:length(year_id), "meanage"]
+  meanage_lm <- lm(menhaden_b[biomass_lag_id] ~ meanage[index_lag_id])
+  meanage_fit <- fitted(meanage_lm)
+  lm_slope$meanage <- paste0(
+    round(summary(meanage_lm)$coefficients[2, 1], digits = 2),
+    if (summary(meanage_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+
+  if (projection_year_id == length(projection_year)) {
+    par(mfrow = c(3, 2))
+
+    plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "AMO values",
+      ylab = "Biomass of menhaden-like species"
+    )
+    abline(amo_lm)
+
+    plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "PDSI values",
+      ylab = "Biomass of menhaden-like species"
+    )
+    abline(pdsi_lm)
+
+    plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "Biomass of Striped bass",
+      ylab = "Biomass of menhaden-like species"
+    )
+    abline(bassB_lm)
+
+    plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "Menhaden fishing effort",
+      ylab = "Biomass of menhaden-like species"
+    )
+    abline(effort_lm)
+    
+    plot(meanage[index_lag_id], menhaden_b[biomass_lag_id],
+      xlab = "Mean age for fishing fleet",
+      ylab = "Biomass of menhaden-like species"
+    )
+    abline(meanage_lm)
+  }
+
+
+  # status of indicators --------------------------------------------
+
+  amo_soi <- calc_soi(
+    indicator_data = amo$scaled_value,
+    slope = coef(amo_lm)[2]
+  )
+
+  pdsi_soi <- calc_soi(
+    indicator_data = pdsi$scaled_value,
+    slope = coef(pdsi_lm)[2]
+  )
+
+  bassB_soi <- calc_soi(
+    indicator_data = bassB$bass_bio,
+    slope = coef(bassB_lm)[2]
+  )
+
+  effort_soi <- calc_soi(
+    indicator_data = effort,
+    slope = coef(effort_lm)[2]
+  )
+  
+  meanage_soi <- calc_soi(
+    indicator_data = meanage,
+    slope = coef(meanage_lm)[2]
+  )
+
+  if (projection_year_id == 1) {
+    scaled_data <- data.frame(
+      year = model_year,
+      projection_year_id = projection_year_id,
+      amo = scale(amo$scaled_value)[, 1],
+      pdsi = scale(pdsi$scaled_value)[, 1],
+      bassB = scale(bassB$bass_bio)[, 1],
+      effort = scale(effort)[, 1],
+      meanage = scale(meanage)[, 1],
+      menhadenB = scale(menhaden_b)[, 1]
+    )
+
+    soi_data <- data.frame(
+      year = model_year,
+      projection_year_id = projection_year_id,
+      amo = amo_soi,
+      pdsi = pdsi_soi,
+      bass_b = bassB_soi,
+      effort = effort_soi, 
+      meanage = meanage_soi
+    )
+  } else {
+    scaled_data <- rbind(
+      scaled_data,
+      data.frame(
+        year = index_year,
+        projection_year_id = projection_year_id,
+        amo = scale(amo$scaled_value)[, 1],
+        pdsi = scale(pdsi$scaled_value)[, 1],
+        bassB = scale(bassB$bass_bio)[, 1],
+        effort = scale(effort)[, 1],
+        meanage = scale(meanage)[, 1], 
+        menhadenB = scale(menhaden_b)[, 1]
+      )
+    )
+
+    soi_data <- rbind(
+      soi_data,
+      data.frame(
+        year = index_year,
+        projection_year_id = projection_year_id,
+        amo = amo_soi,
+        pdsi = pdsi_soi,
+        bass_b = bassB_soi,
+        effort = effort_soi, 
+        meanage = meanage_soi
+      )
+    )
+  }
+
+
+  # Adjusted FMSY ----------------------------------------------------
+  # if (projection_year_id == 1) {
+  #   Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)]
+  #   Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", tail(model_year, n = 1))]
+  # } else {
+  #   Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year) + projection_year_id - 1]
+  #   Bt_BMSY_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == paste0("Bratio_", projection_year[projection_year_id] - 1)]
+  # }
+  
+  if (projection_year_id == 1) {
+    Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)]
+
+  } else {
+    Bt_BMSY <- ss3list$Kobe$B.Bmsy[length(model_year)+projection_year_id-1]
+  }
+
+  # randomly draw 1000 values
+  ss3_fmsy <- rnorm(1000, ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"], 0.5)
+  ss3_Bt_BMSY <- rnorm(1000, Bt_BMSY, 1.0)
+  ss3_Bt_BMSY[ss3_Bt_BMSY<0] <- 0.0001
+
+  # ss3_fmsy_mean <- ss3list$derived_quants$Value[ss3list$derived_quants$Label == "annF_MSY"]
+  # ss3_fmsy_sd <- ss3list$derived_quants$StdDev[ss3list$derived_quants$Label == "annF_MSY"]
+  # 
+  # ss3_fmsy <- c(ss3_fmsy_mean - 1.96 * ss3_fmsy_sd, ss3_fmsy_mean, ss3_fmsy_mean + 1.96 * ss3_fmsy_sd)
+  # ss3_Bt_BMSY <- rep(Bt_BMSY, length(ss3_fmsy))
+
+
+
+  ss3_fmsy[ss3_fmsy < 0] <- 0.1
+
+  amo_fmsy <- adjust_projection_jabba(
+    FMSY = ss3_fmsy,
+    soi = tail(amo_soi, n = 1),
+    Bt_BMSY = ss3_Bt_BMSY
+  )
+  pdsi_fmsy <- adjust_projection_jabba(
+    FMSY = ss3_fmsy,
+    soi = tail(pdsi_soi, n = 1),
+    Bt_BMSY = ss3_Bt_BMSY
+  )
+  bassB_fmsy <- adjust_projection_jabba(
+    FMSY = ss3_fmsy,
+    soi = tail(bassB_soi, n = 1),
+    Bt_BMSY = ss3_Bt_BMSY
+  )
+  effort_fmsy <- adjust_projection_jabba(
+    FMSY = ss3_fmsy,
+    soi = tail(effort_soi, n = 1),
+    Bt_BMSY = ss3_Bt_BMSY
+  )
+  meanage_fmsy <- adjust_projection_jabba(
+    FMSY = ss3_fmsy,
+    soi = tail(meanage_soi, n = 1),
+    Bt_BMSY = ss3_Bt_BMSY
+  )
+
+  if (projection_year_id == 1) {
+    fmsy_data <- data.frame(
+      iter = 1:length(amo_fmsy),
+      projection_year_id = projection_year[projection_year_id],
+      SS3 = ss3_fmsy,
+      amo = amo_fmsy,
+      pdsi = pdsi_fmsy,
+      bassB = bassB_fmsy,
+      effort = effort_fmsy, 
+      meanage = meanage_fmsy
+    )
+  } else {
+    fmsy_data <- rbind(
+      fmsy_data,
+      data.frame(
+        iter = 1:length(amo_fmsy),
+        projection_year_id = projection_year[projection_year_id],
+        SS3 = ss3_fmsy,
+        amo = amo_fmsy,
+        pdsi = pdsi_fmsy,
+        bassB = bassB_fmsy,
+        effort = effort_fmsy, 
+        meanage = meanage_fmsy
+      )
+    )
+  }
+}
+
+soi_data_melt <- reshape2::melt(
+  soi_data,
+  id = c("year", "projection_year_id")
+)
+soi_data_melt$projection_year_id <- as.factor(projection_year)
+
+ggplot(soi_data_melt[soi_data_melt$projection_year_id == projection_year[1], ], aes(x = year, y = value)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Status of Indicators",
+    x = "Year",
+    y = "Status of Indicators"
+  ) +
+  theme_bw()
+
+fmsy_data_melt <- reshape2::melt(
+  fmsy_data,
+  id = c("iter", "projection_year_id")
+)
+fmsy_data_melt$projection_year_id <- as.factor(fmsy_data_melt$projection_year_id)
+
+# ggplot(fmsy_data_melt, aes(x = iter, y = value, color = projection_year_id)) +
+#   geom_line() +
+#   facet_wrap(~variable) +
+#   labs(
+#     title = "FMSY",
+#     x = "Iteration",
+#     y = "FMSY"
+#   ) +
+#   theme_bw()
+
+ggplot(fmsy_data_melt, aes(x = variable, y = value, color = projection_year_id)) +
+  geom_boxplot() +
+  labs(
+    title = "FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
+
+fmsy_data_melt_median <- aggregate(value ~ projection_year_id + variable, data = fmsy_data_melt, median)
+fmsy_data_melt_median$projection_year_id <- as.numeric(as.character(fmsy_data_melt_median$projection_year_id))
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
+  geom_line() +
+  labs(
+    title = "Median FMSY from SS3 and adjusted FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
+```
+
+- Slope values from linear regression models
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+knitr::kable(lm_slope)
+```
+
+- Project biomass based on adjusted $FMSY$
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# Re-run SS3 with adjusted FMSY
+
+projection_file_path <- here::here("data", "data_rich", "OM2_projections")
+originalwd <- getwd()
+setwd(projection_file_path)
+ss3_projection <- list()
+fmsy_vec <- aggregate(value ~ variable, fmsy_data_melt_median, median)
+for (i in 1:nrow(fmsy_vec)) {
+  generate_ss3(
+    file_path = projection_file_path,
+    r0 = 12, steepness = 0.55, sigmar = 0.5,
+    projection_f = fmsy_vec$value[i], projection_catch = NULL,
+    sa_data = sa_data, model_year = model_year,
+    projection_year = projection_year,
+    use_depletion = FALSE, depletion_ratio = NULL,
+    initial_equilibrium_catch = TRUE
+  )
+  system(paste(file.path(projection_file_path, "ss_win.exe"), file.path(projection_file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
+
+  ss3_output <- SS_output(
+    dir = projection_file_path,
+    verbose = TRUE,
+    printstats = TRUE
+  )
+  
+  ss_std <- PBSadmb::readRep("ss", suffix = ".std")
+  msy_std <- ss_std[ss_std$name=="Mgmt_quant",]
+  
+  ss3_output$msy <- msy_std
+  
+  ss3_projection[[i]] <- ss3_output
+}
+
+on.exit(setwd(originalwd), add = TRUE)
+save(ss3_projection, file = file.path(projection_file_path, "ss3_projections.RData"))
+
+
+
+ssb_label <- paste0("SSB_", projection_year)
+recruit_label <- paste0("Recr_", projection_year)
+catch_label <- paste0("ForeCatch_", projection_year)
+
+
+for (i in 1:nrow(fmsy_vec)){
+  fmsy_data_melt_median$ssb[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- ss3_projection[[i]]$derived_quants$Value[ss3_projection[[i]]$derived_quants$Label %in% ssb_label]
+  
+  fmsy_data_melt_median$recruit[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- ss3_projection[[i]]$derived_quants$Value[ss3_projection[[i]]$derived_quants$Label %in% recruit_label]
+  
+  fmsy_data_melt_median$catch[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- ss3_projection[[i]]$derived_quants$Value[ss3_projection[[i]]$derived_quants$Label %in% catch_label]
+  
+  fmsy_data_melt_median$F2017_FMSY[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- tail(ss3_projection[[i]]$Kobe$F.Fmsy, n=1)/fmsy_data_melt_median$value[fmsy_data_melt_median$variable==fmsy_vec$variable[i]]
+  fmsy_data_melt_median$B2017_K[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- tail(ss3_projection[[i]]$timeseries$Bio_all, n=1)/ss3_projection[[i]]$timeseries$Bio_all[1]
+  fmsy_data_melt_median$B2017_BMSY[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- tail(ss3_projection[[i]]$Kobe$B.Bmsy, n=1)
+  fmsy_data_melt_median$Average_Biomass[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- mean(ss3_projection[[i]]$timeseries$Bio_all[ss3_projection[[i]]$timeseries$Era == "FORE"])
+  fmsy_data_melt_median$Bonanza_Period[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- sum((ss3_projection[[i]]$timeseries$Bio_all[ss3_projection[[i]]$timeseries$Era == "FORE"]/ss3_projection[[i]]$timeseries$Bio_all[1])>0.8)
+  fmsy_data_melt_median$Collapse_Period[fmsy_data_melt_median$variable==fmsy_vec$variable[i]] <- sum((ss3_projection[[i]]$timeseries$Bio_all[ss3_projection[[i]]$timeseries$Era == "FORE"]/ss3_projection[[i]]$timeseries$Bio_all[1])<0.2)
+  
+}
+
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = ssb, color = variable))+
+  geom_line() +
+  geom_point()+
+  #facet_wrap(~variable) +
+  labs(
+    title = "",
+    x = "",
+    y = "SSB"
+  ) +
+  theme_bw()
+
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = recruit, color = variable))+
+  geom_line() +
+  geom_point()+
+  #facet_wrap(~variable) +
+  labs(
+    title = "",
+    x = "",
+    y = "Recruit"
+  ) +
+  theme_bw()
+
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+om_K <- 5.12023947*1000000 # max b
+om_bmsy <- c(
+  4.553527815, 4.228060737, 2.657752888, 3.039367286, 1.700737553, 2.625573544, 1.885360091
+)*1000000
+om_fmsy <- c(
+  0.092402786, 0.344614655, 1.101458788, 0.722086847,
+  1.569404483, 0.988227546, 0.72328496
+)
+
+evaluation_table <- data.frame(
+  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
+  F2017_FMSY = mean(tail(mortality_ewe, n=1)/om_fmsy),
+  B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
+  B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
+  Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year))),
+  Bonanza_Period = sum((tail(biomass_ewe[time_id], n=length(projection_year))/om_K)>0.8),
+  Collapse_Period = sum((tail(biomass_ewe[time_id], n=length(projection_year))/om_K)<0.2)
+)
+
+case_names = unique(fmsy_data_melt_median$variable)
+for (i in 1:length(case_names)) {
+  # projected_biomass <- aggregate(biomass ~ year + tac, data = biomass_projection, median)
+  # bk <- aggregate(bk ~ year + tac + variable, data = biomass_projection, median)
+  
+  evaluation_table <- rbind(
+    evaluation_table,
+    c(
+      mean(fmsy_data_melt_median$catch[fmsy_data_melt_median$variable == case_names[i]]),
+      tail(fmsy_data_melt_median$F2017_FMSY[fmsy_data_melt_median$variable == case_names[i]], n=1),
+      tail(fmsy_data_melt_median$B2017_K[fmsy_data_melt_median$variable == case_names[i]], n=1),
+      tail(fmsy_data_melt_median$B2017_BMSY[fmsy_data_melt_median$variable == case_names[i]], n=1),
+      mean(fmsy_data_melt_median$Average_Biomass[fmsy_data_melt_median$variable == case_names[i]]),
+      tail(fmsy_data_melt_median$Bonanza_Period, n=1), 
+      tail(fmsy_data_melt_median$Collapse_Period, n=1)
+    )
+  )
+}
+
+evaluation_table <- rbind(
+  apply(evaluation_table, 2, max),
+  rep(0, ncol(evaluation_table)),
+  evaluation_table
+)
+
+row.names(evaluation_table) <- c("Max", "Min",
+                                 "OM", "SS3 Default",
+                                 "SS3+AMO",
+                                 "SS3+PDSI",
+                                 "SS3+Bass Biomass",
+                                 "SS3+Effort", 
+                                 "SS3+Mean Age")
+
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 5)))
+evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+
+colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
+colors_in <- alpha(colors_border,0.3)
+
+radarchart(evaluation_table,
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2, seg = 5)
+legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
+
+```
