@@ -262,7 +262,7 @@ knitr::kable(lm_results[[case_id]], caption = paste("Slope of linear regression 
 
 ## {-}
 
-## Sinple-species stock assessment input data simulation {.tabset}
+## Single-species stock assessment input data simulation {.tabset}
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 library(RColorBrewer)
 library(ggplot2)
@@ -812,7 +812,7 @@ ss3list <- SS_output(
 )
 
 # plots the results
-SS_plots(ss3list)
+# SS_plots(ss3list)
 ```
 
 ### Compare "true" values from OM and SS3 results

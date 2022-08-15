@@ -1,5 +1,5 @@
 ---
-title: 'Data-poor stock assessment with new EwE OM'
+title: 'Data-poor stock assessment with OM2'
 date: 'Updated on July 19, 2022'
 output:
   html_document: 
@@ -18,8 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 devtools::load_all()
 
-# Install required R packages -------------------------------------
-required_pkg <- c("DLMtool", "here", "ggplot2", "reshape2") ## DLMtool: version 6.0.3
+required_pkg <- c("DLMtool", "here", "ggplot2", "reshape2",
+                  "RColorBrewer", "scales", "fmsb") ## DLMtool: version 6.0.3
 
 pkg_to_install <- required_pkg[!(required_pkg %in%
                                    installed.packages()[, "Package"])]
@@ -31,7 +31,7 @@ lapply(required_pkg, library, character.only = TRUE)
 ## Case 0: stock assessment base run
 
 - Case 0.1
-  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.39
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.48
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
@@ -83,10 +83,7 @@ biomass <- read_ewe_output(
 time_id <- seq(1, nrow(biomass[[1]]), by = 12)
 biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum)[time_id] * 1000000
 
-
 # Case 0.1: default stock assessment run ----------------------------
-sensitivity_run <- FALSE
-sensitivity_plot <- FALSE
 ## DB-SRA is a method designed for determining a catch limit
 ## and management reference points for data-limited fisheries
 ## where catches are known from the beginning of exploitation.
@@ -247,28 +244,25 @@ for (i in 1:length(projection_year)){
 }
 legend("bottomright",
        c("EWE", paste0("DBSRA", projection_year)),
-       bty = "n",
        pch = c(16, rep(NA, length(projection_year))),
        lty = c(NA, 1:length(projection_year)),
        col = c(1, 1:length(projection_year)),
        title = "Case 0.1"
 )
 
-cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]])
-
 ```
 
 - Case 0.2
-  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.66
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is -0.58
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Case 0.2 ---------------------------
 
 
-msy <- c(
-  4.707030582, 4.539975134, 3.3665618, 3.810355182, 2.973373656, 3.620820917, 2.923792894
-)
+# msy <- c(
+#   4.707030582, 4.539975134, 3.3665618, 3.810355182, 2.973373656, 3.620820917, 2.923792894
+# )
 
 # b0 <- 2.45240886*1000000 # final b
 b0 <- 5.12023947*1000000 # max b
@@ -377,17 +371,14 @@ legend("bottomright",
        title = "Case 0.2"
 )
 
-cor(biomass_ewe[1:length(model_year)], dbsraB_projection[[1]])
-
 ```
 
 - Case 0.3
-  - Add 8 years of equilibrium catches (max catch) to the start of the catch
+  - Add 11 years of equilibrium catches (max catch) to the start of the catch
   - Try a sequence of Dep (0.1 - 0.9 with interval of 0.05), BMSY_B0 (0.1 - 0.9 with interval of 0.05), and FMSY_M (0.1 - 2.0 with an interval of 0.05) and find the scenario that has the lowest sum of squared differences
-  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is 0.59
+  - The correlation coefficient value between "true" biomass and estimated biomass of menhaden-like species is 0.5
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-
 time_id_model_year <- seq(1, nrow(biomass[[1]]), by = 12)[1:length(model_year)]
 biomass_ewe_model_year <- apply(biomass[[1]][, age_name], 1, sum)[time_id_model_year] * 1000000
 
@@ -396,7 +387,7 @@ ss_case03 <- ss_case0
 # equi_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year
 # equi_catch <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id]
 
-equi_year <- 2005:2012
+equi_year <- 2002:2012
 catch_multiplier <- 1
 # equi_catch <- rep(sa_data$fishery$obs_total_catch_biomass$fleet1[1], length = length(equi_year)) * catch_multiplier
 equi_catch <- rep(max(sa_data$fishery$obs_total_catch_biomass$fleet), length = length(equi_year)) * catch_multiplier
@@ -520,6 +511,7 @@ for (i in 1:length(projection_year)) {
   # equi_year_temp[[i]] <- 2000:(2012+i-1)
   # equi_catch_temp <- rep(sa_data$fishery$obs_total_catch_biomass$fleet1[1], length = length(equi_year_temp[[i]])) * catch_multiplier
   equi_catch_temp <- rep(max(sa_data$fishery$obs_total_catch_biomass$fleet1), length = length(equi_year_temp[[i]])) * catch_multiplier
+  
   # equi_id_temp <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% equi_year_temp[[i]]
   # equi_catch_temp <- sa_data$fishery$obs_total_catch_biomass$fleet1[equi_id_temp]
   
@@ -611,8 +603,6 @@ legend("bottomright",
        col = c(1, 1:length(projection_year)),
        title = "Case 0.3"
 )
-
-
 
 ```
 
@@ -908,4 +898,140 @@ ggplot(tac_data_melt_median, aes(x = projection_year_id, y = value, color = vari
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 knitr::kable(output$lm_slope)
+```
+
+- Projections
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# tac_data_melt$biomass <- tac_data_melt$catch <- tac_data_melt$B2017_K <-
+  # tac_data_melt$B2017_BMSY <- tac_data_melt$Bonanza_percentage <- tac_data_melt$Collapse_percentage <- NA
+
+cases <- unique(tac_data_melt$variable)
+iters <- unique(tac_data_melt$iter)
+
+for (case_id in 1:length(cases)){
+  temp <- tac_data_melt[tac_data_melt$variable==cases[case_id], ]
+  
+  for (iter in 1:length(iters)){
+    tac_temp <- temp[temp$iter==iters[iter], ]
+    
+    ss_temp <- ss_case_final
+    ss_temp@Cat <- matrix(c(ss_case_final@Cat, tac_temp$value), nrow = 1)
+    ss_temp@Year <- c(ss_case_final@Year, as.numeric(as.character(tac_temp$projection_year_id)))
+    model <- DLMtool::DBSRA_(
+      x = 1,
+      Data = ss_temp,
+      depo = NULL, # Optional fixed depletion (single value)
+      hcr = NULL # Optional harvest control rule for throttling catch as a function of B/B0.
+    )
+    
+    tac_data_melt$biomass[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <- 
+      apply(model$Btrend[, ss_temp@Year %in% as.numeric(as.character(tac_temp$projection_year_id))], 2, median)
+    
+    tac_data_melt$catch[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <- 
+      tac_temp$value
+    
+    tac_data_melt$B2017_K[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <- 
+      median(model$Bt_Kstore)
+    
+    tac_data_melt$B2017_BMSY[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <-
+      median(model$Bt_Kstore/model$BMSY_K_Mstore)
+    
+    tac_data_melt$K[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <- 
+      median(model$Btrend[, ncol(model$Btrend)] / model$Bt_Kstore)
+    
+    tac_data_melt$Bt_K[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <- 
+      tac_data_melt$biomass[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] / 
+      tac_data_melt$K[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])]
+    
+    
+    # tac_data_melt$Bonanza_Percentage[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <-
+    #   length(model$Bt_Kstore[model$Bt_Kstore>0.8])/length(model$Bt_Kstore)*100
+    # 
+    # tac_data_melt$Collapse_Percentage[(tac_data_melt$variable==cases[case_id]) & (tac_data_melt$iter == iters[iter])] <-
+    #   length(model$Bt_Kstore[model$Bt_Kstore<0.2])/length(model$Bt_Kstore)*100
+    
+  
+  }
+  
+  
+  
+}
+
+ggplot(tac_data_melt, aes(x=projection_year_id, y = biomass, color = projection_year_id)) +
+  geom_boxplot()+
+  facet_wrap(~variable)+
+  labs(
+    title = " Estimated biomass based on TAC",
+    x = "",
+    y = "Biomass"
+  ) +
+  theme_bw()
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+om_K <- 5.12023947*1000000 # max b
+om_bmsy <- c(
+  4.553527815, 4.228060737, 2.657752888, 3.039367286, 1.700737553, 2.625573544, 1.885360091
+)*1000000
+om_fmsy <- c(
+  0.092402786, 0.344614655, 1.101458788, 0.722086847,
+  1.569404483, 0.988227546, 0.72328496
+)
+
+mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+mortality_ewe <- apply(mortality[, 2:ncol(mortality)], 1, max)
+
+evaluation_table <- data.frame(
+  Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
+  # F2017_FMSY = mean(tail(mortality_ewe, n=1)/om_fmsy),
+  B2017_K = tail(biomass_ewe, n=1)/om_K, 
+  B2017_BMSY = mean(tail(biomass_ewe, n=1)/om_bmsy),
+  Average_Biomass = mean(tail(biomass_ewe, n=length(projection_year))),
+  Bonanza_Period = sum((tail(biomass_ewe, n=length(projection_year))/om_K)>0.8),
+  Collapse_Period = sum((tail(biomass_ewe, n=length(projection_year))/om_K)<0.2)
+)
+
+case_names = unique(tac_data_melt$variable)
+for (i in 1:length(case_names)) {
+  temp <- tac_data_melt[tac_data_melt$variable == case_names[i], ]
+  
+  evaluation_table <- rbind(
+    evaluation_table,
+    c(
+      mean(aggregate(catch ~ projection_year_id, data = temp, median)$catch),
+      aggregate(B2017_K ~ projection_year_id, data = temp[temp$projection_year_id == 2017, ], median)$B2017_K,
+      aggregate(B2017_BMSY ~ projection_year_id, data = temp[temp$projection_year_id == 2017, ], median)$B2017_BMSY, 
+      mean(aggregate(biomass ~ projection_year_id, data = temp, median)$biomass),
+      sum(aggregate(Bt_K ~ projection_year_id, data = temp, median)$Bt_K>0.8),
+      sum(aggregate(Bt_K ~ projection_year_id, data = temp, median)$Bt_K<0.2)
+    )
+  )
+}
+
+evaluation_table <- rbind(
+  apply(evaluation_table, 2, max),
+  rep(0, ncol(evaluation_table)),
+  evaluation_table
+)
+
+row.names(evaluation_table) <- c("Max", "Min",
+                                 "OM", "DBSRA Default",
+                                 "DBSRA+AMO",
+                                 "DBSRA+PDSI",
+                                 "DBSRA+Bass Biomass",
+                                 "DBSRA+Effort")
+
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period")] <- c(length(projection_year), length(projection_year))
+evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[c("Max", "Min"), c("Collapse_Period")])
+
+colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
+colors_in <- alpha(colors_border,0.3)
+
+radarchart(evaluation_table,
+           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
+           axistype = 5, axislabcol="blue", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 2, seg = 5)
+legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
+
 ```
