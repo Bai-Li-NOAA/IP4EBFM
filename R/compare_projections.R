@@ -95,14 +95,14 @@ compare_projections_dbsra <- function(case_name,
       if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
     pdsi <- palmer_drought_severity_index[year_id, ]
-    pdsi_lm <- lm(biomass_ewe[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
+    pdsi_lm <- lm(menhaden_b[biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
     pdsi_fit <- fitted(pdsi_lm)
     lm_slope$pdsi[projection_year_id] <- paste0(
       round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
       if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
     effort <- fishing_effort[1:length(year_id)]
-    effort_lm <- lm(biomass_ewe[biomass_lag_id] ~ effort[index_lag_id])
+    effort_lm <- lm(menhaden_b[biomass_lag_id] ~ effort[index_lag_id])
     effort_fit <- fitted(effort_lm)
     lm_slope$effort[projection_year_id] <- paste0(
       round(summary(effort_lm)$coefficients[2, 1], digits = 2),
