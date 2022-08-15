@@ -7,6 +7,7 @@
 generate_ss3(
   file_path,
   r0,
+  r0_phase = 1,
   steepness,
   sigmar,
   projection_f,
@@ -23,6 +24,8 @@ generate_ss3(
 \item{file_path}{A file path to a directory where the assessment input and output files will be saved.}
 
 \item{r0}{Unexploited recruitment from Beverton-Holt stock-recruitment model.}
+
+\item{r0_phase}{Phase for Unexploited recruitment from Beverton-Holt stock-recruitment model. Default value is 1.}
 
 \item{steepness}{Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20\% of unfished spawning biomass.}
 
