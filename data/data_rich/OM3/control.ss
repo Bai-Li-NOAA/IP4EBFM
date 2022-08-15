@@ -61,7 +61,7 @@
 #_growth_parms
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env_var&link	dev_link	dev_minyr	dev_maxyr	dev_PH	Block	Block_Fxn
     1	  15	    6	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amin_Fem_GP_1       
-   40	  50	   44	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amax_Fem_GP_1       
+   40	  50	   43	    0	 99	0	-3	0	0	0	0	0	0	0	#_L_at_Amax_Fem_GP_1       
  0.05	0.99	0.331	    0	 99	0	-3	0	0	0	0	0	0	0	#_VonBert_K_Fem_GP_1       
  0.05	 0.5	  0.5	    0	 99	0	-3	0	0	0	0	0	0	0	#_CV_young_Fem_GP_1        
  0.01	 0.2	 0.09	    0	 99	0	 3	0	0	0	0	0	0	0	#_CV_old_Fem_GP_1          
@@ -132,8 +132,8 @@
 -9999	0	0	0	0	0	#_terminator
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn  #  parm_name
--10	10	-2.59117	0	0	0	1	0	0	0	0	0	0	0	#_1
--10	10	-2.83416	0	0	0	1	0	0	0	0	0	0	0	#_2
+-10	10	-3.59631	0	0	0	1	0	0	0	0	0	0	0	#_1
+-10	10	-2.78571	0	0	0	1	0	0	0	0	0	0	0	#_2
 #_no timevary Q parameters
 #
 #_size_selex_patterns
