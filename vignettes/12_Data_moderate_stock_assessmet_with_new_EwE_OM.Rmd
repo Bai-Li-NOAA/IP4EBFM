@@ -43,15 +43,19 @@ library(JABBA)
 ```
 
 ## Case 0: stock assessment base run
-- Input: K = 3500000, r = 0.2, B1985/K = 0.7
-- Output: K = 3973319.89, r = 0.2, B1985/K = 0.69
+- Case that does not include catch-per-unit-effort (CPUE) data
+  - Input: K = 3500000, r = 0.2, B1985/K = 0.7
+  - Output: K = 3971960.342, r = 0.203, B1985/K = 0.691
+- Case that includes CPUE data
+  - Input: K = 3500000, r = 0.6, B1985/K = 0.7
+  - Output: K = 3758380.770	, r = 0.553, B1985/K = 0.708
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulation_newEcosim.R"))
 file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
 source(here::here("Rscript", "load_indices.R"))
-
+set.seed(999)
 # Load EwE biomass data
 functional_groups <- c(
   "StripedBass0",
@@ -99,20 +103,52 @@ projection_year <- 2013:2017
 output_dir <- here::here("data", "data_moderate")
 
 # case 0
+
+## Do not use effort data
+ss_case0_input_noEffort <- generate_jabba(
+  assessment_name = "case0_noEffort",
+  output_dir = output_dir,
+  sa_data = sa_data,
+  model_year = model_year,
+  projection_year = projection_year,
+  effort_data = NULL
+)
+
+k_init <- 3500000
+ss_case0_input_noEffort$jagsdata$K.pr <- c(k_init, 0.1)
+ss_case0_input_noEffort$jagsdata$r.pr <- c(0.2, 0.1)
+ss_case0_input_noEffort$jagsdata$psi.pr <- c(0.7, 0.1)
+
+
+ss_case0_noEffort <- JABBA::fit_jabba(
+  jbinput = ss_case0_input_noEffort,
+  save.jabba = TRUE,
+  save.all = TRUE,
+  save.prj = TRUE,
+  output.dir = output_dir,
+  save.csvs = T
+)
+
+ss_case0_noEffort$pars
+
+
+## Use effort data
+year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
+effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+
 ss_case0_input <- generate_jabba(
   assessment_name = "case0",
   output_dir = output_dir,
   sa_data = sa_data,
   model_year = model_year,
-  projection_year = projection_year
+  projection_year = projection_year,
+  effort_data = effort[1:length(model_year)]
 )
 
 # k_init <- max(sa_data$fishery$obs_total_catch_biomass$fleet1) * 10
 k_init <- 3500000
-# k_init <- 2000000
 ss_case0_input$jagsdata$K.pr <- c(k_init, 0.1)
-# ss_case0_input$jagsdata$K.pr <- c(k_init, sqrt(log(0.3^2 + 1)))
-ss_case0_input$jagsdata$r.pr <- c(0.2, 0.1)
+ss_case0_input$jagsdata$r.pr <- c(0.6, 0.1)
 ss_case0_input$jagsdata$psi.pr <- c(0.7, 0.1)
 
 ss_case0 <- JABBA::fit_jabba(
@@ -124,7 +160,10 @@ ss_case0 <- JABBA::fit_jabba(
   save.csvs = T
 )
 
+ss_case0$pars
+
 # Plot figures using JABBA
+JABBA::jabba_plots(jabba = ss_case0_noEffort, output.dir = output_dir)
 JABBA::jabba_plots(jabba = ss_case0, output.dir = output_dir)
 # # plot with CIs (80% for projections)
 # JABBA::jbplot_prj(ss_case0, type = "BBmsy", output.dir = output_dir)
@@ -141,31 +180,49 @@ ss_case0$prj_posterior$biomass <- ss_case0$prj_posterior$stock * bmsy0
 
 # plot biomass over time
 par(mfrow = c(1, 2))
+
 ylim <- range(
   biomass_ewe[time_id],
-  ss_case0$timeseries[, "mu", "B"]
+  
+  ss_case0_noEffort$timeseries[, , "B"],
+  ss_case0_noEffort$prj_posterior$biomass[(round(ss_case0_noEffort$prj_posterior$tac) %in% round(mean(tail(ss_case0_input_noEffort$data$catch$Total, n = 3))))],
+  
+  ss_case0$timeseries[, , "B"],
+  ss_case0$prj_posterior$biomass[(round(ss_case0$prj_posterior$tac) %in% round(mean(tail(ss_case0_input$data$catch$Total, n = 3))))]
 )
 
+# Plot biomass over time based on no effort model
 plot(c(model_year, projection_year),
      biomass_ewe[time_id],
      xlab = "Year", ylab = "Biomass (mt)",
      ylim = ylim,
      pch = 16
 )
-lines(model_year, ss_case0$timeseries[, "mu", "B"])
-legend("bottomright",
-       c("EWE", "JABBA case 0"),
-       bty = "n",
-       pch = c(16, NA, NA),
-       lty = c(NA, 1, 2),
-       col = c(1, 1, 2)
-)
 
-ylim <- range(
-  biomass_ewe[time_id],
-  ss_case0$timeseries[, , "B"],
-  ss_case0$prj_posterior$biomass[(round(ss_case0$prj_posterior$tac) %in% round(mean(tail(ss_case0_input$data$catch$Total, n = 3))))]
-)
+lines(model_year, ss_case0_noEffort$timeseries[, "mu", "B"])
+lines(model_year, ss_case0_noEffort$timeseries[, "lci", "B"], lty = 2)
+lines(model_year, ss_case0_noEffort$timeseries[, "uci", "B"], lty = 2)
+
+# Plot biomass based on last three years of catch
+for (i in 1:length(projection_year)) {
+  # Projection TAC input used mean catch from the recent 3 years
+  subdata_id <- (ss_case0_noEffort$prj_posterior$year == projection_year[i]) & (round(ss_case0_noEffort$prj_posterior$tac) %in% round(mean(tail(ss_case0_input_noEffort$data$catch$Total, n = 3))))
+  
+  boxplot(ss_case0_noEffort$prj_posterior$biomass[subdata_id],
+          add = TRUE,
+          at = projection_year[i],
+          col = "gray",
+          width = 1,
+          outline = TRUE,
+          axes = FALSE
+  )
+}
+points(c(model_year, projection_year),
+       biomass_ewe[time_id],
+       pch=16)
+legend("topleft", "No CPUE index", bty = "n")
+
+# Plot biomass over time based model that is using effort data
 plot(c(model_year, projection_year),
      biomass_ewe[time_id],
      xlab = "Year", ylab = "Biomass (mt)",
@@ -179,7 +236,6 @@ lines(model_year, ss_case0$timeseries[, "uci", "B"], lty = 2)
 
 # Plot biomass based on last three years of catch
 for (i in 1:length(projection_year)) {
-  # subdata_id <- (ss_case0$prj_posterior$year == projection_year[i]) & (ss_case0$prj_posterior$tac %in% tail(ss_case0_input$data$catch$Total, n = 1))
   
   subdata_id <- (ss_case0$prj_posterior$year == projection_year[i]) & (round(ss_case0$prj_posterior$tac) %in% round(mean(tail(ss_case0_input$data$catch$Total, n = 3))))
   
@@ -195,26 +251,13 @@ for (i in 1:length(projection_year)) {
 points(c(model_year, projection_year),
        biomass_ewe[time_id],
        pch=16)
+legend("topleft", "CPUE index included", bty = "n")
 
-# mortality
-# mortality <- read_ewe_output(
-#   file_path = here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "amo_pcp"),
-#   file_names = "mortality_monthly.csv",
-#   skip_nrows = 8,
-#   plot = FALSE,
-#   figure_titles = NULL,
-#   functional_groups = functional_groups,
-#   figure_colors = NULL
-# )
-# mortality_ewe <- apply(mortality[[1]][, age_name], 1, max)
+# Plot mortality over time
 
 mortality <- read.csv(file = here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
 mortality_ewe_apical <- apply(mortality[, 2:ncol(mortality)], 1, max)
 mortality_ewe_average <- apply(mortality[, 2:ncol(mortality)], 1, mean)
-
-# mortality <- read.csv(file = here::here("data", "ewe", "7ages", "updated_faa.csv"))
-# mortality_ewe_apical <- apply(mortality[, 2:ncol(mortality)], 1, max)
-# mortality_ewe_average <- apply(mortality[, 2:ncol(mortality)], 1, mean)
 
 par(mfrow = c(1, 1))
 ylim <- range(mortality_ewe_apical, 
@@ -362,7 +405,7 @@ abline(effort_lm)
 
 ```
 
-### Adjust projection
+### Adjust projections
 
 - If $\frac{B2012_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
 
@@ -652,10 +695,10 @@ ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = var
 knitr::kable(lm_slope)
 ```
 
-- Adjust catch input and project biomass based on FMSY*B
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+#### Adjust catch input and project biomass based on FMSY*B
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
-B2013 <- ss_case0$posteriors$BtoBmsy[, (length(model_year)+1)] * ss_case0$posteriors$SBmsy[,1]
+B2013 <- ss_case0$posteriors$BtoBmsy[, (length(model_year) + 1)] * ss_case0$posteriors$SBmsy[,1]
 
 variable <- unique(fmsy_data_melt$variable)
 
@@ -714,7 +757,7 @@ om_fmsy <- c(
 
 evaluation_table <- data.frame(
   Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
-  F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
+  #F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year))),
@@ -731,8 +774,8 @@ for (i in 1:length(levels(biomass_projection$tac))) {
     evaluation_table,
     c(
       as.numeric(as.character(unique(biomass_projection$tac[biomass_projection$variable == case_names[i]]))),
-      median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
-        biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
+      # median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
+      #   biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$bk[biomass_projection$year == tail(projection_year, n = 1) &
         biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$stock[biomass_projection$year == tail(projection_year, n = 1) &
@@ -758,21 +801,40 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Effort")
 
-evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
-evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period")] <- c(length(projection_year), length(projection_year))
+evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[c("Max", "Min"), c("Collapse_Period")])
 
-colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
-colors_in <- alpha(colors_border,0.3)
 
+case_num <- 4
+par(mfrow=c(2,3), mar=c(0,0,0,0))
+
+variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+for (i in 1:case_num){
+  colors_border <- palette.colors(palette = "Okabe-Ito")[c(1:2, 2+i)]
+  radarchart(evaluation_table[c(1:4, i+4), ],
+             seg=5,
+             pcol=colors_border, plwd=2, plty=1,
+             axistype = 0, axislabcol="black", 
+             paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+             vlabels = variable_label, vlcex = 0.9)
+  legend(x=-0.5, y=1.9, legend = rownames(evaluation_table)[c(3:4, 4+i)], bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
+}
+
+
+colors_border <- palette.colors(palette = "Okabe-Ito")[1:(nrow(evaluation_table)-2)]
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
-           axistype = 5, axislabcol="blue", 
-           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
-legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
+           seg=5,
+           pcol=colors_border, plwd=2 , plty=1,
+           axistype = 2, axislabcol="black", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+           vlabels = variable_label, vlcex = 0.9)
 
+legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
 ```
-- Adjust catch input and project biomass based on 0.5*FMSY*B
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+#### Adjust catch input and project biomass based on 0.5*FMSY*B
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 tac_data_melt_median <- aggregate(tac ~ variable, data = tac_data_melt, median)
 tac_data_melt_median$tac <- tac_data_melt_median$tac/2
 
@@ -811,7 +873,6 @@ ggplot(biomass_projection, aes(x=year, y = biomass, color = year)) +
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-
 om_K <- 5.12023947*1000000 # max b
 om_bmsy <- c(
   4.553527815, 4.228060737, 2.657752888, 3.039367286, 1.700737553, 2.625573544, 1.885360091
@@ -823,7 +884,7 @@ om_fmsy <- c(
 
 evaluation_table <- data.frame(
   Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
-  F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
+  #F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year))),
@@ -840,8 +901,8 @@ for (i in 1:length(levels(biomass_projection$tac))) {
     evaluation_table,
     c(
       as.numeric(as.character(unique(biomass_projection$tac[biomass_projection$variable == case_names[i]]))),
-      median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
-        biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
+      # median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
+      #   biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$bk[biomass_projection$year == tail(projection_year, n = 1) &
         biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$stock[biomass_projection$year == tail(projection_year, n = 1) &
@@ -867,22 +928,39 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Effort")
 
-evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
-evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period")] <- c(length(projection_year), length(projection_year))
+evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[c("Max", "Min"), c("Collapse_Period")])
 
-colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
-colors_in <- alpha(colors_border,0.3)
 
+case_num <- 4
+par(mfrow=c(2,3), mar=c(0,0,0,0))
+
+variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+for (i in 1:case_num){
+  colors_border <- palette.colors(palette = "Okabe-Ito")[c(1:2, 2+i)]
+  radarchart(evaluation_table[c(1:4, i+4), ],
+             seg=5,
+             pcol=colors_border, plwd=2, plty=1,
+             axistype = 0, axislabcol="black", 
+             paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+             vlabels = variable_label, vlcex = 0.9)
+  legend(x=-0.5, y=1.9, legend = rownames(evaluation_table)[c(3:4, 4+i)], bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
+}
+
+
+colors_border <- palette.colors(palette = "Okabe-Ito")[1:(nrow(evaluation_table)-2)]
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
-           axistype = 5, axislabcol="blue", 
-           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
-legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
+           seg=5,
+           pcol=colors_border, plwd=2 , plty=1,
+           axistype = 2, axislabcol="black", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+           vlabels = variable_label, vlcex = 0.9)
 
+legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
 ```
 
-- Adjust catch input and project biomass based on 0.25*FMSY*B
-```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+#### Adjust catch input and project biomass based on 0.25*FMSY*B
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 tac_data_melt_median <- aggregate(tac ~ variable, data = tac_data_melt, median)
 tac_data_melt_median$tac <- tac_data_melt_median$tac*0.25
 
@@ -921,7 +999,6 @@ ggplot(biomass_projection, aes(x=year, y = biomass, color = year)) +
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-
 om_K <- 5.12023947*1000000 # max b
 om_bmsy <- c(
   4.553527815, 4.228060737, 2.657752888, 3.039367286, 1.700737553, 2.625573544, 1.885360091
@@ -933,7 +1010,7 @@ om_fmsy <- c(
 
 evaluation_table <- data.frame(
   Average_Catch = mean(sa_data$fishery$obs_total_catch_biomass$fleet1[as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% projection_year]),
-  F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
+  #F2017_FMSY = mean(tail(mortality_ewe_average, n=1)/om_fmsy),
   B2017_K = tail(biomass_ewe[time_id], n=1)/om_K, 
   B2017_BMSY = mean(tail(biomass_ewe[time_id], n=1)/om_bmsy),
   Average_Biomass = mean(tail(biomass_ewe[time_id], n=length(projection_year))),
@@ -950,8 +1027,8 @@ for (i in 1:length(levels(biomass_projection$tac))) {
     evaluation_table,
     c(
       as.numeric(as.character(unique(biomass_projection$tac[biomass_projection$variable == case_names[i]]))),
-      median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
-        biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
+      # median(biomass_projection$harvest[biomass_projection$year == tail(projection_year, n = 1) &
+      #   biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$bk[biomass_projection$year == tail(projection_year, n = 1) &
         biomass_projection$tac == unique(biomass_projection$tac[biomass_projection$variable == case_names[i]])]),
       median(biomass_projection$stock[biomass_projection$year == tail(projection_year, n = 1) &
@@ -977,16 +1054,34 @@ row.names(evaluation_table) <- c("Max", "Min",
                                  "JABBA+Bass Biomass",
                                  "JABBA+Effort")
 
-evaluation_table["Max", c("Bonanza_Period", "Collapse_Period", "F2017_FMSY")] <- c(length(projection_year), length(projection_year), max(c(evaluation_table$F2017_FMSY, 4)))
-evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")] <- apply(evaluation_table[c("Max", "Min"), c("F2017_FMSY", "Collapse_Period")], 2, rev)
+evaluation_table["Max", c("Bonanza_Period", "Collapse_Period")] <- c(length(projection_year), length(projection_year))
+evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[c("Max", "Min"), c("Collapse_Period")])
 
-colors_border <- RColorBrewer::brewer.pal(nrow(evaluation_table)-2, "Dark2")
-colors_in <- alpha(colors_border,0.3)
 
+case_num <- 4
+par(mfrow=c(2,3), mar=c(0,0,0,0))
+
+variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+for (i in 1:case_num){
+  colors_border <- palette.colors(palette = "Okabe-Ito")[c(1:2, 2+i)]
+  radarchart(evaluation_table[c(1:4, i+4), ],
+             seg=5,
+             pcol=colors_border, plwd=2, plty=1,
+             axistype = 0, axislabcol="black", 
+             paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+             vlabels = variable_label, vlcex = 0.9)
+  legend(x=-0.5, y=1.9, legend = rownames(evaluation_table)[c(3:4, 4+i)], bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
+}
+
+
+colors_border <- palette.colors(palette = "Okabe-Ito")[1:(nrow(evaluation_table)-2)]
 radarchart(evaluation_table,
-           pcol=colors_border, pfcol=colors_in, plwd=4 , plty=1,
-           axistype = 5, axislabcol="blue", 
-           paxislabels = round(evaluation_table["Max",],2), palcex = 2)
-legend(x=0.9, y=0.7, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=1.2, pt.cex=3)
+           seg=5,
+           pcol=colors_border, plwd=2 , plty=1,
+           axistype = 2, axislabcol="black", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+           vlabels = variable_label, vlcex = 0.9)
 
+legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
 ```
+

@@ -247,7 +247,8 @@ legend("bottomright",
        pch = c(16, rep(NA, length(projection_year))),
        lty = c(NA, 1:length(projection_year)),
        col = c(1, 1:length(projection_year)),
-       title = "Case 0.1"
+       title = "Case 0.1", 
+       bty = "n"
 )
 
 ```

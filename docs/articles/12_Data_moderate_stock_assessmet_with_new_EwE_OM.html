@@ -156,8 +156,18 @@
 <h2 id="case-0-stock-assessment-base-run">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run"></a>
 </h2>
 <ul>
+<li>Case that does not include catch-per-unit-effort (CPUE) data
+<ul>
 <li>Input: K = 3500000, r = 0.2, B1985/K = 0.7</li>
-<li>Output: K = 3973319.89, r = 0.2, B1985/K = 0.69</li>
+<li>Output: K = 3971960.342, r = 0.203, B1985/K = 0.691</li>
+</ul>
+</li>
+<li>Case that includes CPUE data
+<ul>
+<li>Input: K = 3500000, r = 0.6, B1985/K = 0.7</li>
+<li>Output: K = 3758380.770 , r = 0.553, B1985/K = 0.708</li>
+</ul>
+</li>
 </ul>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
 </div>
@@ -191,7 +201,7 @@
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 </div>
 <div class="section level3">
-<h3 id="adjust-projection">Adjust projection<a class="anchor" aria-label="anchor" href="#adjust-projection"></a>
+<h3 id="adjust-projections">Adjust projections<a class="anchor" aria-label="anchor" href="#adjust-projections"></a>
 </h3>
 <ul>
 <li><p>If <span class="math inline">\(\frac{B2012_{i}}{BMSY} &gt; 1\)</span>, <span class="math inline">\(F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})\)</span></p></li>
@@ -233,16 +243,16 @@ PDSI+AMO1 Case
 1
 </td>
 <td style="text-align:left;">
-1163303.65*
+1433865.51*
 </td>
 <td style="text-align:left;">
-307195.38
+646688.79
 </td>
 <td style="text-align:left;">
-2.68*
+4.43*
 </td>
 <td style="text-align:left;">
-68442.5*
+58495.96*
 </td>
 </tr>
 <tr>
@@ -253,16 +263,16 @@ PDSI+AMO1 Case
 2
 </td>
 <td style="text-align:left;">
-1163303.65*
+1433865.51*
 </td>
 <td style="text-align:left;">
-307195.38
+646688.79
 </td>
 <td style="text-align:left;">
-2.68*
+4.43*
 </td>
 <td style="text-align:left;">
-68442.5*
+58495.96*
 </td>
 </tr>
 <tr>
@@ -273,16 +283,16 @@ PDSI+AMO1 Case
 3
 </td>
 <td style="text-align:left;">
-1163303.65*
+1433865.51*
 </td>
 <td style="text-align:left;">
-307195.38
+646688.79
 </td>
 <td style="text-align:left;">
-2.68*
+4.43*
 </td>
 <td style="text-align:left;">
-68442.5*
+58495.96*
 </td>
 </tr>
 <tr>
@@ -293,16 +303,16 @@ PDSI+AMO1 Case
 4
 </td>
 <td style="text-align:left;">
-1163303.65*
+1433865.51*
 </td>
 <td style="text-align:left;">
-307195.38
+646688.79
 </td>
 <td style="text-align:left;">
-2.68*
+4.43*
 </td>
 <td style="text-align:left;">
-68442.5*
+58495.96*
 </td>
 </tr>
 <tr>
@@ -313,59 +323,38 @@ PDSI+AMO1 Case
 5
 </td>
 <td style="text-align:left;">
-1163303.65*
+1433865.51*
 </td>
 <td style="text-align:left;">
-307195.38
+646688.79
 </td>
 <td style="text-align:left;">
-2.68*
+4.43*
 </td>
 <td style="text-align:left;">
-68442.5*
+58495.96*
 </td>
 </tr>
 </tbody>
 </table>
-<ul>
-<li>Adjust catch input and project biomass based on FMSY*B</li>
-</ul>
-<pre><code><span class="co">## Compiling model graph</span>
-<span class="co">##    Resolving undeclared variables</span>
-<span class="co">##    Allocating nodes</span>
-<span class="co">## Graph information:</span>
-<span class="co">##    Observed stochastic nodes: 111</span>
-<span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19802</span>
-<span class="co">## </span>
-<span class="co">## Initializing model</span></code></pre>
+<div class="section level4">
+<h4 id="adjust-catch-input-and-project-biomass-based-on-fmsyb">Adjust catch input and project biomass based on FMSY*B<a class="anchor" aria-label="anchor" href="#adjust-catch-input-and-project-biomass-based-on-fmsyb"></a>
+</h4>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
-<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-1.png" width="1152"> - Adjust catch input and project biomass based on 0.5<em>FMSY</em>B</p>
-<pre><code><span class="co">## Compiling model graph</span>
-<span class="co">##    Resolving undeclared variables</span>
-<span class="co">##    Allocating nodes</span>
-<span class="co">## Graph information:</span>
-<span class="co">##    Observed stochastic nodes: 111</span>
-<span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19802</span>
-<span class="co">## </span>
-<span class="co">## Initializing model</span></code></pre>
+<p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
+</div>
+<div class="section level4">
+<h4 id="adjust-catch-input-and-project-biomass-based-on-0-5fmsyb">Adjust catch input and project biomass based on 0.5<em>FMSY</em>B<a class="anchor" aria-label="anchor" href="#adjust-catch-input-and-project-biomass-based-on-0-5fmsyb"></a>
+</h4>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-8-1.png" width="1152"></p>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
-<ul>
-<li>Adjust catch input and project biomass based on 0.25<em>FMSY</em>B</li>
-</ul>
-<pre><code><span class="co">## Compiling model graph</span>
-<span class="co">##    Resolving undeclared variables</span>
-<span class="co">##    Allocating nodes</span>
-<span class="co">## Graph information:</span>
-<span class="co">##    Observed stochastic nodes: 111</span>
-<span class="co">##    Unobserved stochastic nodes: 124</span>
-<span class="co">##    Total graph size: 19802</span>
-<span class="co">## </span>
-<span class="co">## Initializing model</span></code></pre>
+</div>
+<div class="section level4">
+<h4 id="adjust-catch-input-and-project-biomass-based-on-0-25fmsyb">Adjust catch input and project biomass based on 0.25<em>FMSY</em>B<a class="anchor" aria-label="anchor" href="#adjust-catch-input-and-project-biomass-based-on-0-25fmsyb"></a>
+</h4>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-10-1.png" width="1152"></p>
 <p><img src="12_Data_moderate_stock_assessmet_with_new_EwE_OM_files/figure-html/unnamed-chunk-11-1.png" width="1152"></p>
+</div>
 </div>
 </div>
   </div>
