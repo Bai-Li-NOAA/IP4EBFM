@@ -10,6 +10,7 @@ generate_jabba(
   sa_data,
   model_year,
   projection_year,
+  effort_data = NULL,
   tacs = NULL
 )
 }
@@ -23,6 +24,8 @@ generate_jabba(
 \item{model_year}{A vector of years for model fitting.}
 
 \item{projection_year}{A vector of years for projection.}
+
+\item{effort_data}{A vector of effort data.}
 
 \item{tacs}{A vector of total allowable catch values for projection.}
 }
