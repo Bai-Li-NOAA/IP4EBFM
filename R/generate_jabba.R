@@ -5,6 +5,7 @@
 #' @param sa_data Simulated stock assessment input data from Rscript/simulation.R.
 #' @param model_year A vector of years for model fitting.
 #' @param projection_year A vector of years for projection.
+#' @param effort_data A vector of effort data.
 #' @param tacs A vector of total allowable catch values for projection.
 #' @return A list of initial input values
 #' @examples
@@ -14,6 +15,7 @@
 #' @export
 generate_jabba <- function(assessment_name, output_dir,
                            sa_data, model_year, projection_year,
+                           effort_data=NULL,
                            tacs=NULL) {
 
   dir.create(output_dir, showWarnings = F)
@@ -35,6 +37,8 @@ generate_jabba <- function(assessment_name, output_dir,
     se[[survey_name[i]]] <- sa_data$survey$om_cv[[survey_name[i]]][as.numeric(names(sa_data$survey$om_cv[[survey_name[i]]])) %in% cpue$Year]
   }
 
+
+
   # Prepare catch data
   catch_id <- as.numeric(names(sa_data$fishery$obs_total_catch_biomass$fleet1)) %in% model_year
   catch <- data.frame(
@@ -42,6 +46,12 @@ generate_jabba <- function(assessment_name, output_dir,
     Total = sa_data$fishery$obs_total_catch_biomass$fleet1[catch_id]
   )
   rownames(catch) <- 1:nrow(catch)
+
+  # Prepare CPUE data if effort data are available
+  if (!is.null(effort_data)) {
+    cpue[["cpue"]] <- catch$Total/effort_data
+    se[["cpue"]] <- 0.1
+  }
 
   # Set up JABBA input data
   if (is.null(tacs)) {
