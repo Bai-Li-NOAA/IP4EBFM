@@ -19,7 +19,7 @@
 1 #  number of recruitment settlement assignments 
 0 # unused option
 #GPattern month  area  age (for each settlement assignment)
- 1 1 1 1
+ 1 1 1 0
 #
 #_Cond 0 # N_movement_definitions goes here if Nareas > 1
 #_Cond 1.0 # first age that moves (real age at begin of season, not integer) also cond on do_migration>0
@@ -63,7 +63,7 @@
 3 #_maturity_option:  1=length logistic; 2=age logistic; 3=read age-maturity matrix by growth_pattern; 4=read age-fecundity; 5=disabled; 6=read length-maturity
 #_Age_Maturity by growth pattern
  0 0 0.1 0.5 0.9 1 1 1
-2 #_First_Mature_Age
+1 #_First_Mature_Age
 1 #_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W
 0 #_hermaphroditism option:  0=none; 1=female-to-male age-specific fxn; -1=male-to-female age-specific fxn
 1 #_parameter_offset_approach for M, G, CV_G:  1- direct, no offset**; 2- male=fem_parm*exp(male_parm); 3: male=female*exp(parm) then old=young*exp(parm)
@@ -77,7 +77,7 @@
  40 50 44 0 99 0 -3 0 0 0 0 0 0 0 # L_at_Amax_Fem_GP_1
  0.05 0.99 0.331 0 99 0 -3 0 0 0 0 0 0 0 # VonBert_K_Fem_GP_1
  0.05 0.5 0.5 0 99 0 -3 0 0 0 0 0 0 0 # CV_young_Fem_GP_1
- 0.01 0.2 0.0100028 0 99 0 3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
+ 0.01 0.2 0.0589335 0 99 0 3 0 0 0 0 0 0 0 # CV_old_Fem_GP_1
 # Sex: 1  BioPattern: 1  WtLen
  -3 3 0.01 0 99 0 -3 0 0 0 0 0 0 0 # Wtlen_1_Fem_GP_1
  -3 4 3 0 99 0 -3 0 0 0 0 0 0 0 # Wtlen_2_Fem_GP_1
@@ -108,7 +108,7 @@
 0  # 0/1 to use steepness in initial equ recruitment calculation
 0  #  future feature:  0/1 to make realized sigmaR a function of SR curvature
 #_          LO            HI          INIT         PRIOR         PR_SD       PR_type      PHASE    env-var    use_dev   dev_mnyr   dev_mxyr     dev_PH      Block    Blk_Fxn #  parm_name
-             3            31       11.8984          10.3            10             0          1          0          0          0          0          0          0          0 # SR_LN(R0)
+             3            31       12.9356          10.3            10             0          1          0          0          0          0          0          0          0 # SR_LN(R0)
            0.2             1          0.55           0.7          0.05             0         -4          0          0          0          0          0          0          0 # SR_BH_steep
              0             2           0.5           0.8           0.8             0         -2          0          0          0          0          0          0          0 # SR_sigmaR
             -5             5             0             0             1             0         -4          0          0          0          0          0          0          0 # SR_regime
@@ -140,7 +140,7 @@
 #
 # all recruitment deviations
 #  1985R 1986R 1987R 1988R 1989R 1990R 1991R 1992R 1993R 1994R 1995R 1996R 1997R 1998R 1999R 2000R 2001R 2002R 2003R 2004R 2005R 2006R 2007R 2008R 2009R 2010R 2011R 2012R 2013F 2014F 2015F 2016F 2017F
-#  -1.07826 -0.661779 -0.626938 -1.00609 0.808582 0.600646 -0.925811 -0.76725 -0.958874 -0.65731 0.00991293 0.919953 1.02763 0.288368 -0.151457 0.0517721 -0.679951 0.121039 1.35063 1.14959 0.614487 0.0368225 -1.02486 0.237612 1.1193 0.317561 0.0221411 -0.137459 0 0 0 0 0
+#  -1.08444 -0.668093 -0.618368 -0.984519 0.829897 0.623875 -0.957305 -0.795102 -0.962496 -0.639195 0.0376427 0.944222 1.026 0.253283 -0.176157 0.0446425 -0.673826 0.132971 1.3788 1.18287 0.598927 0.0105117 -1.05693 0.217176 1.13371 0.339572 -0.00653823 -0.131124 0 0 0 0 0
 #
 #Fishing Mortality info 
 0.3 # F ballpark value in units of annual_F
@@ -157,7 +157,7 @@
 # F rates by fleet x season
 # Yr:  1985 1986 1987 1988 1989 1990 1991 1992 1993 1994 1995 1996 1997 1998 1999 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017
 # seas:  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
-# fleet1 0.0612051 0.0594606 0.0142104 0.00135021 0.00256597 0.0125383 0.0137638 0.02477 0.0604847 0.0141475 0.00373867 0.011616 0.0331543 0.0577784 0.0381378 0.0591107 0.0444679 0.00518362 0.0261576 0.0658847 0.166551 0.716711 0.646469 0.103239 0.157962 0.236339 0.331432 0.357579 0.54 0.54 0.54 0.54 0.54
+# fleet1 0.0660576 0.0725034 0.017794 0.0016265 0.00307254 0.0106134 0.0126129 0.0289019 0.0778256 0.0183724 0.00443046 0.0116604 0.0276592 0.0515706 0.0408951 0.0707877 0.0527751 0.00633929 0.0291181 0.0530635 0.147931 0.740271 0.730166 0.130736 0.178591 0.197906 0.328406 0.404152 0.74 0.74 0.74 0.74 0.74
 #
 #_Q_setup for fleets with cpue or survey data
 #_1:  fleet number
@@ -173,8 +173,8 @@
 #
 #_Q_parms(if_any);Qunits_are_ln(q)
 #_          LO            HI          INIT         PRIOR         PR_SD       PR_type      PHASE    env-var    use_dev   dev_mnyr   dev_mxyr     dev_PH      Block    Blk_Fxn  #  parm_name
-           -10            10       4.37799             0             0             0          1          0          0          0          0          0          0          0  #  LnQ_base_survey1(2)
-           -10            10       2.28985             0             0             0          1          0          0          0          0          0          0          0  #  LnQ_base_survey2(3)
+           -10            10       5.10875             0             0             0          1          0          0          0          0          0          0          0  #  LnQ_base_survey1(2)
+           -10            10       3.01513             0             0             0          1          0          0          0          0          0          0          0  #  LnQ_base_survey2(3)
 #_no timevary Q parameters
 #
 #_size_selex_patterns
@@ -229,24 +229,24 @@
 # 2   survey1 LenSelex
 # 3   survey2 LenSelex
 # 1   fleet1 AgeSelex
-             0             7       3.35049             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P1_fleet1(1)
-             0             7       1.53871             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_fleet1(1)
+             0             7       3.35658             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P1_fleet1(1)
+             0             7       1.53614             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_fleet1(1)
              0             7          0.01             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P3_fleet1(1)
-             0             7       0.55468             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_fleet1(1)
+             0             7      0.551843             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_fleet1(1)
              0             7             1             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P5_fleet1(1)
              0             7             0             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P6_fleet1(1)
 # 2   survey1 AgeSelex
              0             7           2.3             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P1_survey1(2)
-             0            14      0.876558             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey1(2)
-             0             7       3.44775             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey1(2)
-             0            14       1.12348             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey1(2)
+             0            14      0.874735             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey1(2)
+             0             7       3.48175             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey1(2)
+             0            14       1.12447             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey1(2)
              0             7             1             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P5_survey1(2)
              0            14             0             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P6_survey1(2)
 # 3   survey2 AgeSelex
              0             7           2.3             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P1_survey2(3)
-             0            14      0.794575             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey2(3)
-             0             7     0.0106371             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey2(3)
-             0            14      0.446241             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey2(3)
+             0            14      0.790244             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P2_survey2(3)
+             0             7     0.0114925             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P3_survey2(3)
+             0            14      0.441133             0            99             0          2          0          0          0          0          0          0          0  #  AgeSel_P4_survey2(3)
              0             7             1             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P5_survey2(3)
              0            14             0             0            99             0         -2          0          0          0          0          0          0          0  #  AgeSel_P6_survey2(3)
 #_No_Dirichlet parameters
