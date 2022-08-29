@@ -11,6 +11,7 @@ options(digits = 2)
 
 project_path <- here::here()
 
+# ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_base_run")
 ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final_fleetdynamics", "ecosim_forcing_pdsi_egg_amo1")
 # ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_noFbegin", "ewe7ages_ecosim_noFbegin", "ecosim_forcing_pdsi_egg_amo1_noFbegin")
