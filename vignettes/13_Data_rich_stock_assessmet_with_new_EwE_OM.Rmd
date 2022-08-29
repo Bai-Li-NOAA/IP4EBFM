@@ -44,9 +44,10 @@ library(r4ss)
 # Load simulated input data
 source(here::here("Rscript", "simulation_newEcosim.R"))
 file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+
 source(here::here("Rscript", "load_indices.R"))
 file_path <- here::here("data", "data_rich", "OM2")
-originalwd <- getwd()
+
 
 depletion <- FALSE
 depletion_ratio <- 0.8 # tried values between 0.3 - 0.8
@@ -61,13 +62,37 @@ generate_ss3(
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
   use_depletion = FALSE, depletion_ratio = NULL,
-  initial_equilibrium_catch = TRUE
+  initial_equilibrium_catch = TRUE, 
+  settlement_age = 1
 )
 
-# Run SS3 ----------------------------------------------------------
+## If settlement age = 0, settlement month = 1, and spawn month = 1
+## Higher estimated biomass over time
 
-setwd(file_path)
-system(paste(file.path(file_path, "ss_win.exe"), file.path(file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
+# file_path <- here::here("data", "data_rich", "OM2_SettlementAge0")
+# generate_ss3(
+#   file_path = file_path,
+#   r0 = 12, steepness = 0.55, sigmar = 0.5,
+#   projection_f = 0.75, projection_catch = NULL,
+#   sa_data = sa_data, model_year = model_year,
+#   projection_year = projection_year,
+#   use_depletion = FALSE, depletion_ratio = NULL,
+#   initial_equilibrium_catch = TRUE, 
+#   settlement_age = 0
+# )
+
+## Run SS3
+
+local({
+    working_dir <- file_path
+    shell(
+        paste0(
+        "cd ", working_dir,
+        " & ss_win "
+        )
+    )
+
+})
 
 # get FMSY
 ss3list <- SS_output(
@@ -86,11 +111,20 @@ generate_ss3(
   sa_data = sa_data, model_year = model_year,
   projection_year = projection_year,
   use_depletion = FALSE, depletion_ratio = NULL,
-  initial_equilibrium_catch = TRUE
+  initial_equilibrium_catch = TRUE, 
+  settlement_age = 1
 )
 
-system(paste(file.path(file_path, "ss_win.exe"), file.path(file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
-on.exit(setwd(originalwd), add = TRUE)
+local({
+    working_dir <- file_path
+    shell(
+        paste0(
+        "cd ", working_dir,
+        " & ss_win "
+        )
+    )
+
+})
 
 # plot r4ss -------------------------------------------------------
 
@@ -103,6 +137,32 @@ ss3list <- SS_output(
 
 # plots the results
 # SS_plots(ss3list)
+
+# MCMC run
+mcmc_dir <- here::here("data", "data_rich", "OM2_mcmc")
+# generate_ss3(
+#   file_path = mcmc_dir,
+#   r0 = 12, steepness = 0.55, sigmar = 0.5,
+#   projection_f = fmsy, projection_catch = NULL,
+#   sa_data = sa_data, model_year = model_year,
+#   projection_year = projection_year,
+#   use_depletion = FALSE, depletion_ratio = NULL,
+#   initial_equilibrium_catch = TRUE, 
+#   settlement_age = 1
+# )
+# 
+# local({
+# 
+#     shell(
+#         paste0(
+#         "cd ", mcmc_dir,
+#         " & ss_win ",
+#         "-mcmc 1400000 -mcsave 1000 -mcseed 91438",
+#         " & ss_win -mceval"
+#         )
+#     )
+# 
+# })
 ```
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
@@ -816,7 +876,6 @@ knitr::kable(lm_slope)
 # Re-run SS3 with adjusted FMSY
 
 projection_file_path <- here::here("data", "data_rich", "OM2_projections")
-originalwd <- getwd()
 setwd(projection_file_path)
 ss3_projection <- list()
 fmsy_vec <- aggregate(value ~ variable, fmsy_data_melt_median, median)
@@ -830,7 +889,17 @@ for (i in 1:nrow(fmsy_vec)) {
     use_depletion = FALSE, depletion_ratio = NULL,
     initial_equilibrium_catch = TRUE
   )
-  system(paste(file.path(projection_file_path, "ss_win.exe"), file.path(projection_file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
+  
+  local({
+    working_dir <- file_path
+    shell(
+        paste0(
+        "cd ", working_dir,
+        " & ss_win "
+        )
+    )
+
+})
 
   ss3_output <- SS_output(
     dir = projection_file_path,
@@ -846,7 +915,6 @@ for (i in 1:nrow(fmsy_vec)) {
   ss3_projection[[i]] <- ss3_output
 }
 
-on.exit(setwd(originalwd), add = TRUE)
 save(ss3_projection, file = file.path(projection_file_path, "ss3_projections.RData"))
 
 
@@ -1320,7 +1388,6 @@ knitr::kable(lm_slope)
 # Re-run SS3 with adjusted FMSY
 
 projection_file_path <- here::here("data", "data_rich", "OM2_projections")
-originalwd <- getwd()
 setwd(projection_file_path)
 ss3_projection <- list()
 fmsy_vec <- aggregate(value ~ variable, fmsy_data_melt_median, median)
@@ -1334,7 +1401,17 @@ for (i in 1:nrow(fmsy_vec)) {
     use_depletion = FALSE, depletion_ratio = NULL,
     initial_equilibrium_catch = TRUE
   )
-  system(paste(file.path(projection_file_path, "ss_win.exe"), file.path(projection_file_path, "data.ss"), sep = " "), show.output.on.console = TRUE)
+  
+  local({
+    working_dir <- file_path
+    shell(
+        paste0(
+        "cd ", working_dir,
+        " & ss_win "
+        )
+    )
+
+})
 
   ss3_output <- SS_output(
     dir = projection_file_path,
@@ -1350,7 +1427,6 @@ for (i in 1:nrow(fmsy_vec)) {
   ss3_projection[[i]] <- ss3_output
 }
 
-on.exit(setwd(originalwd), add = TRUE)
 save(ss3_projection, file = file.path(projection_file_path, "ss3_projections.RData"))
 
 

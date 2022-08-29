@@ -129,7 +129,7 @@ ss_case0_noEffort <- JABBA::fit_jabba(
   save.csvs = T
 )
 
-ss_case0_noEffort$pars
+ss_case0_noEffort$estimates
 
 
 ## Use effort data
@@ -151,6 +151,7 @@ ss_case0_input$jagsdata$K.pr <- c(k_init, 0.1)
 ss_case0_input$jagsdata$r.pr <- c(0.6, 0.1)
 ss_case0_input$jagsdata$psi.pr <- c(0.7, 0.1)
 
+set.seed(999)
 ss_case0 <- JABBA::fit_jabba(
   jbinput = ss_case0_input,
   save.jabba = TRUE,
@@ -160,7 +161,7 @@ ss_case0 <- JABBA::fit_jabba(
   save.csvs = T
 )
 
-ss_case0$pars
+ss_case0$estimates
 
 # Plot figures using JABBA
 JABBA::jabba_plots(jabba = ss_case0_noEffort, output.dir = output_dir)
@@ -234,6 +235,8 @@ lines(model_year, ss_case0$timeseries[, "mu", "B"])
 lines(model_year, ss_case0$timeseries[, "lci", "B"], lty = 2)
 lines(model_year, ss_case0$timeseries[, "uci", "B"], lty = 2)
 
+cor(biomass_ewe[time_id][1:length(model_year)], ss_case0$timeseries[, "mu", "B"])
+
 # Plot biomass based on last three years of catch
 for (i in 1:length(projection_year)) {
   
@@ -283,6 +286,8 @@ legend("topright",
        lty = 1:3,
        col = 1:3
 )
+
+cor(mortality_ewe_average[1:length(model_year)], ss_case0$timeseries[, "mu", "F"])
 ```
 
 
@@ -829,7 +834,8 @@ radarchart(evaluation_table,
            paxislabels = round(evaluation_table["Max",],2), palcex = 1,
            vlabels = variable_label, vlcex = 0.9)
 
-legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
+plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 ```
 
 #### Adjust catch input and project biomass based on 0.5*FMSY*B
@@ -956,7 +962,8 @@ radarchart(evaluation_table,
            paxislabels = round(evaluation_table["Max",],2), palcex = 1,
            vlabels = variable_label, vlcex = 0.9)
 
-legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
+plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 ```
 
 #### Adjust catch input and project biomass based on 0.25*FMSY*B
@@ -1082,6 +1089,7 @@ radarchart(evaluation_table,
            paxislabels = round(evaluation_table["Max",],2), palcex = 1,
            vlabels = variable_label, vlcex = 0.9)
 
-legend(x=-1, y=1.9, legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3, ncol=2)
+plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 ```
 
