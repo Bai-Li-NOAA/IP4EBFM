@@ -13,6 +13,7 @@
 #' @param use_depletion A logical value.
 #' @param depletion_ratio Ratio of depletion.
 #' @param initial_equilibrium_catch TRUE or FALSE.
+#' @param settlement_age Settlement age. Default value is age 0.
 #' @import r4ss
 #' @return Outputs from Stock Synthesis 3
 #' @examples
@@ -30,7 +31,9 @@
 generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
                          projection_f, projection_catch = NULL,
                          sa_data, model_year, projection_year,
-                         use_depletion = FALSE, depletion_ratio = NULL, initial_equilibrium_catch=TRUE) {
+                         use_depletion = FALSE, depletion_ratio = NULL,
+                         initial_equilibrium_catch=TRUE,
+                         settlement_age = 0) {
   # Write data.ss  ------------------------------------------
 
   ss3_data <- r4ss::SS_readdat(
@@ -40,7 +43,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   ss3_data$styr <- model_year[1]
   ss3_data$endyr <- tail(model_year, n = 1)
-  ss3_data$spawn_month <- 1.00001 # default is 1
+  if (settlement_age == 1) ss3_data$spawn_month <- 1.0001 # default is 1
   #ss3_data$Nsexes <- sa_data$biodata$nsex
   ss3_data$Nsexes <- ss3_data$Ngenders <- (-1) # use -1 for 1 sex setup with SSB multiplied by female_frac parameter
   ss3_data$Nages <- length(sa_data$biodata$ages)
@@ -319,8 +322,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   ss3_ctl$EmpiricalWAA <- 0
   ss3_ctl$recr_dist_method <- 4
-  ss3_ctl$recr_dist_pattern$age <- 1
-  # ss3_ctl$recr_dist_pattern$age <- 0
+  if (settlement_age == 1) ss3_ctl$recr_dist_pattern$age <- 1
   ss3_ctl$N_Block_Designs <- 0 # Change to 0?
   #ss3_ctl$Block_Design[[1]] <- c(model_year[1], model_year[1])
 
@@ -342,7 +344,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   ss3_ctl$Age_Maturity <- data.frame(t(c(0, sa_data$biodata$maturity_matrix[1, ])))
 
 
-  ss3_ctl$First_Mature_Age <- 2
+  if (settlement_age == 1) ss3_ctl$First_Mature_Age <- 2
   ss3_ctl$fecundity_option <- 1 # 1: eggs=Wt*(a+b*Wt)
 
   # Growth parameters
@@ -657,8 +659,9 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   ss3_starter$F_report_units <- 3
   ss3_starter$F_report_basis <- 0
   ss3_starter$F_age_range <- c(sa_data$biodata$ages[1], ss3_data$Nages-2)
-  ss3_starter$MCMCburn <- 10000
-  ss3_starter$MCMCthin <- 1000
+  ss3_starter$MCMCburn <- 400
+  ss3_starter$MCMCthin <- 1
+  ss3_starter$MCMC_output_detail <- 2
 
   r4ss::SS_writestarter(ss3_starter,
                         dir = file.path(file_path),

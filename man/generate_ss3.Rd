@@ -17,7 +17,8 @@ generate_ss3(
   projection_year,
   use_depletion = FALSE,
   depletion_ratio = NULL,
-  initial_equilibrium_catch = TRUE
+  initial_equilibrium_catch = TRUE,
+  settlement_age = 0
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ generate_ss3(
 \item{depletion_ratio}{Ratio of depletion.}
 
 \item{initial_equilibrium_catch}{TRUE or FALSE.}
+
+\item{settlement_age}{Settlement age. Default value is age 0.}
 }
 \value{
 Outputs from Stock Synthesis 3
