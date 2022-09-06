@@ -379,6 +379,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
     c(-3, 4, sa_data$biodata$lw_b, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 3)
 
   ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.5, 0.5, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
+  # ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.99, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
 
   ss3_ctl$MG_parms <- ss3_ctl$MG_parms[-grep("RecrDist", rownames(ss3_ctl$MG_parms)), ]
 
