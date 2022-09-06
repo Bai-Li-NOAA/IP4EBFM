@@ -908,7 +908,8 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")
+# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
 
 variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
 for (i in 1:case_num){
@@ -1111,7 +1112,8 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")
+# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
 
 variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
 for (i in 1:case_num){
@@ -1313,7 +1315,8 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")
+# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
 
 variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
 for (i in 1:case_num){
