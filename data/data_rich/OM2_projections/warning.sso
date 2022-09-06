@@ -1,3 +1,1 @@
-1 1st iteration warning: ssb(endyr)/ssb(styr)= 4.06849e-06; suggest start with larger R0 to get near 0.4; or use depletion fleet option
- N parameters are on or within 1% of min-max bound: 4; check results, variance may be suspect
-N warnings: 1
+N warnings: 0

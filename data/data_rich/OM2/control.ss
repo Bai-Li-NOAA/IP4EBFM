@@ -11,7 +11,7 @@
 0 # unused option
 # for each settlement assignment:
 #_GPattern	month	area	age
-1	1	1	0	#_recr_dist_pattern1
+1	1	1	1	#_recr_dist_pattern1
 #
 #_Cond 0 # N_movement_definitions goes here if N_areas > 1
 #_Cond 1.0 # first age that moves (real age at begin of season, not integer) also cond on do_migration>0
@@ -53,7 +53,7 @@
 # Age Maturity or Age fecundity:
 #_V1	age0	age1	age2	age3	age4	age5	age6
 0	0	0.1	0.5	0.9	1	1	1	#_1
-1 #_First_Mature_Age
+2 #_First_Mature_Age
 1 #_fecundity option:(1)eggs=Wt*(a+b*Wt);(2)eggs=a*L^b;(3)eggs=a*Wt^b; (4)eggs=a+b*L; (5)eggs=a+b*W
 0 #_hermaphroditism option:  0=none; 1=female-to-male age-specific fxn; -1=male-to-female age-specific fxn
 1 #_parameter_offset_approach (1=none, 2= M, G, CV_G as offset from female-GP1, 3=like SS2 V1.x)
@@ -84,7 +84,7 @@
 0 # 0/1 to use steepness in initial equ recruitment calculation
 0 # future feature: 0/1 to make realized sigmaR a function of SR curvature
 #_LO	HI	INIT	PRIOR	PR_SD	PR_type	PHASE	env-var	use_dev	dev_mnyr	dev_mxyr	dev_PH	Block	Blk_Fxn # parm_name
-  3	31	  11	10.3	  10	0	 -1	0	0	0	0	0	0	0	#_SR_LN(R0)  
+  3	31	  12	10.3	  10	0	  1	0	0	0	0	0	0	0	#_SR_LN(R0)  
 0.2	 1	0.55	 0.7	0.05	0	 -4	0	0	0	0	0	0	0	#_SR_BH_steep
   0	 2	 0.5	 0.8	 0.8	0	 -2	0	0	0	0	0	0	0	#_SR_sigmaR  
  -5	 5	   0	   0	   1	0	 -4	0	0	0	0	0	0	0	#_SR_regime  

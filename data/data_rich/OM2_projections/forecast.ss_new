@@ -2,7 +2,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2022-08-30 09:49:01
+#C file write time: 2022-09-06 08:56:11
 # for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr
 1 # Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F0.1,F_msy; 3=add F_Blimit; 
 2 # Do_MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY) with MSY_unit options
@@ -59,11 +59,11 @@
 99 # basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input apical_F; NOTE: bio vs num based on fleet's catchunits
 #enter list of Fcast catches or Fa; terminate with line having year=-9999
 #_Yr Seas Fleet Catch(or_F)
- 2013 1 1 1.5
- 2014 1 1 1.5
- 2015 1 1 1.5
- 2016 1 1 1.5
- 2017 1 1 1.5
+ 2013 1 1 1.4
+ 2014 1 1 1.4
+ 2015 1 1 1.4
+ 2016 1 1 1.4
+ 2017 1 1 1.4
 -9999 1 1 0 
 #
 999 # verify end of input 
