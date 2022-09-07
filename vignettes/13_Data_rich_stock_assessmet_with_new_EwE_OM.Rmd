@@ -229,7 +229,7 @@ projection_year_id <- which(ss3list$timeseries$Yr %in% projection_year)
 ylim <- range(ssb_ewe[time_id], ss3list$timeseries$SpawnBio)
 plot(c(model_year, projection_year),
      ssb_ewe[time_id],
-     xlab = "Year", ylab = "SSB (mt)",
+     xlab = "Year", ylab = "SB (mt)",
      ylim = ylim,
      pch = 16
 )
@@ -559,7 +559,8 @@ where $I_{y}$ represents indicator value in year y. $I_{y}^{min}$ and $I_{y}^{ma
 
 where $i$ represents individual iterations
   
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+  
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Projection: cases 1 - 5 ---------------------------
 
@@ -851,7 +852,9 @@ for (projection_year_id in 1:length(projection_year)) {
     )
   }
 }
+```
 
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 soi_data_melt <- reshape2::melt(
   soi_data,
   id = c("year", "projection_year_id")
@@ -898,7 +901,7 @@ fmsy_data_melt_median$projection_year_id <- as.numeric(as.character(fmsy_data_me
 ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
   geom_line() +
   labs(
-    title = "Median FMSY from SS3 and adjusted FMSY",
+    title = "Median FMSY from SS3 and adjusted F",
     x = "",
     y = "FMSY"
   ) +
@@ -1004,7 +1007,7 @@ ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = ssb, color = varia
   labs(
     title = "",
     x = "",
-    y = "SSB"
+    y = "SB"
   ) +
   theme_bw()
 
@@ -1253,7 +1256,7 @@ ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = ssb, color = varia
   labs(
     title = "",
     x = "",
-    y = "SSB"
+    y = "SB"
   ) +
   theme_bw()
 
@@ -1502,7 +1505,7 @@ ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = ssb, color = varia
   labs(
     title = "",
     x = "",
-    y = "SSB"
+    y = "SB"
   ) +
   theme_bw()
 
