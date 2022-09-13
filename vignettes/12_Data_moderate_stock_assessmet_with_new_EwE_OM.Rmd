@@ -908,10 +908,9 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- brewer.pal(12,"Paired")
-# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")[-c(6, 12)]
 
-variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+variable_label <- c("Mean Catch", "B2017/K", "B2017/BMSY", "Mean Biomass", "Bonanza \n Length", "Minimize \n Collapse \n Length")
 for (i in 1:case_num){
   colors_border <- colors[c(1, 1+i, 6, 6+i)]
   radarchart(evaluation_table[c(1:3, 3+i, 8, 8+i), ],
@@ -1112,10 +1111,9 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- brewer.pal(12,"Paired")
-# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")[-c(6, 12)]
 
-variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+variable_label <- c("Mean Catch", "B2017/K", "B2017/BMSY", "Mean Biomass", "Bonanza \n Length", "Minimize \n Collapse \n Length")
 for (i in 1:case_num){
   colors_border <- colors[c(1, 1+i, 6, 6+i)]
   radarchart(evaluation_table[c(1:3, 3+i, 8, 8+i), ],
@@ -1315,10 +1313,9 @@ evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[
 
 case_num <- 4
 par(mfrow=c(2,3), mar=c(0,0,0,0))
-colors <- brewer.pal(12,"Paired")
-# colors <- c(palette.colors(palette = "Okabe-Ito"), "purple")
+colors <- brewer.pal(12,"Paired")[-c(6, 12)]
 
-variable_label <- c("Average Catch", "B2017/K", "B2017/BMSY", "Average Biomass", "Bonanza", "Collapse")
+variable_label <- c("Mean Catch", "B2017/K", "B2017/BMSY", "Mean Biomass", "Bonanza \n Length", "Minimize \n Collapse \n Length")
 for (i in 1:case_num){
   colors_border <- colors[c(1, 1+i, 6, 6+i)]
   radarchart(evaluation_table[c(1:3, 3+i, 8, 8+i), ],
