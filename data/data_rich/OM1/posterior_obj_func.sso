@@ -34,3 +34,15 @@ Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitmen
 Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitment | Forecast_Recruitment | Parm_priors | Parm_softbounds | Parm_devs | F_Ballpark | Crash_Pen 
 ---- | Lambdas |  1 1 1 |  0 1 1 |  0 1 1 |  1 1 1 | 1 | 1 | 1 | NA | 1 | 1 | 1
 0 | 4708.45 |  4.50774e-09 0 0 | 42084.5 |  0 676.361 1494.65 |  1302.62 473.203 749.621 | 11.9744 | 0 | 0 | 0.0129534 | 0 | 0.00417725 | 0
+Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitment | Forecast_Recruitment | Parm_priors | Parm_softbounds | Parm_devs | F_Ballpark | Crash_Pen 
+---- | Lambdas |  1 1 1 |  0 1 1 |  0 1 1 |  1 1 1 | 1 | 1 | 1 | NA | 1 | 1 | 1
+0 | 420.564 |  4.85809e-11 0 0 | 0 |  0 -1.03885 2.77559 |  255.825 82.3242 106.475 | -25.9696 | 0 | 0 | 0.0177684 | 0 | 0.154425 | 0
+Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitment | Forecast_Recruitment | Parm_priors | Parm_softbounds | Parm_devs | F_Ballpark | Crash_Pen 
+---- | Lambdas |  1 1 1 |  0 1 1 |  0 1 1 |  1 1 1 | 1 | 1 | 1 | NA | 1 | 1 | 1
+0 | 420.564 |  4.85809e-11 0 0 | 0 |  0 -1.03885 2.77559 |  255.825 82.3242 106.475 | -25.9696 | 0 | 0 | 0.0177684 | 0 | 0.154425 | 0
+Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitment | Forecast_Recruitment | Parm_priors | Parm_softbounds | Parm_devs | F_Ballpark | Crash_Pen 
+---- | Lambdas |  1 1 1 |  0 1 1 |  0 1 1 |  1 1 1 | 1 | 1 | 1 | NA | 1 | 1 | 1
+0 | 4783.8 |  3.68339e-09 0 0 | 41686 |  0 674.901 1489.58 |  1311.48 468.765 756.928 | 82.1374 | 0 | 0 | 0.00793129 | 0 | 0.00156573 | 0
+Iter | Objective_function | Catch | Equil_catch | Survey | Age_comp | Recruitment | Forecast_Recruitment | Parm_priors | Parm_softbounds | Parm_devs | F_Ballpark | Crash_Pen 
+---- | Lambdas |  1 1 1 |  0 1 1 |  0 1 1 |  1 1 1 | 1 | 1 | 1 | NA | 1 | 1 | 1
+0 | 4708.45 |  4.50774e-09 0 0 | 42084.5 |  0 676.361 1494.65 |  1302.62 473.203 749.621 | 11.9744 | 0 | 0 | 0.0129534 | 0 | 0.00417725 | 0
