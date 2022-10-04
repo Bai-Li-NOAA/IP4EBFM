@@ -29,14 +29,16 @@ adjust_projection_dbsra <- function(tac, soi, Bt_BMSY) {
 adjust_projection_jabba <- function(FMSY, soi, Bt_BMSY) {
   FMSY_lower <- min(FMSY)
   FMSY_upper <- max(FMSY)
-  adjust_FMSY <- c()
+  adjust_FMSY <- matrix(NA, nrow=nrow(Bt_BMSY), ncol=ncol(Bt_BMSY))
 
   for (i in 1:length(FMSY)) {
-    if (Bt_BMSY[i] > 1) adjust_FMSY[i] <- FMSY_lower + soi * (FMSY_upper - FMSY_lower)
-    if (Bt_BMSY[i] <= 1 & Bt_BMSY[i] > 0.5) adjust_FMSY[i] <- soi * Bt_BMSY[i] * FMSY[i]
-    if (Bt_BMSY[i] <= 0.5) adjust_FMSY[i] <- 0
+    if (Bt_BMSY[i, 1] > 1) adjust_FMSY[i, ] <- FMSY_lower + soi * (FMSY_upper - FMSY_lower)
+    if (ncol(Bt_BMSY)==1 & Bt_BMSY[i, 1] <= 1 & Bt_BMSY[i, 1] > 0.5) adjust_FMSY[i, ] <- soi * Bt_BMSY[i] * FMSY[i]
+    if (ncol(Bt_BMSY)>1 & Bt_BMSY[i, 1] <= 1 & Bt_BMSY[i, 1] > 0.5) adjust_FMSY[i, ] <- as.numeric(soi * Bt_BMSY[i, ] * FMSY[i])
+    if (Bt_BMSY[i, 1] <= 0.5) adjust_FMSY[i, ] <- 0
   }
 
+  colnames(adjust_FMSY) <- colnames(Bt_BMSY)
   return(adjust_FMSY)
 }
 
