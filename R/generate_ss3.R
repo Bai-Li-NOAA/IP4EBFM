@@ -712,6 +712,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   # Write ss.wtatage ------------------------------------------------
   wt_conversion <- 1000000 #g
+  year_length <- length(model_year)+length(projection_year)
   waa.new <- do.call(
     "rbind",
     replicate((length(survey_id) + 3), data.frame(
@@ -721,8 +722,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = 1,
-      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)][1:year_length, ]*wt_conversion
     ), simplify = FALSE)
   )
   waa.new$Fleet <- rep(-1:(length(survey_id) + 1),
@@ -738,8 +739,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = -1,
-      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==6), paste0("age", sa_data$biodata$ages)][1:year_length, ]*wt_conversion
     ), simplify = FALSE)
   )
 
@@ -752,8 +753,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = 0,
-      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==1), paste0("age", sa_data$biodata$ages)][1:year_length, ] *wt_conversion
     ), simplify = FALSE)
   )
 
@@ -766,8 +767,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = 1,
-      "0" = sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$fishery$om_waa[, paste0("age", sa_data$biodata$ages)][1:year_length, ]*wt_conversion
     ), simplify = FALSE)
   )
 
@@ -780,8 +781,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = 2,
-      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==10), paste0("age", sa_data$biodata$ages)][1:year_length, ]*wt_conversion
     ), simplify = FALSE)
   )
 
@@ -794,8 +795,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       "Bio_Pattern" = 1,
       "BirthSeas" = 1,
       "Fleet" = 3,
-      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages[1])]*wt_conversion,
-      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages)]*wt_conversion
+      "0" = sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages[1])][1:year_length]*wt_conversion,
+      sa_data$biodata$monthly_waa[which(sa_data$biodata$monthly_waa$month==4), paste0("age", sa_data$biodata$ages)][1:year_length, ]*wt_conversion
     ), simplify = FALSE)
   )
 
