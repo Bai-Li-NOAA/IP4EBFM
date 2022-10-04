@@ -999,7 +999,7 @@ ggplot(tac_data_melt, aes(x=projection_year_id, y = biomass, color = projection_
 
 final_K <- 2.45240886*1000000
 max_K <- 5.12023947*1000000
-om_K <- max_K
+om_K <- final_K
 
 om_bmsy <- c(
   4.553527815, 4.228060737, 2.657752888, 3.039367286, 1.700737553, 2.625573544, 1.885360091
@@ -1116,16 +1116,16 @@ evaluation_table <- rbind(
 )
 
 row.names(evaluation_table) <- c("Max", "Min",
-                                 "DBSRA OM", 
-                                 "AMO OM",
-                                 "PDSI OM",
-                                 "Bass Biomass OM",
-                                 "Effot OM",
-                                 "DBSRA Default",
-                                 "DBSRA+AMO",
-                                 "DBSRA+PDSI",
-                                 "DBSRA+Bass Biomass",
-                                 "DBSRA+Effort")
+                                 "OM+DBSRA TAC", 
+                                 "OM+AMO TACadj",
+                                 "OM+PDSI TACadj",
+                                 "OM+Bass Biomass TACadj",
+                                 "OM+Effot TACadj",
+                                 "DBSRA+DBSRA TAC",
+                                 "DBSRA+AMO TACadj",
+                                 "DBSRA+PDSI TACadj",
+                                 "DBSRA+Bass Biomass TACadj",
+                                 "DBSRA+Effort TACadj")
 
 evaluation_table["Max", c("Bonanza_Period", "Collapse_Period")] <- c(length(projection_year), length(projection_year))
 evaluation_table[c("Max", "Min"), c("Collapse_Period")] <- rev(evaluation_table[c("Max", "Min"), c("Collapse_Period")])
@@ -1160,4 +1160,38 @@ plot(1, type = "n", axes=FALSE, xlab="", ylab="")
 legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 
 
+```
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+case_num <- 4
+par(mfrow=c(1,3), mar=c(0,0,0,0))
+colors <- brewer.pal(12,"Paired")
+
+variable_label <- c("Mean Catch",
+                    # expression('B'[.(tail(projection_year, n=1))]/'B'[0]),
+                    paste0("B", tail(projection_year, n=1),"/B0"),
+                    paste0("B", tail(projection_year, n=1),"/BMSY"),
+                    "Mean Biomass",
+                    "Bonanza \n Length",
+                    "Minimize \n Collapse \n Length")
+
+colors_border <- colors[c(1:5)]
+radarchart(evaluation_table[c(1:2, 3:7),],
+           seg=5,
+           pcol=colors_border, plwd=2 , plty=1,
+           axistype = 2, axislabcol="black",
+           paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+           vlabels = variable_label, vlcex = 0.8)
+
+colors_border <- colors[c(6:10)]
+radarchart(evaluation_table[c(1:2, 8:12),],
+           seg=5,
+           pcol=colors_border, plwd=2 , plty=1,
+           axistype = 2, axislabcol="black", 
+           paxislabels = round(evaluation_table["Max",],2), palcex = 1,
+           vlabels = variable_label, vlcex = 0.9)
+
+colors_border <- colors[1:10]
+plot(1, type = "n", axes=FALSE, xlab="", ylab="")
+legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 ```
