@@ -44,56 +44,6 @@ lapply(required_pkg, library, character.only = TRUE)
 # Run simulation_newEcosim.R and get fishing mortality rate
 source(here::here("Rscript", "simulation_newEcosim.R"))
 
-# Load fishing mortality rate
-file_path <- here::here("data", "ewe", "7ages_newsim_final")
-
-Fta <- read.csv(file.path(file_path, "fatage.csv"))
-colnames(Fta)[1] <- "year"
-
-Ft_year <- read.csv(file.path(file_path, "f_full_year.csv"))
-colnames(Ft_year) <- c("year", "Ft")
-Ft_year$year <- Fta$year
-
-Ft_month <- read.csv(file.path(file_path, "f_full_month.csv"))
-colnames(Ft_month) <- c("year", "Ft")
-Ft_month$year <- rep(Ft_year$year, each = 12)
-Ft_month$month <- rep(1:12, times = nrow(Ft_year))
-
-# Load catchability from the operating model 
-qta_om <- read.csv(file.path(file_path, "qatage.csv")) 
-
-# Calculate effort using fishing mortality rate and catchality from the operating model
-Eta_om <- Fta[, grep("menhaden", colnames(Fta))] / qta_om[seq(1, nrow(qta_om), by = 12), grep("menhaden", colnames(qta_om))]
-
-Et_om <- apply(Eta_om, 1, sum)
-
-om_data <- data.frame(
-  "Year" = Ft_year$year,
-  "Fishing_Mortality_Rate" = Ft_year$Ft,
-  "Effort" = Et_om,
-  "Catchablity" = Ft_year$Ft/Et_om
-)
-
-om_data_reshape <- reshape2::melt(
-  om_data,
-  id = c("Year")
-)
-
-om_figure <- ggplot(om_data_reshape, aes(Year, value, col = variable)) +             
-  geom_line() +
-  facet_wrap(~variable, scales = "free_y") +
-  labs(
-    title = "Simulation based on default catchablity from the EwE OM",
-    x = "Year",
-    y = "Values"
-  ) 
-om_figure
-
-```
-
-## Simulation based on density-dependent catchablity
-```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
-
 # Load biomass from the operating model
 om_output_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
 
@@ -134,7 +84,67 @@ biomass <- read_ewe_output(
   figure_colors = NULL
 )
 
-biomass_om <- apply(biomass[[1]][seq(1, nrow(qta_om), by = 12), age_name], 1, sum) * 1000000
+biomass_om <- apply(biomass[[1]][seq(1, nrow(biomass[[1]]), by = 12), age_name], 1, sum) * 1000000
+
+# Load fishing mortality rate
+file_path <- here::here("data", "ewe", "7ages_newsim_final")
+
+Fta <- read.csv(file.path(file_path, "fatage.csv"))
+colnames(Fta)[1] <- "year"
+
+Ft_year <- read.csv(file.path(file_path, "f_full_year.csv"))
+colnames(Ft_year) <- c("year", "Ft")
+Ft_year$year <- Fta$year
+
+Ft_month <- read.csv(file.path(file_path, "f_full_month.csv"))
+colnames(Ft_month) <- c("year", "Ft")
+Ft_month$year <- rep(Ft_year$year, each = 12)
+Ft_month$month <- rep(1:12, times = nrow(Ft_year))
+
+# Load catchability from the operating model 
+qta_om <- read.csv(file.path(file_path, "qatage.csv")) 
+
+# Calculate effort using fishing mortality rate and catchality from the operating model
+Eta_om <- Fta[, grep("menhaden", colnames(Fta))] / qta_om[seq(1, nrow(qta_om), by = 12), grep("menhaden", colnames(qta_om))]
+
+Et_om <- apply(Eta_om, 1, sum)
+
+om_data <- data.frame(
+  "Year" = Ft_year$year,
+  "Fishing_Mortality_Rate" = Ft_year$Ft,
+  "Effort" = Et_om,
+  "Catchability" = Ft_year$Ft/Et_om, 
+  "Biomass" = biomass_om
+)
+
+om_data_reshape <- reshape2::melt(
+  om_data,
+  id = c("Year")
+)
+
+om_figure <- ggplot(om_data_reshape, aes(Year, value, col = variable)) +             
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Simulation based on default catchablity from the EwE OM",
+    x = "Year",
+    y = "Values"
+  ) 
+om_figure
+
+bq_om_figure <- ggplot(om_data, aes(Biomass, Catchability)) +             
+  geom_line() +
+  labs(
+    title = "Catchability V.S. Biomass",
+    x = "Biomass",
+    y = "Catchability"
+  ) 
+bq_om_figure
+
+```
+
+## Simulation based on density-dependent catchablity
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 # Simulate density-dependent catchability
 alpha <- c(90)
@@ -146,7 +156,8 @@ dd_data <- data.frame(
   "Year" = Ft_year$year,
   "Fishing_Mortality_Rate" = Ft_year$Ft,
   "Effort" = Ft_year$Ft/qt_dd,
-  "Catchablity" = qt_dd
+  "Catchability" = qt_dd, 
+  "Biomass" = biomass_om
 )
 
 dd_data_reshape <- reshape2::melt(
@@ -163,6 +174,15 @@ dd_figure <- ggplot(dd_data_reshape, aes(Year, value, col = variable)) +
     y = "Values"
   ) 
 dd_figure
+
+bq_dd_figure <- ggplot(dd_data, aes(Biomass, Catchability)) +             
+  geom_line() +
+  labs(
+    title = "Catchability V.S. Biomass",
+    x = "Biomass",
+    y = "Catchability"
+  ) 
+bq_dd_figure
 
 ```
 
