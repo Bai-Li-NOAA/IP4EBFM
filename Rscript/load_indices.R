@@ -96,8 +96,9 @@ kaplan_sst <- read.csv(
 )
 
 # Load catchability data ------------------------------------------
-ewe_catchability <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "qatage.csv"))
-
+ewe_catchability <- read.csv(here::here("data", "ewe", "qatage.csv"))
 
 # Load fishing mortality at age data ------------------------------
-ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+# ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
+ewe_faa <- read.csv(file.path(dirname(dirname(file_path)), "fatage.csv"))
+
