@@ -54,6 +54,11 @@ for (i in 1:length(f_full)) {
 
 write.csv(fatage, file.path(project_path, "data", "ewe", "7ages_newsim_final", "fatage.csv"))
 
+f_full_scale <- rescale(f_full)
+f_full_scale_month <- rep(f_full_scale, each=12)
+write.csv(f_full, file.path(project_path, "data", "ewe", "7ages_newsim_final", "f_full_year.csv"))
+write.csv(f_full_scale_month, file.path(project_path, "data", "ewe", "7ages_newsim_final", "f_full_month.csv"))
+
 # Create fishery ----------------------------------------------------------
 
 fishery_sample_num <- cbind(
