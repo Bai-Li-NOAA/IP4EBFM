@@ -1,0 +1,168 @@
+---
+title: 'Catchability pattern exploration'
+date: 'Updated on Oct 11, 2022'
+output:
+  html_document: 
+    code_folding: hide
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Density-dependent catchability pattern
+
+- Create a density-dependent catchability pattern that follows a powered relationship ([Wilber and Bence, 2006](https://doi.org/10.1139/f06-111)) where catchability declined with increasing biomass of menhaden-like species
+
+- $q_t = \alpha B_t^{-\beta}$ and $F_{t, a} = q_t E_t$
+
+where $q_t$ denotes fishery catchability ($effort^{-1}$), $\alpha$ and $\beta$ represent parameters for density-dependent catchability. Medium values of $\alpha$ and $\beta$ can be 90 and 0.49 respectively ([Wilber and Bence, 2006](https://doi.org/10.1139/f06-111)). $F_{t,a}$ and $E_t$ represent instantaneous fishing mortality rate by age and year ($year^{-1}$) and fishery effort respectively.
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+devtools::load_all()
+
+required_pkg <- c(
+  "devtools", "here", "reshape",
+  "ggplot2", "reshape2",
+  "RColorBrewer", "scales", "fmsb", 
+  "PBSadmb"
+)
+
+pkg_to_install <- required_pkg[!(required_pkg %in%
+  installed.packages()[, "Package"])]
+if (length(pkg_to_install)) install.packages(pkg_to_install)
+
+lapply(required_pkg, library, character.only = TRUE)
+
+```
+
+## Simulation based on default catchablity from the EwE OM
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+# Run simulation_newEcosim.R and get fishing mortality rate
+source(here::here("Rscript", "simulation_newEcosim.R"))
+
+# Load fishing mortality rate
+file_path <- here::here("data", "ewe", "7ages_newsim_final")
+
+Fta <- read.csv(file.path(file_path, "fatage.csv"))
+colnames(Fta)[1] <- "year"
+
+Ft_year <- read.csv(file.path(file_path, "f_full_year.csv"))
+colnames(Ft_year) <- c("year", "Ft")
+Ft_year$year <- Fta$year
+
+Ft_month <- read.csv(file.path(file_path, "f_full_month.csv"))
+colnames(Ft_month) <- c("year", "Ft")
+Ft_month$year <- rep(Ft_year$year, each = 12)
+Ft_month$month <- rep(1:12, times = nrow(Ft_year))
+
+# Load catchability from the operating model 
+qta_om <- read.csv(file.path(file_path, "qatage.csv")) 
+
+# Calculate effort using fishing mortality rate and catchality from the operating model
+Eta_om <- Fta[, grep("menhaden", colnames(Fta))] / qta_om[seq(1, nrow(qta_om), by = 12), grep("menhaden", colnames(qta_om))]
+
+Et_om <- apply(Eta_om, 1, sum)
+
+om_data <- data.frame(
+  "Year" = Ft_year$year,
+  "Fishing_Mortality_Rate" = Ft_year$Ft,
+  "Effort" = Et_om,
+  "Catchablity" = Ft_year$Ft/Et_om
+)
+
+om_data_reshape <- reshape2::melt(
+  om_data,
+  id = c("Year")
+)
+
+om_figure <- ggplot(om_data_reshape, aes(Year, value, col = variable)) +             
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Simulation based on default catchablity from the EwE OM",
+    x = "Year",
+    y = "Values"
+  ) 
+om_figure
+
+```
+
+## Simulation based on density-dependent catchablity
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+# Load biomass from the operating model
+om_output_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+
+functional_groups <- c(
+  "StripedBass0",
+  "StripedBass2_5",
+  "StripedBass6",
+  "AtlanticMenhaden0",
+  "AtlanticMenhaden1",
+  "AtlanticMenhaden2",
+  "AtlanticMenhaden3",
+  "AtlanticMenhaden4",
+  "AtlanticMenhaden5",
+  "AtlanticMenhaden6",
+  "SpinyDogfish",
+  "BluefishJuvenile",
+  "BluefishAdult",
+  "WeakfishJuvenile",
+  "WeakfishAdult",
+  "AtlanticHerring0_1",
+  "AtlanticHerring2",
+  "Anchovies",
+  "Benthos",
+  "Zooplankton",
+  "Phytoplankton",
+  "Detritus"
+)
+
+age_name <- paste0("AtlanticMenhaden", 0:6)
+
+biomass <- read_ewe_output(
+  file_path = om_output_path,
+  file_names = "biomass_monthly.csv",
+  skip_nrows = 8,
+  plot = FALSE,
+  figure_titles = NULL,
+  functional_groups = functional_groups,
+  figure_colors = NULL
+)
+
+biomass_om <- apply(biomass[[1]][seq(1, nrow(qta_om), by = 12), age_name], 1, sum) * 1000000
+
+# Simulate density-dependent catchability
+alpha <- c(90)
+beta <- c(0.49)
+
+qt_dd <- alpha*biomass_om^(-beta)
+
+dd_data <- data.frame(
+  "Year" = Ft_year$year,
+  "Fishing_Mortality_Rate" = Ft_year$Ft,
+  "Effort" = Ft_year$Ft/qt_dd,
+  "Catchablity" = qt_dd
+)
+
+dd_data_reshape <- reshape2::melt(
+  dd_data,
+  id = c("Year")
+)
+
+dd_figure <- ggplot(dd_data_reshape, aes(Year, value, col = variable)) +             
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Simulation based on density-dependent catchablity",
+    x = "Year",
+    y = "Values"
+  ) 
+dd_figure
+
+```
+
