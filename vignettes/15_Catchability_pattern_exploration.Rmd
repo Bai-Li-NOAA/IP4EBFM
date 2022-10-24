@@ -1,6 +1,6 @@
 ---
 title: 'Catchability pattern exploration'
-date: 'Updated on Oct 11, 2022'
+date: "Updated on `r format(Sys.time(), '%b %d, %Y')`"
 output:
   html_document: 
     code_folding: hide
@@ -186,3 +186,176 @@ bq_dd_figure
 
 ```
 
+## I think effort is confounded by fishing mortality?
+
+We can plot effort from both constant catchability (the OM) and density-dependent 
+catchability below:  
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+eff_data <- rbind(
+  data.frame(dd_data_reshape[dd_data_reshape$variable == "Effort", ], 
+    Catch_type = "DD"),
+  data.frame(om_data_reshape[om_data_reshape$variable == "Effort", ], 
+    Catch_type = "OM")
+  )
+
+eff_figure <- ggplot(eff_data, aes(Year, value, col = Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    title = "Simulation based on density-dependent catchablity",
+    x = "Year",
+    y = "Values"
+  ) 
+eff_figure
+
+```
+
+The scale is different but the trends still appear similar - I think this is 
+because effort is still mostly following the trend from fishing mortality. This 
+may make sense if we think fishing mortality is a leading indicator for biomass, 
+if for example when fishing mortality is greater we should expect smaller 
+biomass in the future. In previous exercises however lagged fishing effort and 
+biomass tended to have a positive relationship? The intuition there is unclear 
+to me.
+
+An alternative is to look at catch per unit effort. This could follow for two 
+reasons: the first, fishing mortality is exogenous both in the operating model 
+(as I understand it?). The second, is if we examine a fishery where catches are 
+exogenously set by management, and harvesters always fulfill the total allowable 
+catch, as a simplifying starting assumption.  
+
+The first plot is catch per unit effort, with total catches per year taken from 
+the EwE operating model. Notably, catches are not 1:1 with fishing mortality, 
+but rather they already move with biomass (there's already some kind of 
+catchability set in the OM?).  
+
+The second plot assumes we can observe true fishing mortality, and is fishing 
+mortality per unit effort. By definition, catchability is recovered and is
+shown in the second plot.  
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+project_path <- here::here()
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", 
+  "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+
+# grab total catch from ewe
+temp_cat <- scan(file.path(ewe_output_path, "catch_annual.csv"), what = "", 
+  sep = "\n")
+skip_nrows <- 8
+data <- temp_cat[-c(1:skip_nrows)]
+data <- read.table(
+  text = as.character(data),
+  sep = ",",
+  col.names = read.table(text = temp_cat[skip_nrows], sep = ",")
+  )
+data_years <- 1985:2017
+species = 4:10
+species_vec <- paste0("X", species)
+data <- data[which(data$year.group %in% data_years), 
+  c("year.group", species_vec)]
+data[, species_vec] <- data[, species_vec] * 1000000 # biomass in mt
+ages <- 0:6
+species_labels = paste0("age", ages)
+colnames(data) <- c("year", species_labels)
+catch_age <- data[, species_labels] # biomass in mt
+row.names(catch_age) <- data_years
+total_catch <- apply(catch_age, 1, sum)
+names(total_catch) <- data_years
+total_catch <- cbind(Year=data$year, total_catch)
+
+eff_data <- merge(eff_data, total_catch, by = c("Year"))
+eff_data$eff_norm <- eff_data$total_catch/eff_data$value
+
+catch_figure <- ggplot(eff_data, aes(Year, eff_norm, col = Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    title = "Simulation based on density-dependent catchablity",
+    x = "Year",
+    y = "Values"
+  ) 
+catch_figure
+
+om_data <- merge(om_data, total_catch, by = c("Year"))
+dd_data <- merge(dd_data, total_catch, by = c("Year"))
+om_data$CPUE <- om_data$Fishing_Mortality_Rate/om_data$Effort
+dd_data$CPUE <- dd_data$Fishing_Mortality_Rate/dd_data$Effort
+
+om_dd_data <- rbind(
+  data.frame(dd_data, 
+    Catch_type = "DD"),
+  data.frame(om_data, 
+    Catch_type = "OM")
+  )
+
+fmort_figure <- ggplot(om_dd_data, aes(Year, CPUE, col=Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    title = "Simulation based on density-dependent catchablity",
+    x = "Year",
+    y = "Values"
+  ) 
+fmort_figure
+
+```
+
+Then we plot the relationship between each indicator and biomass, where the 
+first is catch per unit effort and the second fishing mortality per unit 
+effort.
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+model_year <- 1985:2012
+projection_year <- 2013:2017
+index_year <- c(model_year, projection_year)
+lag = 1
+biomass_lag_id <- (1+lag):length(index_year)
+index_lag_id <- 1:(length(index_year)-lag)
+time_id <- seq(1, nrow(biomass[[1]]), by = 12)
+biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum) * 1000000
+
+effort <- dd_data$CPUE
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+     xlab = "Catch per unit effort of menhaden-like species from OM",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+abline(effort_lm)
+
+effort <- eff_data$eff_norm[eff_data$Catch_type == "DD"]
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+     xlab = "Fishing mortality per unit effort of menhaden-like species from OM",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+abline(effort_lm)
+
+effort_soi <- calc_soi(
+    indicator_data = effort,
+    slope = coef(effort_lm)[2]
+  )
+  
+```
+
+Notably, for the latter, the relationship with biomass is positive. This is due 
+to the functional form we have specified for catchability, which decreases as 
+biomass increases. This is (I suspect) because biomass tends to move positively
+with lagged biomass. So when catchability is good, biomass is (relatively) high,
+and we can expect future biomass to also be large.  
+
+For the former, catches tend to decrease with biomass, and catches largely 
+dominate the trend (compared to catchability). Then, when catches are low, 
+biomass is relatively smaller, and future biomass also decreases. In addition, 
+specifying catchability likely doesn't affect the indicator in the first plot, 
+which is largely driven by catches (which is a function of biomass?).
+
+If we could "observe" a stricly exogenous fishing mortality however, 
+catchability matters.
