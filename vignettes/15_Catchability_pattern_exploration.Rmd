@@ -358,4 +358,4 @@ specifying catchability likely doesn't affect the indicator in the first plot,
 which is largely driven by catches (which is a function of biomass?).
 
 If we could "observe" a stricly exogenous fishing mortality however, 
-catchability matters.
+catchability matters.  
