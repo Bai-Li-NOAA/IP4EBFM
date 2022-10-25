@@ -323,7 +323,7 @@ effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
 effort_fit <- fitted(effort_lm)
 
 plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
-     xlab = "Catch per unit effort of menhaden-like species from OM",
+     xlab = "Fishing mortality per unit effort of menhaden-like species from OM",
      ylab = "Biomass of menhaden-like species from OM"
 )
 abline(effort_lm)
@@ -333,7 +333,7 @@ effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
 effort_fit <- fitted(effort_lm)
 
 plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
-     xlab = "Fishing mortality per unit effort of menhaden-like species from OM",
+     xlab = "Catch per unit effort of menhaden-like species from OM",
      ylab = "Biomass of menhaden-like species from OM"
 )
 abline(effort_lm)
@@ -345,17 +345,18 @@ effort_soi <- calc_soi(
   
 ```
 
-Notably, for the latter, the relationship with biomass is positive. This is due 
-to the functional form we have specified for catchability, which decreases as 
-biomass increases. This is (I suspect) because biomass tends to move positively
-with lagged biomass. So when catchability is good, biomass is (relatively) high,
-and we can expect future biomass to also be large.  
+Notably, for the latter, the relationship with biomass is positive. Catches tend 
+to increase with biomass, and catches largely dominate the trend (compared to 
+catchability). Then, when catches are low, biomass is relatively smaller, and 
+future biomass is also smaller on average. In addition, specifying catchability 
+likely doesn't affect the indicator in the this plot, which is largely driven by 
+catches (which is a function of biomass?).
 
-For the former, catches tend to decrease with biomass, and catches largely 
-dominate the trend (compared to catchability). Then, when catches are low, 
-biomass is relatively smaller, and future biomass also decreases. In addition, 
-specifying catchability likely doesn't affect the indicator in the first plot, 
-which is largely driven by catches (which is a function of biomass?).
+For the former, the relationship with biomass is negative. This is due 
+to the functional form we have specified for catchability, which decreases as 
+biomass increases. Because biomass tends to move positively with lagged biomass,
+when when catchability is good, biomass is (relatively) low, and we can expect 
+future biomass to also be smaller on average.
 
 If we could "observe" a stricly exogenous fishing mortality however, 
 catchability matters.  
