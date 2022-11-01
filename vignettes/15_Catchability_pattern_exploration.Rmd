@@ -1,6 +1,6 @@
 ---
 title: 'Catchability pattern exploration'
-date: 'Updated on Oct 11, 2022'
+date: "Updated on `r format(Sys.time(), '%b %d, %Y')`"
 output:
   html_document: 
     code_folding: hide
@@ -34,6 +34,8 @@ pkg_to_install <- required_pkg[!(required_pkg %in%
 if (length(pkg_to_install)) install.packages(pkg_to_install)
 
 lapply(required_pkg, library, character.only = TRUE)
+
+library(JABBA)
 
 ```
 
@@ -186,3 +188,464 @@ bq_dd_figure
 
 ```
 
+## I think effort is still confounded by fishing mortality?
+
+We can plot effort from both constant catchability (the OM) and density-dependent 
+catchability below:  
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+eff_data <- rbind(
+  data.frame(dd_data_reshape[dd_data_reshape$variable == "Effort", ], 
+    Catch_type = "DD"),
+  data.frame(om_data_reshape[om_data_reshape$variable == "Effort", ], 
+    Catch_type = "OM")
+  )
+
+eff_figure <- ggplot(eff_data, aes(Year, value, col = Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    x = "Year",
+    y = "Effort"
+  ) 
+eff_figure
+
+```
+
+The scale is different but the trends still appear similar - I think this is 
+because effort is still mostly following the trend from fishing mortality. There 
+are a few reasons this may make sense, or not. I don't think there should be a 
+relationship between fishing mortality and biomass, at least in the 
+same period, since fishing mortality is exogenous (by definition?).  
+
+There might be a relationship between lagged mortality and biomass, if for example 
+fishing more in this period affects biomass in the next period. However, this 
+relationship seems to be positive (am I misreading this?), which also seems to 
+imply more fishing results in more future fish. I would be worried any relationship 
+here is spurious.  
+
+An alternative is to look at catch per unit effort, and control for fishing 
+mortality. This could follow if we were examining a fishery where catches are 
+exogenously set by management, and harvesters always fulfill the total allowable 
+catch, as a simplifying starting assumption.  
+
+The first plot below is then catch per unit effort, with total catches per year 
+taken from the EwE operating model. Notably, catches are not 1:1 with fishing mortality, 
+but rather they already move with biomass, which is surprising (there's already 
+some kind of catchability set in the OM?).  
+
+The second plot assumes we can observe true fishing mortality, and is fishing 
+mortality per unit effort. By definition, we can then recover catchability.  
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+project_path <- here::here()
+ewe_output_path <- file.path(project_path, "data", "ewe", "7ages_newsim_final", 
+  "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+
+# grab total catch from ewe
+temp_cat <- scan(file.path(ewe_output_path, "catch_annual.csv"), what = "", 
+  sep = "\n")
+skip_nrows <- 8
+data <- temp_cat[-c(1:skip_nrows)]
+data <- read.table(
+  text = as.character(data),
+  sep = ",",
+  col.names = read.table(text = temp_cat[skip_nrows], sep = ",")
+  )
+data_years <- 1985:2017
+species = 4:10
+species_vec <- paste0("X", species)
+data <- data[which(data$year.group %in% data_years), 
+  c("year.group", species_vec)]
+data[, species_vec] <- data[, species_vec] * 1000000 # biomass in mt
+ages <- 0:6
+species_labels = paste0("age", ages)
+colnames(data) <- c("year", species_labels)
+catch_age <- data[, species_labels] # biomass in mt
+row.names(catch_age) <- data_years
+total_catch <- apply(catch_age, 1, sum)
+names(total_catch) <- data_years
+total_catch <- cbind(Year=data$year, total_catch)
+
+eff_data <- merge(eff_data, total_catch, by = c("Year"))
+eff_data$eff_norm <- eff_data$total_catch/eff_data$value
+
+par(mfrow = c(1, 2))
+
+catch_figure <- ggplot(eff_data, aes(Year, eff_norm, col = Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    x = "Year",
+    y = "CPUE"
+  ) 
+catch_figure
+
+om_data <- merge(om_data, total_catch, by = c("Year"))
+dd_data <- merge(dd_data, total_catch, by = c("Year"))
+om_data$CPUE <- om_data$Fishing_Mortality_Rate/om_data$Effort
+dd_data$CPUE <- dd_data$Fishing_Mortality_Rate/dd_data$Effort
+
+om_dd_data <- rbind(
+  data.frame(dd_data, 
+    Catch_type = "DD"),
+  data.frame(om_data, 
+    Catch_type = "OM")
+  )
+
+fmort_figure <- ggplot(om_dd_data, aes(Year, CPUE, col=Catch_type)) +             
+  geom_line() +
+  #facet_grid(~Catch_type, scales = "fixed") +
+  labs(
+    x = "Year",
+    y = "FPUE"
+  ) 
+fmort_figure
+
+```
+
+Then we plot the relationship between each indicator (lagged) and biomass, where the 
+first is fishing mortality per unit effort and the second catch per unit effort.
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+model_year <- 1985:2012
+projection_year <- 2013:2017
+index_year <- c(model_year, projection_year)
+lag = 1
+biomass_lag_id <- (1+lag):length(index_year)
+index_lag_id <- 1:(length(index_year)-lag)
+time_id <- seq(1, nrow(biomass[[1]]), by = 12)
+biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum) * 1000000
+
+effort <- dd_data$CPUE
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+
+fmort_effort_soi <- calc_soi(
+    indicator_data = effort,
+    slope = coef(effort_lm)[2]
+  )
+
+par(mfrow = c(1, 2))
+  
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+     xlab = "Fishing mortality per unit effort of menhaden-like species from OM",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+abline(effort_lm)
+
+effort <- eff_data$eff_norm[eff_data$Catch_type == "DD"]
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+     xlab = "Catch per unit effort of menhaden-like species from OM",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+abline(effort_lm)
+
+catch_effort_soi <- calc_soi(
+    indicator_data = effort,
+    slope = coef(effort_lm)[2]
+  )
+
+```
+
+Notably, for the catch per unit effort, the relationship with biomass is positive. Catches tend 
+to increase with biomass, and catches largely dominate the trend (compared to 
+catchability). Then, when catches are low, biomass is relatively smaller, and 
+future biomass is also smaller on average. I would guess that specifying catchability 
+likely doesn't affect the indicator in the this plot, which is largely driven by 
+catches (which is a function of biomass?).  
+
+For fishing mortality, the relationship with biomass is negative. This is due 
+to the functional form we have specified for catchability, which decreases as 
+biomass increases. Because biomass tends to move positively with lagged biomass,
+when when catchability is good, biomass is (relatively) low, and we can expect 
+future biomass to also be smaller on average.  
+
+Below, we plot lagged indicators on biomass estimates from JABBA, as well as the 
+status of indicators over years and FMSY benchmarks.
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+file_path <- here::here("data", "ewe", "7ages_newsim_final", "ewe7ages_ecosim_final", "ecosim_forcing_pdsi_egg_amo1")
+source(here::here("Rscript", "load_indices_catcha.R"))
+
+lm_slope <- data.frame(
+  case = "PDSI+AMO1 Case",
+  projection_year = 1:length(projection_year),
+  effort_fm = NA,
+  effort_c = NA
+)
+
+model_year <- 1985:2012
+projection_year <- 2013:2017
+output_dir <- here::here("data", "data_moderate")
+
+## Use effort data
+year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
+effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
+
+ss_case0_input <- generate_jabba(
+  assessment_name = "case0",
+  output_dir = output_dir,
+  sa_data = sa_data,
+  model_year = model_year,
+  projection_year = projection_year,
+  effort_data = effort[1:length(model_year)]
+)
+
+# k_init <- max(sa_data$fishery$obs_total_catch_biomass$fleet1) * 10
+k_init <- 3500000
+ss_case0_input$jagsdata$K.pr <- c(k_init, 0.1)
+ss_case0_input$jagsdata$r.pr <- c(0.6, 0.1)
+ss_case0_input$jagsdata$psi.pr <- c(0.7, 0.1)
+
+set.seed(999)
+ss_case0 <- JABBA::fit_jabba(
+  jbinput = ss_case0_input,
+  save.jabba = TRUE,
+  save.all = TRUE,
+  save.prj = TRUE,
+  output.dir = output_dir,
+  save.csvs = T
+)
+
+ss_case0$estimates
+
+for (projection_year_id in 1:length(projection_year)){
+  
+  menhaden_b <- ss_case0$timeseries[, "mu", "B"]
+  
+  year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:length(model_year)]
+  
+  index_year = model_year
+  
+  
+  # Linear regression model -----------------------------------------
+  
+  lag = 1
+  biomass_lag_id <- (1+lag):length(index_year)
+  index_lag_id <- 1:(length(index_year)-lag)
+  
+  effort_fm <- dd_data$CPUE
+  effort_fm_lm <- lm(menhaden_b[biomass_lag_id] ~ effort_fm[index_lag_id])
+  effort_fit <- fitted(effort_fm_lm)
+  lm_slope$effort_fm <- paste0(
+    round(summary(effort_fm_lm)$coefficients[2, 1], digits = 2),
+    if (summary(effort_fm_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+  
+  effort_c <- eff_data$eff_norm[eff_data$Catch_type == "DD"]
+  effort_c_lm <- lm(menhaden_b[biomass_lag_id] ~ effort_c[index_lag_id])
+  effort_fit <- fitted(effort_c_lm)
+  lm_slope$effort_c <- paste0(
+    round(summary(effort_c_lm)$coefficients[2, 1], digits = 2),
+    if (summary(effort_c_lm)$coefficients[2, 4] <= 0.05) {
+      "*"
+    }
+  )
+  
+  if (projection_year_id == length(projection_year)){
+    
+    par(mfrow = c(1, 2))
+    
+    plot(effort_fm[index_lag_id], menhaden_b[biomass_lag_id],
+         xlab = "Fishing mortality per unit effort",
+         ylab = "Biomass of menhaden-like species"
+    )
+    abline(effort_fm_lm)
+    
+    plot(effort_c[index_lag_id], menhaden_b[biomass_lag_id],
+         xlab = "Catch per unit effort",
+         ylab = "Biomass of menhaden-like species"
+    )
+    abline(effort_c_lm)
+    
+  }
+    
+  # status of indicators --------------------------------------------
+  
+  effort_fm_soi <- calc_soi(
+    indicator_data = effort_fm,
+    slope = coef(effort_fm_lm)[2]
+  )
+  
+  effort_c_soi <- calc_soi(
+    indicator_data = effort_c,
+    slope = coef(effort_c_lm)[2]
+  )
+  
+  if (projection_year_id == 1) {
+    soi_data <- data.frame(
+      year = model_year,
+      projection_year_id = projection_year_id,
+      effort_fm = effort_fm_soi[1:28],
+      effort_c = effort_c_soi[1:28]
+    )
+  } else {
+    soi_data <- rbind(
+      soi_data,
+      data.frame(
+            year = model_year,
+            projection_year_id = projection_year_id,
+            effort_fm = effort_fm_soi[1:28],
+            effort_c = effort_c_soi[1:28]
+      )
+    )
+  }
+    
+  # Adjusted FMSY ----------------------------------------------------
+  Bt_BMSY <- as.matrix(ss_case0$posteriors$BtoBmsy[, length(model_year)])
+  
+  effort_fm_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case0$refpts_posterior$Fmsy,
+    soi = tail(effort_fm_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+
+  effort_c_fmsy <- adjust_projection_jabba(
+    FMSY = ss_case0$refpts_posterior$Fmsy,
+    soi = tail(effort_c_soi, n = 1),
+    Bt_BMSY = Bt_BMSY
+  )
+  
+  if (projection_year_id == 1){
+    fmsy_data <- data.frame(
+      iter = 1:length(effort_fm_fmsy),
+      projection_year_id = projection_year[projection_year_id],
+      JABBA = ss_case0$refpts_posterior$Fmsy,
+      effort_fm = effort_fm_fmsy,
+      effort_c = effort_c_fmsy
+    )
+  } else {
+    fmsy_data <- rbind(
+      fmsy_data,
+      data.frame(
+        iter = 1:length(effort_fm_fmsy),
+        projection_year_id = projection_year[projection_year_id],
+        JABBA = ss_case0$refpts_posterior$Fmsy,
+        effort_fm = effort_fm_fmsy,
+        effort_c = effort_c_fmsy
+      )
+    )
+  }
+  
+}
+
+soi_data_melt <- reshape2::melt(
+  soi_data,
+  id = c("year", "projection_year_id")
+)
+
+soi_data_melt$projection_year_id <- as.factor(projection_year)
+
+ggplot(soi_data_melt[soi_data_melt$projection_year_id==projection_year[1], ], aes(x = year, y = value)) +
+  geom_line() +
+  facet_wrap(~variable, scales = "free_y") +
+  labs(
+    title = "Status of Indicators",
+    x = "Year",
+    y = "Status of Indicators"
+  ) +
+  theme_bw()
+    
+fmsy_data_melt <- reshape2::melt(
+  fmsy_data,
+  id = c("iter", "projection_year_id")
+)
+fmsy_data_melt$projection_year_id <- as.factor(fmsy_data_melt$projection_year_id)
+
+ggplot(fmsy_data_melt, aes(x=variable, y = value, color = projection_year_id)) +
+  geom_boxplot()+
+  labs(
+    title = "FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
+
+fmsy_data_melt_median <- aggregate(value ~ projection_year_id+variable, data = fmsy_data_melt, median)
+fmsy_data_melt_median$projection_year_id <- as.numeric(as.character(fmsy_data_melt_median$projection_year_id))
+ggplot(fmsy_data_melt_median, aes(x = projection_year_id, y = value, color = variable)) +
+  geom_line() +
+  labs(
+    title = "Median FMSY from JABBA and adjusted FMSY",
+    x = "",
+    y = "FMSY"
+  ) +
+  theme_bw()
+
+(lm_slope)
+
+```
+
+I think, for me, the benefit of using fishing mortality is that there's a well-
+defined mechanism that I can see drive the results: catchability is a function 
+of biomass, so it should tell us something about future biomass as long as we can
+recover it.  
+
+I think catch per unit effort would work as well here, but I don't see a need to use catchability anymore, 
+or at least it appears there's already some sort of catchability implicit in EwE? As far 
+as I can see it's all -9999 as inputs into EwE so I'm not quite sure what's going on here yet.
+But to the extent catches increase with biomass, there's a relationship there to exploit. 
+The story would then be if fishers catch more for the same mortality when biomass is larger,
+because it's easier to catch fish conditional on the same time spent, fuel consumed, etc.
+
+I think with previous indicators like price, it could work but I'm not following 
+the mechanism where prices have some relationship with biomass in the EwE OM. Although 
+I'm sure I miss a lot of things so I apologize in advance!
+
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+
+B2013 <- ss_case0$posteriors$BtoBmsy[, (length(model_year) + 1)] * ss_case0$posteriors$SBmsy[,1]
+
+variable <- unique(fmsy_data_melt$variable)
+
+Bt <- rep(B2013, times= length(variable))
+
+tac_data_melt <- fmsy_data_melt
+names(tac_data_melt)[names(tac_data_melt) == "value"] <- "fmsy"
+tac_data_melt$tac <- adjust_projection_catcheco_jabba(fmsy_melted = fmsy_data_melt, Bt = Bt)
+tac_data_melt_median <- aggregate(tac ~ variable, data = tac_data_melt, median)
+
+ss_case0_input$jagsdata$nTAC <- length(variable)
+ss_case0_input$jagsdata$TAC <- matrix(rep(tac_data_melt_median$tac, times =5), 
+                                      ncol = length(variable), byrow = T)
+ss_case0_input$settings$TAC.implementation <- 2013
+ss_case0 <- JABBA::fit_jabba(
+  jbinput = ss_case0_input,
+  save.jabba = TRUE,
+  save.all = TRUE,
+  save.prj = TRUE,
+  output.dir = output_dir,
+  save.csvs = T
+)
+
+biomass_projection <- ss_case0$prj_posterior
+biomass_projection <- biomass_projection[(biomass_projection$year %in% projection_year), ]
+Bmsy <- rep(ss_case0$posteriors$SBmsy[, 1], 
+            times= length(unique(biomass_projection$tac))*length(unique(biomass_projection$year)))
+biomass_projection$biomass <- biomass_projection$stock*Bmsy
+biomass_projection$year <- as.factor(biomass_projection$year)
+biomass_projection$tac <- as.factor(biomass_projection$tac)
+
+biomass_projection <- merge(biomass_projection, tac_data_melt_median, by="tac")
+
+ggplot(biomass_projection, aes(x=year, y = biomass, color = year)) +
+  geom_boxplot()+
+  facet_wrap(~variable)+
+  labs(
+    title = " Estimated biomass based on catch=FMSY*B",
+    x = "",
+    y = "Biomass"
+  ) +
+  theme_bw()
+
+```
