@@ -206,9 +206,8 @@ eff_figure <- ggplot(eff_data, aes(Year, value, col = Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "Effort"
   ) 
 eff_figure
 
@@ -279,9 +278,8 @@ catch_figure <- ggplot(eff_data, aes(Year, eff_norm, col = Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "CPUE"
   ) 
 catch_figure
 
@@ -301,9 +299,8 @@ fmort_figure <- ggplot(om_dd_data, aes(Year, CPUE, col=Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "FPUE"
   ) 
 fmort_figure
 
