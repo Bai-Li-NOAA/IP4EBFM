@@ -2,7 +2,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2022-09-13 11:25:27
+#C file write time: 2022-09-20 12:15:18
 # for all year entries except rebuilder; enter either: actual year, -999 for styr, 0 for endyr, neg number for rel. endyr
 1 # Benchmarks: 0=skip; 1=calc F_spr,F_btgt,F_msy; 2=calc F_spr,F0.1,F_msy; 3=add F_Blimit; 
 2 # Do_MSY: 1= set to F(SPR); 2=calc F(MSY); 3=set to F(Btgt) or F0.1; 4=set to F(endyr); 5=calc F(MEY) with MSY_unit options
@@ -10,8 +10,8 @@
 0.4 # SPR target (e.g. 0.40)
 0.4 # Biomass target (e.g. 0.40)
 #_Bmark_years: beg_bio, end_bio, beg_selex, end_selex, beg_relF, end_relF, beg_recr_dist, end_recr_dist, beg_SRparm, end_SRparm (enter actual year, or values of 0 or -integer to be rel. endyr)
- 2012 2012 2012 2012 2012 2012 2012 2012 2012 2012
-#  2012 2012 2012 2012 2012 2012 2012 2012 2012 2012
+ 2002 2002 2002 2002 2002 2002 2002 2002 2002 2002
+#  2002 2002 2002 2002 2002 2002 2002 2002 2002 2002
 # value <0 convert to endyr-value; except -999 converts to start_yr; must be >=start_yr and <=endyr
 1 #Bmark_relF_Basis: 1 = use year range; 2 = set relF same as forecast below
 #
@@ -21,7 +21,7 @@
 0 # Fmult (only used for Do_Forecast==5) such that apical_F(f)=Fmult*relF(f)
 #_Fcast_years:  beg_selex, end_selex, beg_relF, end_relF, beg_mean recruits, end_recruits  (enter actual year, or values of 0 or -integer to be rel. endyr)
  0 0 0 0 0 0
-#  2012 2012 2012 2012 2012 2012
+#  2002 2002 2002 2002 2002 2002
 0 # Forecast selectivity (0=fcast selex is mean from year range; 1=fcast selectivity from annual time-vary parms)
 2 # Control rule method (0: none; 1: ramp does catch=f(SSB), buffer on F; 2: ramp does F=f(SSB), buffer on F; 3: ramp does catch=f(SSB), buffer on catch; 4: ramp does F=f(SSB), buffer on catch) 
 # values for top, bottom and buffer exist, but not used when Policy=0
@@ -33,7 +33,7 @@
 0 #_Forecast recruitment:  0= spawn_recr; 1=value*spawn_recr_fxn; 2=value*VirginRecr; 3=recent mean from yr range above (need to set phase to -1 in control to get constant recruitment in MCMC)
 1 # value is ignored 
 0 #_Forecast loop control #5 (reserved for future bells&whistles) 
-2018  #FirstYear for caps and allocations (should be after years with fixed inputs) 
+2008  #FirstYear for caps and allocations (should be after years with fixed inputs) 
 0 # stddev of log(realized catch/target catch) in forecast (set value>0.0 to cause active impl_error)
 0 # Do West Coast gfish rebuilder output: 0=no; 1=yes 
 1999 # Rebuilder:  first year catch could have been set to zero (Ydecl)(-1 to set to 1999)
@@ -59,11 +59,11 @@
 99 # basis for input Fcast catch: -1=read basis with each obs; 2=dead catch; 3=retained catch; 99=input apical_F; NOTE: bio vs num based on fleet's catchunits
 #enter list of Fcast catches or Fa; terminate with line having year=-9999
 #_Yr Seas Fleet Catch(or_F)
- 2013 1 1 6.9
- 2014 1 1 6.9
- 2015 1 1 6.9
- 2016 1 1 6.9
- 2017 1 1 6.9
+ 2003 1 1 0.89
+ 2004 1 1 0.89
+ 2005 1 1 0.89
+ 2006 1 1 0.89
+ 2007 1 1 0.89
 -9999 1 1 0 
 #
 999 # verify end of input 
