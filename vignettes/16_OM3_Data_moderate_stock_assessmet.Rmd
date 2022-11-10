@@ -9,6 +9,7 @@ output:
   
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+options(digits = 3)
 ```
 
 ## Just Another Bayesian Biomass Assessment (JABBA)
@@ -81,7 +82,7 @@ functional_groups <- c(
 )
 ages <- 0:6
 start_year <- 1985
-terminal_year <- 2007
+terminal_year <- 2006
 projection_nyear <- 5
 model_year <- start_year:terminal_year
 projection_year <- (terminal_year+1):(terminal_year+projection_nyear)
@@ -114,6 +115,8 @@ stationary_msy <- read_ewe_reference_points(
   plot = TRUE
 ) # MSY, FMSY, BMSY: 0.5784879, 2.899998, 1.604036
 
+msy_mean <- sapply(1:length(compensation_msy), function(x) {mean(c(compensation_msy[[x]], stationary_msy[[x]]))})
+names(msy_mean) <- names(compensation_msy)
 
 # OM unfished biomass --------------------------------------------
 age_name <- paste0("AtlanticMenhaden", ages)
@@ -161,6 +164,7 @@ legend("topright",
 
 B0_F0_menhaden <- mean(tail(biomass_f0_menhaden, n = length(ages) * 2))
 B0_F0_all <- mean(tail(biomass_f0_all, n = length(ages) * 2))
+B0_F0_mean <- mean(c(B0_F0_menhaden, B0_F0_all))
 
 # Load OM data
 file_path <- here::here("data", "ewe", "7ages_newsim_om3", "ewe7ages_ecosim_om3", "ecosim_forcing_pdsi_egg_amo1")
@@ -186,32 +190,53 @@ biomass_ewe <- apply(biomass[[1]][, age_name], 1, sum) * 1000000
 
 output_dir <- here::here("data", "data_moderate", "om3")
 if (!dir.exists(output_dir)) dir.create(output_dir)
-
+compensation_msy$BMSY/B0_F0_menhaden
 # case 0
-
+# BmsyK = 0.4 # shape = 1.2
+# BmsyK = 0.45 # shape = 1.5
+BmsyK = 0.5 # shape = 2
+# BmsyK = , # shape = 3.23
+# BmsyK = msy_mean["BMSY"]/B0_F0_mean, # shape = 7.6
 ## Do not use effort data
 ss_case0_input_noEffort <- generate_jabba(
   assessment_name = "case0_noEffort",
   output_dir = output_dir,
   sa_data = sa_data,
+  BmsyK = BmsyK,
   model_year = model_year,
   projection_year = projection_year,
   effort_data = NULL
 )
 
+
+# k.prior (mu.k, cv.k)
 # k_init <- B0_F0_menhaden
+K.init <- 8*max(sa_data$fishery$obs_total_catch_biomass$fleet1)
+K.prior = c(K.init, max(sa_data$fishery$obs_total_catch_biomass$fleet1))
+log.K =  mean(log(K.prior))
+sd.K= abs(log.K - log(K.prior[1]))/2
+log.K = mean(log(K.prior))+0.5*sd.K^2 # Will be back-bias corrected in lognorm function
+CV.K = sqrt(exp(sd.K^2)-1) #
+# r.prior (mu.r, sd.r) # mu.r range: 0.2 - 0.8
+start.r <- c(0.2,0.8)
+log.r = mean(log(start.r))
+sd.r = abs(log.r - log(start.r[1]))/2
+
+
 # ss_case0_input_noEffort$jagsdata$K.pr <- c(k_init, 0.1)
 # ss_case0_input_noEffort$jagsdata$r.pr <- c(0.2, 0.1)
 # # ss_case0_input_noEffort$jagsdata$r.pr <- c(0.6, 0.1)
 # psi_init <- biomass_ewe[1]/k_init
 # ss_case0_input_noEffort$jagsdata$psi.pr <- c(psi_init, 0.1)
 
-k_init <- B0_F0_menhaden
-ss_case0_input_noEffort$jagsdata$K.pr <- c(k_init, 0.5)
-ss_case0_input_noEffort$jagsdata$r.pr <- c(0.2, 0.5)
-# ss_case0_input_noEffort$jagsdata$r.pr <- c(0.6, 0.1)
-psi_init <- biomass_ewe[1]/k_init
-ss_case0_input_noEffort$jagsdata$psi.pr <- c(psi_init, 0.5)
+# k_init <- B0_F0_all
+# k_init <- B0_F0_menhaden
+ss_case0_input_noEffort$jagsdata$K.pr <- c(exp(log.K), CV.K) # 5208722, 2091
+# ss_case0_input_noEffort$jagsdata$K.pr <- c(k_init, 0.5)
+ss_case0_input_noEffort$jagsdata$r.pr <- c(exp(log.r), sd.r) # 0.4, 0.35
+# psi_init <- biomass_ewe[1]/k_init
+psi_init <- biomass_ewe[1]/exp(log.K)
+ss_case0_input_noEffort$jagsdata$psi.pr <- c(psi_init, 0.25)
 
 
 ss_case0_noEffort <- JABBA::fit_jabba(
@@ -231,10 +256,11 @@ write.csv(ss_case0_noEffort$estimates, file.path(output_dir, "case0_noEffort_est
 year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
 effort <- apply(ewe_faa[, grep("menhaden", colnames(ewe_faa))] / ewe_catchability[year_id, grep("menhaden", colnames(ewe_catchability))], 1, sum)
 
-ss_case0_input <- generate_jabba(
+ss_case0_effort_input <- generate_jabba(
   assessment_name = "case0",
   output_dir = output_dir,
   sa_data = sa_data,
+  BmsyK = BmsyK,
   model_year = model_year,
   projection_year = projection_year,
   effort_data = effort[1:length(model_year)]
@@ -243,22 +269,24 @@ ss_case0_input <- generate_jabba(
 # k_init <- max(sa_data$fishery$obs_total_catch_biomass$fleet1) * 10
 # k_init <- 3500000
 # k_init <- B0_F0_menhaden
-# ss_case0_input$jagsdata$K.pr <- c(k_init, 0.1)
-# ss_case0_input$jagsdata$r.pr <- c(0.2, 0.1)
-# # ss_case0_input$jagsdata$r.pr <- c(0.6, 0.1)
+# ss_case0_effort_input$jagsdata$K.pr <- c(k_init, 0.1)
+# ss_case0_effort_input$jagsdata$r.pr <- c(0.2, 0.1)
+# # ss_case0_effort_input$jagsdata$r.pr <- c(0.6, 0.1)
 # psi_init <- biomass_ewe[1]/k_init
-# ss_case0_input$jagsdata$psi.pr <- c(psi_init, 0.1)
+# ss_case0_effort_input$jagsdata$psi.pr <- c(psi_init, 0.1)
 
-k_init <- B0_F0_menhaden
-ss_case0_input$jagsdata$K.pr <- c(k_init, 0.5)
-ss_case0_input$jagsdata$r.pr <- c(0.2, 0.5)
-# ss_case0_input$jagsdata$r.pr <- c(0.6, 0.1)
-psi_init <- biomass_ewe[1]/k_init
-ss_case0_input$jagsdata$psi.pr <- c(psi_init, 0.5)
+# k_init <- B0_F0_all
+# k_init <- B0_F0_menhaden
+ss_case0_effort_input$jagsdata$K.pr <- c(exp(log.K), CV.K) # 5208722, 2091
+# ss_case0_input_noEffort$jagsdata$K.pr <- c(k_init, 0.5)
+ss_case0_effort_input$jagsdata$r.pr <- c(exp(log.r), sd.r) # 0.4, 0.35
+# psi_init <- biomass_ewe[1]/k_init
+psi_init <- biomass_ewe[1]/exp(log.K)
+ss_case0_effort_input$jagsdata$psi.pr <- c(psi_init, 0.25)
 
 set.seed(999)
-ss_case0 <- JABBA::fit_jabba(
-  jbinput = ss_case0_input,
+ss_case0_effort <- JABBA::fit_jabba(
+  jbinput = ss_case0_effort_input,
   save.jabba = TRUE,
   save.all = TRUE,
   save.prj = TRUE,
@@ -266,25 +294,28 @@ ss_case0 <- JABBA::fit_jabba(
   save.csvs = T
 )
 
-ss_case0$estimates
-write.csv(ss_case0$estimates, file.path(output_dir, "case0_estimates.csv"))
+ss_case0_effort$estimates
+write.csv(ss_case0_effort$estimates, file.path(output_dir, "case0_estimates.csv"))
+
+ss_case0_input <-  ss_case0_effort_input
+ss_case0 <- ss_case0_effort
 
 # Plot figures using JABBA
 figure_dir <- file.path(output_dir, "noEffort")
 if (!dir.exists(figure_dir)) dir.create(figure_dir)
 JABBA::jabba_plots(jabba = ss_case0_noEffort, output.dir = figure_dir)
 # plot with CIs (80% for projections)
-JABBA::jbplot_prj(ss_case0_noEffort, type = "BBmsy", output.dir = figure_dir)
-JABBA::jbplot_prj(ss_case0_noEffort, type = "BB0", output.dir = figure_dir)
-JABBA::jbplot_prj(ss_case0_noEffort, type = "FFmsy", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_noEffort, type = "BBmsy", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_noEffort, type = "BB0", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_noEffort, type = "FFmsy", output.dir = figure_dir)
 
 figure_dir <- file.path(output_dir, "Effort")
 if (!dir.exists(figure_dir)) dir.create(figure_dir)
-JABBA::jabba_plots(jabba = ss_case0, output.dir = figure_dir)
+JABBA::jabba_plots(jabba = ss_case0_effort, output.dir = figure_dir)
 # plot with CIs (80% for projections)
-JABBA::jbplot_prj(ss_case0, type = "BBmsy", output.dir = figure_dir)
-JABBA::jbplot_prj(ss_case0, type = "BB0", output.dir = figure_dir)
-JABBA::jbplot_prj(ss_case0, type = "FFmsy", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_effort, type = "BBmsy", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_effort, type = "BB0", output.dir = figure_dir)
+# JABBA::jbplot_prj(ss_case0_effort, type = "FFmsy", output.dir = figure_dir)
 
 # Plot figures for cases 0.1 and 0.2 ----------------------------------------------------
 fmsy0 <- rep(ss_case0_noEffort$posteriors$Hmsy, times = (length(projection_year) + 1) * length(ss_case0_input_noEffort$jagsdata$TAC[1, ]))
@@ -501,7 +532,7 @@ lm_slope$effort <- paste0(
   round(summary(effort_lm)$coefficients[2, 1], digits = 2),
   if(summary(effort_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-cpue <- sa_data$fishery$om_total_catch_biomass/effort
+cpue <- sa_data$fishery$obs_total_catch_biomass$fleet1/effort
 cpue_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ cpue[index_lag_id])
 cpue_fit <- fitted(cpue_lm)
 lm_slope$cpue <- paste0(
