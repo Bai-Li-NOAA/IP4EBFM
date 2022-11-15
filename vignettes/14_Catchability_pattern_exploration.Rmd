@@ -145,6 +145,30 @@ bq_om_figure
 
 ```
 
+```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+om_data_lagged <- data.frame(
+  "Year" = om_data$Year[2:nrow(om_data)],
+  "Fishing_Mortality_Rate" = om_data$Fishing_Mortality_Rate[1:(nrow(om_data)-1)],
+  "Effort" = om_data$Effort[1:(nrow(om_data)-1)],
+  "Catchability" = om_data$Catchability[1:(nrow(om_data)-1)], 
+  "Biomass" = om_data$Biomass[2:nrow(om_data)]
+)
+
+fb_om_figure <- ggplot(om_data_lagged, aes(x = Fishing_Mortality_Rate, y = Biomass)) + 
+  geom_point() +
+  stat_smooth(method = "lm", col = "red")+
+  labs(
+    title = "Lagged biomass v.s. fishing mortality rate",
+    x = "Fishing mortality rate",
+    y = "Biomass"
+  ) 
+
+fb_om_figure
+
+model_linear <- lm(formula = Biomass ~ Fishing_Mortality_Rate, data = om_data_lagged)
+summary(model_linear) # get model results and p values
+```
+
 ## Simulation based on density-dependent catchability
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
@@ -206,9 +230,8 @@ eff_figure <- ggplot(eff_data, aes(Year, value, col = Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "Effort"
   ) 
 eff_figure
 
@@ -279,9 +302,8 @@ catch_figure <- ggplot(eff_data, aes(Year, eff_norm, col = Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "CPUE"
   ) 
 catch_figure
 
@@ -301,9 +323,8 @@ fmort_figure <- ggplot(om_dd_data, aes(Year, CPUE, col=Catch_type)) +
   geom_line() +
   #facet_grid(~Catch_type, scales = "fixed") +
   labs(
-    title = "Simulation based on density-dependent catchablity",
     x = "Year",
-    y = "Values"
+    y = "FPUE"
   ) 
 fmort_figure
 
@@ -332,7 +353,7 @@ fmort_effort_soi <- calc_soi(
     slope = coef(effort_lm)[2]
   )
 
-par(mfrow = c(1, 2))
+par(mfrow = c(2, 2))
   
 plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
      xlab = "Fishing mortality per unit effort of menhaden-like species from OM",
@@ -354,6 +375,16 @@ catch_effort_soi <- calc_soi(
     indicator_data = effort,
     slope = coef(effort_lm)[2]
   )
+
+effort <- eff_data$total_catch[eff_data$Catch_type == "DD"]
+effort_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ effort[index_lag_id])
+effort_fit <- fitted(effort_lm)
+
+plot(effort[index_lag_id], biomass_ewe[time_id][biomass_lag_id],
+     xlab = "Catch of menhaden-like species from OM",
+     ylab = "Biomass of menhaden-like species from OM"
+)
+abline(effort_lm)
 
 ```
 
