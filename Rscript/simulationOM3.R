@@ -36,17 +36,25 @@ fishery_sel <- IFA4EBFM::logistic(
 ) # CRS 1972 selectivity
 
 phase1_nyear <- 5
+# phase2_nyear <- 10
 phase2_nyear <- 15
+# phase2_nyear <- 20
 phase3_nyear <- length(years) - phase1_nyear - phase2_nyear
 
 set.seed(9999)
-
 f_full <- c(
     rep(0.01, length = phase1_nyear),
-    cumprod(c(0.2, rep(1.2, phase2_nyear-1))),
-    cumprod(c(1.0, rep(0.85, phase3_nyear-1)))
+    cumprod(c(0.2, rep(1.25, phase2_nyear-1))),
+    cumprod(c(1.8, rep(0.85, phase3_nyear-1)))
 ) *
     exp(rnorm(length(years), mean = 0, sd = 0.2))
+
+# f_full <- c(
+#     rep(0.01, length = phase1_nyear),
+#     cumprod(c(0.2, rep(1.22, phase2_nyear-1))),
+#     cumprod(c(1.8, rep(0.85, phase3_nyear-1)))
+# ) *
+#     exp(rnorm(length(years), mean = 0, sd = 0.2))
 fatage <- matrix(NA, nrow = length(f_full), ncol = length(fishery_sel))
 rownames(fatage) <- years
 colnames(fatage) <- paste0("menhaden", ages)

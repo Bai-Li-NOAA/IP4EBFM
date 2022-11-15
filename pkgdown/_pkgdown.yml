@@ -57,7 +57,13 @@ navbar:
       - text: Data-rich stock assessment with new EwE OM
         href: articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html
       - text: Catchability pattern exploration
-        href: articles/15_Catchability_pattern_exploration.html
+        href: articles/14_Catchability_pattern_exploration.html
+      - text: OM3 data-moderate stock assessment 2008
+        href: articles/16_OM3_Data_moderate_stock_assessmet_2008.html
+      - text: OM3 data-moderate stock assessment 2009
+        href: articles/16_OM3_Data_moderate_stock_assessmet_2009.html
+      - text: OM3 data-moderate stock assessment 2012
+        href: articles/16_OM3_Data_moderate_stock_assessmet_2012.html
 
 
 
