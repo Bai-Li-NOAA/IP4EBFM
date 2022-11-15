@@ -3,6 +3,7 @@
 #' @param assessment_name name of the assessment
 #' @param output_dir A file path to a directory where the assessment output will be saved.
 #' @param sa_data Simulated stock assessment input data from Rscript/simulation.R.
+#' @param BmsyK Inflection point of the surplus production curve. Default value is 0.4.
 #' @param model_year A vector of years for model fitting.
 #' @param projection_year A vector of years for projection.
 #' @param effort_data A vector of effort data.
@@ -14,7 +15,7 @@
 #' }
 #' @export
 generate_jabba <- function(assessment_name, output_dir,
-                           sa_data, model_year, projection_year,
+                           sa_data, BmsyK = 0.4, model_year, projection_year,
                            effort_data=NULL,
                            tacs=NULL) {
 
@@ -29,9 +30,12 @@ generate_jabba <- function(assessment_name, output_dir,
 
   for (i in 1:length(survey_name)) {
     cpue[[survey_name[i]]] <- NA
-
+    # Use abundance index
     cpue[[survey_name[i]]][cpue$Year %in% as.numeric(names(sa_data$survey$obs_abundance_index[[survey_name[i]]]))] <-
       sa_data$survey$obs_abundance_index[[survey_name[i]]][as.numeric(names(sa_data$survey$obs_abundance_index[[survey_name[i]]])) %in% cpue$Year] / 1000 # 1000 fish
+    # Use biomass index
+    cpue[[survey_name[i]]][cpue$Year %in% as.numeric(names(sa_data$survey$obs_biomass_index[[survey_name[i]]]))] <-
+      sa_data$survey$obs_biomass_index[[survey_name[i]]][as.numeric(names(sa_data$survey$obs_biomass_index[[survey_name[i]]])) %in% cpue$Year]
 
     se[[survey_name[i]]] <- NA
     se[[survey_name[i]]] <- sa_data$survey$om_cv[[survey_name[i]]][as.numeric(names(sa_data$survey$om_cv[[survey_name[i]]])) %in% cpue$Year]
@@ -79,7 +83,8 @@ generate_jabba <- function(assessment_name, output_dir,
     projection = TRUE,
     TACs = tacs,
     pyrs = length(projection_year),
-    catch.metric = "mt"
+    catch.metric = "mt",
+    BmsyK = BmsyK
   )
 
   return(jabba_input)

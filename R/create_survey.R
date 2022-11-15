@@ -73,11 +73,11 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
 
   # Calculate OM biomass-at-age (baa), number-at-age (naa), total abundance, and abundance index after including selectivity and catchability
   survey_name <- names(survey_time)
-  om_baa <-
+  om_baa <- om_biomass <- om_biomass_index <-
     om_naa <- om_abundance <- om_abundance_index <-
       naa_sel <-
     vector(mode = "list", length = survey_num)
-  names(om_baa) <-
+  names(om_baa) <- names(om_biomass) <- names(om_biomass_index) <-
     names(om_naa) <- names(om_abundance) <- names(om_abundance_index) <-
       names(naa_sel) <-
     survey_name
@@ -85,34 +85,42 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
   for (i in 1:survey_num) {
     subdata_id <- which((data$year %in% survey_time[[survey_name[i]]]$year) & (data$month %in% survey_time[[survey_name[i]]]$month))
     sub_waa <- waa[subdata_id, ]
-
+    # biomass-at-age
     om_baa[[survey_name[i]]] <- data[subdata_id, ]
-
+    # biomass
+    om_biomass[[survey_name[i]]] <- apply(om_baa[[survey_name[i]]][, species_labels], 1, sum)
+    names(om_biomass[[survey_name[i]]]) <- om_baa[[survey_name[i]]]$year
+    # number-at-age
     om_naa[[survey_name[i]]] <- om_baa[[survey_name[i]]]
     om_naa[[survey_name[i]]][, species_labels] <- om_baa[[survey_name[i]]][, species_labels] / sub_waa[, species_labels]
-
+    # abundance
     om_abundance[[survey_name[i]]] <- apply(om_naa[[survey_name[i]]][, species_labels], 1, sum)
     names(om_abundance[[survey_name[i]]]) <- om_naa[[survey_name[i]]]$year
-
+    # selected number-at-age
     selectivity_id <- which(row.names(survey_selectivity[[survey_name[i]]]) %in% survey_time[[survey_name[i]]]$year)
     naa_sel[[survey_name[i]]] <- om_naa[[survey_name[i]]][, species_labels] * survey_selectivity[[survey_name[i]]][selectivity_id, ]
     row.names(naa_sel[[survey_name[i]]]) <- om_naa[[survey_name[i]]]$year
 
     catchability_id <- which(names(survey_catchability[[survey_name[i]]]) %in% survey_time[[survey_name[i]]]$year)
-
+    # abundance index
     om_abundance_index[[survey_name[i]]] <- apply(naa_sel[[survey_name[i]]], 1, sum) * survey_catchability[[survey_name[i]]][catchability_id]
     names(om_abundance_index[[survey_name[i]]]) <- om_naa[[survey_name[i]]]$year
+
+    # biomass index
+    om_biomass_index[[survey_name[i]]] <- apply(naa_sel[[survey_name[i]]]*sub_waa[, species_labels], 1, sum) * survey_catchability[[survey_name[i]]][catchability_id]
+    names(om_biomass_index[[survey_name[i]]]) <- om_naa[[survey_name[i]]]$year
   }
 
   # create observed abundance index
-  obs_abundance_index <- vector(mode = "list", length = survey_num)
-  names(obs_abundance_index) <- survey_name
+  obs_biomass_index <- obs_abundance_index <- vector(mode = "list", length = survey_num)
+  names(obs_biomass_index) <- names(obs_abundance_index) <- survey_name
 
   for (i in 1:survey_num) {
     n <- length(om_abundance_index[[survey_name[i]]])
     cv_id <- which(names(survey_CV[[survey_name[i]]]) %in% survey_time[[survey_name[i]]]$year)
     sd <- sqrt(log(1 + survey_CV[[survey_name[i]]][cv_id]^2)) # SD in log space, given CV in arithmetic space
     ln <- rnorm(n, mean = rep(0, length(survey_time[[survey_name[i]]]$year)), sd = sd) # log error
+    obs_biomass_index[[i]] <- om_biomass_index[[survey_name[i]]] * exp(ln) # multiplicative lognormal error
     obs_abundance_index[[i]] <- om_abundance_index[[survey_name[i]]] * exp(ln) # multiplicative lognormal error
   }
 
@@ -286,12 +294,15 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
   output_data <- list(
     om_baa = om_baa,
     om_naa = om_naa,
+    om_total_biomass = om_biomass,
     om_total_abundance = om_abundance,
+    om_biomass_index = om_biomass_index,
     om_abundance_index = om_abundance_index,
     om_cv = survey_CV,
     om_sample_number = survey_sample_num,
     om_waa_mt = waa,
     om_laa = laa,
+    obs_biomass_index = obs_biomass_index,
     obs_abundance_index = obs_abundance_index,
     obs_survey_agecomp_prop = survey_age_obs,
     obs_lencomp_proportion_ss3 = len_dist_ss3,
