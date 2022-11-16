@@ -44,7 +44,7 @@ library(JABBA)
 
 ```
 
-## Case 0: stock assessment base run (terminal year = 2008)
+## Case 0: stock assessment base run (terminal year = 2012)
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulationOM3.R"))# OM reference points ---------------------------------------------
@@ -82,7 +82,7 @@ functional_groups <- c(
 )
 ages <- 0:6
 start_year <- 1985
-terminal_year <- 2008
+terminal_year <- 2012
 projection_nyear <- 5
 model_year <- start_year:terminal_year
 projection_year <- (terminal_year+1):(terminal_year+projection_nyear)
@@ -638,11 +638,11 @@ gridExtra::grid.arrange(p)
 
 ### Adjust projections
 
-- If $\frac{B2008_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2008 \times (FMSY^{max}-FMSY^{min})$
+- If $\frac{B2012_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
 
-- If $\frac{B2008_{i}}{BMSY} \le 1$ and $\frac{B2008_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2008 \times \frac{B2008_{i}}{BMSY} \times FMSY_{i}$
+- If $\frac{B2012_{i}}{BMSY} \le 1$ and $\frac{B2012_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}$
   
-- If $\frac{B2008_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
+- If $\frac{B2012_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
 
 where $i$ represents individual iterations
 
@@ -1288,6 +1288,7 @@ colors_border <- colors[1:length(colors)]
 plot(1, type = "n", axes=FALSE, xlab="", ylab="")
 legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
 
+format(evaluation_table, digits=3)
 # colors_border <- colors[c(case_num+2:length(colors))]
 # radarchart(evaluation_table[c(1:2, (case_num+4):nrow(evaluation_table)),],
 #            seg=5,

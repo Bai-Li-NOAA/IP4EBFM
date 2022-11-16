@@ -44,7 +44,7 @@ library(JABBA)
 
 ```
 
-## Case 0: stock assessment base run (terminal year = 2012)
+## Case 0: stock assessment base run (terminal year = 2009)
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
 source(here::here("Rscript", "simulationOM3.R"))# OM reference points ---------------------------------------------
@@ -82,7 +82,7 @@ functional_groups <- c(
 )
 ages <- 0:6
 start_year <- 1985
-terminal_year <- 2012
+terminal_year <- 2009
 projection_nyear <- 5
 model_year <- start_year:terminal_year
 projection_year <- (terminal_year+1):(terminal_year+projection_nyear)
@@ -474,14 +474,6 @@ cor(mortality_ewe_average[1:length(model_year)], ss_case0$timeseries[, "mu", "F"
 - Linear regression models from case 1 - 5
   - True biomass of menhaden-like species as functions of AMO, PDSI, biomass of striped bass, fishing effort of menhaden, and menhaden CPUE
 
-### Status of indicators (SOI)
-
-- If stock-indicator relationship is positive, $SOI_{y} = \frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}$
-  
-- If stock-indicator relationship is negative, $SOI_{y} = 1-\frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}$
-  
-  where $I_{y}$ represents indicator value in year y. $I_{y}^{min}$ and $I_{y}^{max}$ represent the minimum and maximum values of $I$ from the time series.
-
 ```{r,  echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
 lm_slope <- data.frame(
@@ -635,14 +627,13 @@ gridExtra::grid.arrange(p)
 # abline(cpue_lm)
 
 ```
-
 ### Adjust projections
 
-- If $\frac{B2012_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
+- If $\frac{B2009_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2009 \times (FMSY^{max}-FMSY^{min})$
 
-- If $\frac{B2012_{i}}{BMSY} \le 1$ and $\frac{B2012_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}$
+- If $\frac{B2009_{i}}{BMSY} \le 1$ and $\frac{B2009_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2009 \times \frac{B2009_{i}}{BMSY} \times FMSY_{i}$
   
-- If $\frac{B2012_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
+- If $\frac{B2009_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
 
 where $i$ represents individual iterations
 
@@ -945,6 +936,7 @@ soi_data_melt <- reshape2::melt(
   id = c("year", "projection_year_id")
 )
 soi_data_melt$projection_year_id <- rep(rep(projection_year, each=length(model_year)), times=ncol(soi_data)-2)
+
 # SOI figure
 # jpeg(filename = file.path(figure_path, paste0("soi", terminal_year, ".jpeg")), width = 200, height = 100, units = "mm", res = 1800)
 ggplot(soi_data_melt[soi_data_melt$projection_year_id==projection_year[1], ], aes(x = year, y = value)) +
@@ -1287,6 +1279,8 @@ radarchart(evaluation_table[c(1:4, (case_num+5):nrow(evaluation_table)),],
 colors_border <- colors[1:length(colors)]
 plot(1, type = "n", axes=FALSE, xlab="", ylab="")
 legend("center", legend = rownames(evaluation_table[-c(1,2),]), bty = "n", pch=20 , col=colors_border, text.col = "black", cex=0.9, pt.cex=3)
+
+format(evaluation_table, digits=3)
 
 # colors_border <- colors[c(case_num+2:length(colors))]
 # radarchart(evaluation_table[c(1:2, (case_num+4):nrow(evaluation_table)),],
