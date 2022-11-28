@@ -11,6 +11,7 @@
 #' @param bassB Biomass of Striped bass data.
 #' @param price Price of menhaden data.
 #' @param effort Fishing effort of menhaden-like species from the EwE operating model.
+#' @param cpue Catch per unit effort of menhaden-like species from the EwE operating model.
 #' @param indices Indices will be used in the analysis.
 #' @return A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).
 #' @export
@@ -25,6 +26,7 @@ compare_projections_dbsra <- function(case_name,
                                       bassB,
                                       price,
                                       effort,
+                                      cpue,
                                       indices) {
 
   amo_unsmooth_lag1 <- amo
@@ -33,6 +35,7 @@ compare_projections_dbsra <- function(case_name,
   menhaden_price <- price
   palmer_drought_severity_index <- pdsi
   fishing_effort <- effort
+  fishing_cpue <- cpue
 
   lm_slope <- data.frame(
     case = case_name,
@@ -42,7 +45,8 @@ compare_projections_dbsra <- function(case_name,
     bassB = NA,
     price = NA,
     pdsi = NA,
-    effort = NA
+    effort = NA,
+    cpue = NA
   )
 
   for (projection_year_id in 1:length(projection_year)){
@@ -108,59 +112,97 @@ compare_projections_dbsra <- function(case_name,
       round(summary(effort_lm)$coefficients[2, 1], digits = 2),
       if(summary(effort_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-    if (projection_year_id == length(projection_year)){
+    cpue <- fishing_cpue[1:length(year_id)]
+    cpue_lm <- lm(menhaden_b[biomass_lag_id] ~ cpue[index_lag_id])
+    cpue_fit <- fitted(cpue_lm)
+    lm_slope$cpue[projection_year_id] <- paste0(
+      round(summary(cpue_lm)$coefficients[2, 1], digits = 2),
+      if(summary(cpue_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-      par(mfrow = c(ceiling(length(indices)/2), 2))
-
-      if ("amo" %in% indices){
-        plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-             xlab = "AMO values",
-             ylab = "Biomass of menhaden-like species"
+    if (projection_year_id == 1) {
+      lm_data_em <- rbind(
+        data.frame(
+          Menhaden_Biomass = menhaden_b[biomass_lag_id],
+          Variable = "AMO",
+          Index_Value = amo$scaled_value[index_lag_id]
+        ),
+        data.frame(
+          Menhaden_Biomass = menhaden_b[biomass_lag_id],
+          Variable = "PDSI",
+          Index_Value = pdsi$scaled_value[index_lag_id]
+        ),
+        data.frame(
+          Menhaden_Biomass = menhaden_b[biomass_lag_id],
+          Variable = "Biomass of Striped bass",
+          Index_Value = bassB$bass_bio[index_lag_id]
+        ),
+        data.frame(
+          Menhaden_Biomass = menhaden_b[biomass_lag_id],
+          Variable = "Menhaden fishing effort",
+          Index_Value = effort[index_lag_id]
+        ),
+        data.frame(
+          Menhaden_Biomass = menhaden_b[biomass_lag_id],
+          Variable = "Menhaden CPUE",
+          Index_Value = cpue[index_lag_id]
         )
-        abline(amo_lm)
-      }
-
-      if ("pcp" %in% indices){
-        plot(pcp$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-             xlab = "Precipitation values",
-             ylab = "Biomass of menhaden-like species"
-        )
-        abline(pcp_lm)
-      }
-
-      if ("pdsi" %in% indices){
-        plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
-             xlab = "PDSI values",
-             ylab = "Biomass of menhaden-like species"
-        )
-        abline(pdsi_lm)
-      }
-
-      if ("bassB" %in% indices){
-        plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
-             xlab = "Biomass of Striped bass",
-             ylab = "Biomass of menhaden-like species"
-        )
-        abline(bassB_lm)
-      }
-
-      if ("price" %in% indices){
-        plot(sub_menhadenP[index_lag_id], sub_menhaden_b[biomass_lag_id],
-             xlab = "Menhaden price",
-             ylab = "Biomass of menhaden-like species"
-        )
-        abline(price_lm)
-      }
-
-      if ("effort" %in% indices){
-        plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
-             xlab = "Fishing effort of menhaden-like species",
-             ylab = "Biomass of menhaden-like species"
-        )
-        abline(effort_lm)
-      }
-
+      )
+      lm_data_em$model <- "EM"
     }
+
+    # if (projection_year_id == length(projection_year)){
+    #
+    #   par(mfrow = c(ceiling(length(indices)/2), 2))
+    #
+    #   if ("amo" %in% indices){
+    #     plot(amo$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+    #          xlab = "AMO values",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(amo_lm)
+    #   }
+    #
+    #   if ("pcp" %in% indices){
+    #     plot(pcp$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+    #          xlab = "Precipitation values",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(pcp_lm)
+    #   }
+    #
+    #   if ("pdsi" %in% indices){
+    #     plot(pdsi$scaled_value[index_lag_id], menhaden_b[biomass_lag_id],
+    #          xlab = "PDSI values",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(pdsi_lm)
+    #   }
+    #
+    #   if ("bassB" %in% indices){
+    #     plot(bassB$bass_bio[index_lag_id], menhaden_b[biomass_lag_id],
+    #          xlab = "Biomass of Striped bass",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(bassB_lm)
+    #   }
+    #
+    #   if ("price" %in% indices){
+    #     plot(sub_menhadenP[index_lag_id], sub_menhaden_b[biomass_lag_id],
+    #          xlab = "Menhaden price",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(price_lm)
+    #   }
+    #
+    #   if ("effort" %in% indices){
+    #     plot(effort[index_lag_id], menhaden_b[biomass_lag_id],
+    #          xlab = "Fishing effort of menhaden-like species",
+    #          ylab = "Biomass of menhaden-like species"
+    #     )
+    #     abline(effort_lm)
+    #   }
+    #
+    # }
 
     # status of indicators --------------------------------------------
 
@@ -194,6 +236,11 @@ compare_projections_dbsra <- function(case_name,
       slope = coef(bassB_lm)[2]
     )
 
+    cpue_soi <- calc_soi(
+      indicator_data = cpue,
+      slope = coef(bassB_lm)[2]
+    )
+
     if (projection_year_id == 1) {
       scaled_data <- data.frame(
         year = model_year,
@@ -204,6 +251,7 @@ compare_projections_dbsra <- function(case_name,
         bassB = scale(bassB$bass_bio)[,1],
         price = scale(sub_menhadenP)[,1],
         effort = scale(effort)[,1],
+        cpue = scale(cpue)[,1],
         menhadenB = scale(menhaden_b)[,1]
       )
 
@@ -215,7 +263,8 @@ compare_projections_dbsra <- function(case_name,
         pdsi = pdsi_soi,
         bassB = bassB_soi,
         price = price_soi,
-        effort = effort_soi
+        effort = effort_soi,
+        cpue = cpue_soi
       )
     } else{
       scaled_data <- rbind(
@@ -229,6 +278,7 @@ compare_projections_dbsra <- function(case_name,
           bassB = scale(bassB$bass_bio)[,1],
           price = scale(sub_menhadenP)[,1],
           effort = scale(effort)[,1],
+          cpue = scale(cpue)[,1],
           menhadenB = scale(menhaden_b)[,1]
         )
       )
@@ -243,7 +293,8 @@ compare_projections_dbsra <- function(case_name,
           pcp = pcp_soi,
           bassB = bassB_soi,
           price = price_soi,
-          effort = effort_soi
+          effort = effort_soi,
+          cpue = cpue_soi
         )
       )
     }
@@ -282,6 +333,11 @@ compare_projections_dbsra <- function(case_name,
       soi = tail(effort_soi, n = 1),
       Bt_BMSY = Bt_BMSY
     )
+    cpue_tac <- adjust_projection_dbsra(
+      tac = projection_output[[projection_year_id]]$TAC,
+      soi = tail(cpue_soi, n = 1),
+      Bt_BMSY = Bt_BMSY
+    )
 
     if (projection_year_id == 1){
       tac_data <- data.frame(
@@ -293,7 +349,8 @@ compare_projections_dbsra <- function(case_name,
         pdsi = pdsi_tac,
         bassB = bassB_tac,
         price = price_tac,
-        effort = effort_tac
+        effort = effort_tac,
+        cpue = cpue_tac
       )
     } else {
       tac_data <- rbind(
@@ -307,7 +364,8 @@ compare_projections_dbsra <- function(case_name,
           pdsi = pdsi_tac,
           bassB = bassB_tac,
           price = price_tac,
-          effort = effort_tac
+          effort = effort_tac,
+          cpue = cpue_tac
         )
       )
     }
@@ -334,6 +392,7 @@ compare_projections_dbsra <- function(case_name,
   tac_data_melt_median$projection_year_id <- as.numeric(as.character(tac_data_melt_median$projection_year_id))
 
   return(list(
+    lm_data_em = lm_data_em,
     lm_slope = lm_slope,
     soi_data = soi_data,
     tac_data = tac_data,
