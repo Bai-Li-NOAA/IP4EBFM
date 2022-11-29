@@ -929,6 +929,16 @@ legend("bottomright",
 - If stock-indicator relationship is negative, $SOI_{y} = 1-\frac{I_{y}-I_{y}^{min}}{I_{y}^{max}-I_{y}^{min}}$
   
   where $I_{y}$ represents indicator value in year y. $I_{y}^{min}$ and $I_{y}^{max}$ represent the minimum and maximum values of $I$ from the time series.
+  
+### Adjust projections
+
+- If $\frac{B2012_{i}}{BMSY} > 1$, $F^{'}_{i} = FMSY^{min} + SOI2012 \times (FMSY^{max}-FMSY^{min})$
+
+- If $\frac{B2012_{i}}{BMSY} \le 1$ and $\frac{B2012_{i}}{BMSY} > 0.5$, $F^{'}_{i} = SOI2012 \times \frac{B2012_{i}}{BMSY} \times FMSY_{i}$
+  
+- If $\frac{B2012_{i}}{BMSY} \le 0.5$, $F^{'}_{i} = 0$
+
+where $i$ represents individual iterations
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 lm_slope <- data.frame(
@@ -1310,6 +1320,14 @@ for (i in 1:nrow(projection_f)) {
 
 write.csv(projection_f, here::here("data", "data_poor", paste0("fmsy_median_data", terminal_year, ".csv")))
 
+Bt_BMSY_data <- matrix(NA, ncol=length(projection_year), nrow=length(projection_output3_clean[[1]]$Bt_Kstore))
+for (projection_year_id in 1:length(projection_year)){
+    projection_output <- projection_output3_clean
+    Bt_BMSY_data[, projection_year_id] <- projection_output[[projection_year_id]]$Bt_Kstore / projection_output[[projection_year_id]]$BMSY_K_Mstore
+}
+
+write.csv(Bt_BMSY_data, here::here("data", "data_poor", paste0("Bt_BMSY_data", terminal_year, ".csv")))
+
 ```
 
 - Slope values from linear regression models
@@ -1396,6 +1414,7 @@ ggplot(tac_data_melt, aes(x=projection_year_id, y = biomass, color = projection_
     y = "Biomass"
   ) +
   theme_bw()
+
 
 ```
 

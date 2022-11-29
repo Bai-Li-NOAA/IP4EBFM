@@ -155,7 +155,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>OM3 data-poor stock assessment</h1>
             
-            <h4 data-toc-skip class="date">2022-11-28</h4>
+            <h4 data-toc-skip class="date">2022-11-29</h4>
       
       
       <div class="hidden name"><code>15_OM3_data_poor_stock_assessment_2009.Rmd</code></div>
@@ -217,6 +217,16 @@
 <p>where <span class="math inline">\(I_{y}\)</span> represents indicator value in year y. <span class="math inline">\(I_{y}^{min}\)</span> and <span class="math inline">\(I_{y}^{max}\)</span> represent the minimum and maximum values of <span class="math inline">\(I\)</span> from the time series.</p>
 </li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="adjust-projections">Adjust projections<a class="anchor" aria-label="anchor" href="#adjust-projections"></a>
+</h3>
+<ul>
+<li><p>If <span class="math inline">\(\frac{B2009_{i}}{BMSY} &gt; 1\)</span>, <span class="math inline">\(F^{'}_{i} = FMSY^{min} + SOI2009 \times (FMSY^{max}-FMSY^{min})\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2009_{i}}{BMSY} \le 1\)</span> and <span class="math inline">\(\frac{B2009_{i}}{BMSY} &gt; 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = SOI2009 \times \frac{B2009_{i}}{BMSY} \times FMSY_{i}\)</span></p></li>
+<li><p>If <span class="math inline">\(\frac{B2009_{i}}{BMSY} \le 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = 0\)</span></p></li>
+</ul>
+<p>where <span class="math inline">\(i\)</span> represents individual iterations</p>
 <p><img src="15_OM3_data_poor_stock_assessment_2009_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
 </div>
 </div>
