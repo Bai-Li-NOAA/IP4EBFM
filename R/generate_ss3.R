@@ -321,6 +321,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   )
 
   ss3_ctl$EmpiricalWAA <- 0
+  # ss3_ctl$EmpiricalWAA <- 1
   ss3_ctl$recr_dist_method <- 4
   if (settlement_age == 1) ss3_ctl$recr_dist_pattern$age <- 1
   ss3_ctl$N_Block_Designs <- 0 # Change to 0?
@@ -372,14 +373,14 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   ss3_ctl$MG_parms[grep("CV_young", rownames(ss3_ctl$MG_parms)), ] <-
     c(0.05, 0.5, 0.5, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("CV_old", rownames(ss3_ctl$MG_parms)), ] <-
-    c(0.01, 0.2, 0.09, 0, 99, 0, 3, 0, 0, 0, 0, 0, 0, 0, 2)
+    c(0.01, 0.2, 0.09, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 2)
   ss3_ctl$MG_parms[grep("Wtlen_1", rownames(ss3_ctl$MG_parms)), ] <-
     c(-3, 3, sa_data$biodata$lw_a, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 3)
   ss3_ctl$MG_parms[grep("Wtlen_2", rownames(ss3_ctl$MG_parms)), ] <-
     c(-3, 4, sa_data$biodata$lw_b, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 3)
 
-  ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.5, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
-  # ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.99, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
+  # ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.5, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
+  ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.99, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
 
   ss3_ctl$MG_parms <- ss3_ctl$MG_parms[-grep("RecrDist", rownames(ss3_ctl$MG_parms)), ]
 
@@ -460,10 +461,12 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   ss3_ctl$Q_parms <- rbind(data.frame(
     "LO" = rep(-10, ss3_data$Nsurveys),
     "HI" = rep(10, ss3_data$Nsurveys),
-    "INIT" = log(jitter(rep(0.05, ss3_data$Nsurveys), 30)),
+    "INIT" = log(c(0.77*1000, 0.29*1000)),
+    # "INIT" = log(jitter(rep(0.05, ss3_data$Nsurveys), 30)),
     "PRIOR" = rep(0, ss3_data$Nsurveys),
     "SD" = rep(0, ss3_data$Nsurveys),
     "PR_TYPE" = rep(0, ss3_data$Nsurveys),
+    # "PHASE" = rep(-1, ss3_data$Nsurveys),
     "PHASE" = rep(1, ss3_data$Nsurveys),
 
     matrix(0, ncol = 7, nrow = ss3_data$Nsurveys)
@@ -531,7 +534,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       SD = 99,
       PR_TYPE = 0,
       PHASE = c(2, 2, -2, 2, -2, -2),
-      # PHASE = c(-2, -2, -2, -2, 2, 2),
+      # PHASE = 2,
       # PHASE = -2,
       matrix(0, ncol = 7, nrow = 6)
     ),
@@ -544,9 +547,10 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      # PHASE = c(2, 2, 2, 2, -2, -2),
-      PHASE = c(-2, 2, 2, 2, -2, -2),
+      PHASE = c(2, 2, 2, 2, -2, -2),
+      # PHASE = c(-2, 2, 2, 2, -2, -2),
       # PHASE = -2,
+      # PHASE = 2,
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -561,6 +565,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
       PHASE = c(-2, 2, 2, 2, -2, -2),
       # PHASE = c(2, 2, 2, 2, -2, -2),
       # PHASE = -2,
+      # PHASE = 2,
       matrix(0, ncol = 7, nrow = 6)
     )
   )
