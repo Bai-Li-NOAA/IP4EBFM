@@ -129,7 +129,8 @@ create_survey <- function(file_path, skip_nrows, species, species_labels, years,
   names(survey_age_obs) <- paste("survey", 1:survey_num, sep = "")
 
   for (i in 1:survey_num) {
-    survey_age_obs[[i]] <- om_naa[[survey_name[i]]][species_labels]
+    survey_age_obs[[i]] <- naa_sel[[survey_name[i]]][species_labels]
+    # survey_age_obs[[i]] <- om_naa[[survey_name[i]]][species_labels]
 
     survey_age_obs[[i]] <- t(sapply(1:nrow(survey_age_obs[[i]]), function(x) {
       as.numeric(as.character(survey_age_obs[[i]][x,]))
