@@ -164,7 +164,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>OM3 data-rich stock assessment (2002)</h1>
             
-            <h4 data-toc-skip class="date">2022-12-05</h4>
+            <h4 data-toc-skip class="date">2022-12-06</h4>
       
       
       <div class="hidden name"><code>17_OM3_data_rich_stock_assessment_2002.Rmd</code></div>
@@ -185,18 +185,18 @@
 <div class="section level2">
 <h2 id="unfished-biomass-of-menhaden-like-species-and-unfished-age-0-menhaden-like-fish-from-the-ewe-operating-model">Unfished biomass of menhaden-like species and unfished age 0 menhaden-like fish from the EwE operating model<a class="anchor" aria-label="anchor" href="#unfished-biomass-of-menhaden-like-species-and-unfished-age-0-menhaden-like-fish-from-the-ewe-operating-model"></a>
 </h2>
-<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-2-1.png" width="1152"></p>
+<ul>
+<li>f0_menhaden: menhaden-like species F = 0</li>
+<li>f0_menhaden_bass: menhaden-like species and Striped bass F = 0</li>
+<li>f0_all: all functional groups F = 0</li>
+<li>f0_all_noEnv: all functional groups F = 0 and no AMO and PDSI impacts</li>
+</ul>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-2-1.png" width="9600"></p>
 </div>
 <div class="section level2">
 <h2 id="case-0-stock-assessment-base-run-terminal-year-2002">Case 0: stock assessment base run (terminal year = 2002)<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run-terminal-year-2002"></a>
 </h2>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ss3list</span><span class="op">$</span><span class="va">sigma_R_info</span><span class="op">$</span><span class="va">alternative_sigma_R</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 0.85</span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">fmsy</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] 3</span></code></pre>
-<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-6-1.png" width="1152"> ## Cases 1-5 are based on the settings from case 0 - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species - Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator - Case 4: Link catch per unit effort of menhaden with menhaden biomass estimates and adjust projections - Case 5: Link mean age for fishing fleet with menhaden biomass estimates and adjust projections</p>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-5-1.png" width="9600"> ## Cases 1-5 are based on the settings from case 0 - Case 1: Link Atlantic Multidecadal Oscillation Index with menhaden biomass estimates and adjust projections: AMO is an indicator of climate conditions and would affect recruitment variability of menhaden-like species - Case 2: Link Palmer drought severity index with menhaden biomass estimates and adjust projections: PSDI is a long-term indicator of drought conditions and it reflects river discharge and precipitation - Case 3: Link biomass of Striped bass from the EwE with menhaden biomass estimates and adjust projections because bass is a major predator - Case 4: Link catch per unit effort of menhaden with menhaden biomass estimates and adjust projections - Case 5: Link mean age for fishing fleet with menhaden biomass estimates and adjust projections</p>
 <p><em>Notes</em>: here, the biomass estimates are spawning biomass estimates.</p>
 <ul>
 <li>
@@ -220,8 +220,8 @@
 <li><p>If <span class="math inline">\(\frac{B2002_{i}}{BMSY} \le 0.5\)</span>, <span class="math inline">\(F^{'}_{i} = 0\)</span></p></li>
 </ul>
 <p>where <span class="math inline">\(i\)</span> represents individual iterations</p>
-<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
-<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-9-1.png" width="1152"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-9-2.png" width="1152"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-9-3.png" width="1152"></p>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-6-1.png" width="9600"></p>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-8-1.png" width="9600"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-8-2.png" width="9600"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-8-3.png" width="9600"></p>
 <ul>
 <li>Slope values from linear regression models</li>
 </ul>
@@ -368,13 +368,14 @@ PDSI+AMO1 Case
 </tbody>
 </table>
 <ul>
-<li>Project biomass based on <span class="math inline">\(F_{MSY}\)</span> <img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-11-1.png" width="1152"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-11-2.png" width="1152">
+<li>Project biomass based on <span class="math inline">\(F_{MSY}\)</span> <img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-10-1.png" width="9600"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-10-2.png" width="9600">
 </li>
 </ul>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-11-1.png" width="9600"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-11-2.png" width="9600"><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-11-3.png" width="9600"></p>
 <pre><code><span class="co">##                          Average_Catch    B_K B_BMSY Average_Biomass</span>
 <span class="co">## Max                           15168101 9.2425 96.160        43320940</span>
 <span class="co">## Min                                  0 0.0000  0.000               0</span>
-<span class="co">## OM+OM FMSY                      151542 0.0828  0.140          162525</span>
+<span class="co">## OM+OM FMSY                      270473 0.2094  0.354          385751</span>
 <span class="co">## OM+SS3 FMSY                     214353 0.0748  0.126          193751</span>
 <span class="co">## OM+AMO Fadj                     151542 0.0828  0.140          162525</span>
 <span class="co">## OM+PDSI Fadj                    151542 0.0828  0.140          162525</span>
@@ -390,7 +391,7 @@ PDSI+AMO1 Case
 <span class="co">##                          Bonanza_Period Collapse_Period</span>
 <span class="co">## Max                                   5               0</span>
 <span class="co">## Min                                   0               5</span>
-<span class="co">## OM+OM FMSY                            0               5</span>
+<span class="co">## OM+OM FMSY                            0               3</span>
 <span class="co">## OM+SS3 FMSY                           0               5</span>
 <span class="co">## OM+AMO Fadj                           0               5</span>
 <span class="co">## OM+PDSI Fadj                          0               5</span>
@@ -403,7 +404,7 @@ PDSI+AMO1 Case
 <span class="co">## SS3 EM+Bass Biomass Fadj              5               0</span>
 <span class="co">## SS3 EM+CPUE Fadj                      5               0</span>
 <span class="co">## SS3 EM+Mean Age Fadj                  5               0</span></code></pre>
-<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-12-1.png" width="1152"></p>
+<p><img src="17_OM3_data_rich_stock_assessment_2002_files/figure-html/unnamed-chunk-12-1.png" width="9600"></p>
 </div>
 </div>
   </div>
