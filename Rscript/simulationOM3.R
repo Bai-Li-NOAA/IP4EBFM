@@ -141,7 +141,7 @@ fishery <- create_fishery(
     data_years = years,
     fleet_num = 1,
     selectivity = NULL,
-    CV = rep(0.05, length(years)),
+    CV = rep(fishery_CV_input, length(years)),
     # sample_num = apply(fishery_sample_num, 1, sum),
     sample_num = rep(800, length(years)),
     waa_path = file.path(ewe_output_path, "weight_annual.csv")
@@ -235,8 +235,8 @@ survey_catchability <- lapply(survey_catchability, setNames, years)
 # )
 
 survey_CV <- list(
-    survey1 = rep(0.1, length(years)),
-    survey2 = rep(0.1, length(years))
+    survey1 = rep(survey_CV_input, length(years)),
+    survey2 = rep(survey_CV_input, length(years))
 )
 
 survey_CV <- lapply(survey_CV, setNames, years)
