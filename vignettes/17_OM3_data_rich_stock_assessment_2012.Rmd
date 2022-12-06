@@ -9,10 +9,6 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-knitr::opts_chunk$set(dev = "png",
-                      dpi = 800,
-                      echo = FALSE,
-                      cache = TRUE)
 ```
 
 ## Stock Synthesis 3 (SS3)
@@ -50,6 +46,8 @@ library(r4ss)
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data
+fishery_CV_input <- 0.05
+survey_CV_input <- 0.1
 source(here::here("Rscript", "simulationOM3.R")) # OM reference points
 
 # Reference points scenarios
