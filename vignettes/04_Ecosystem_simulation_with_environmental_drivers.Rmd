@@ -11,20 +11,30 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r echo = FALSE, message=FALSE, results='hide'}
+devtools::load_all()
+
+required_pkg <- c(
+  "RColorBrewer", "ggplot2", "tidyverse",
+  "reshape2", "here"
+)
+
+pkg_to_install <- required_pkg[!(required_pkg %in%
+  installed.packages()[, "Package"])]
+if (length(pkg_to_install)) install.packages(pkg_to_install, repos = "http://cran.us.r-project.org")
+
+invisible(lapply(required_pkg, library, character.only = TRUE))
+
+options(digits = 2)
+
+```
+
 ## Simulation scenarios 
 
 We want to incorporate climate, environmental, or biological drivers to the Ecopath with Ecosim (EwE) model. Base on [Buchheister et al. (2016)](https://doi.org/10.1093/icesjms/fsv260) paper, we explored the following scenarios:
 
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 devtools::load_all()
-
-library(RColorBrewer)
-library(ggplot2)
-library(tidyverse)
-library(reshape2)
-library(here)
-
-options(digits = 2)
 
 scenarios <- read.csv(here::here("data", "ewe", "7ages", "ecosim_with_environmental_driver", "ecosim_scenarios.csv"))
 functional_groups = c(

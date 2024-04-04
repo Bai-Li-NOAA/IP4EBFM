@@ -43,7 +43,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   ss3_data$styr <- model_year[1]
   ss3_data$endyr <- tail(model_year, n = 1)
-  if (settlement_age == 1) ss3_data$spawn_month <- 1.0001 # default is 1
+  # if (settlement_age == 1) ss3_data$spawn_month <- 1.0001 # default is 1
   #ss3_data$Nsexes <- sa_data$biodata$nsex
   ss3_data$Nsexes <- ss3_data$Ngenders <- (-1) # use -1 for 1 sex setup with SSB multiplied by female_frac parameter
   ss3_data$Nages <- length(sa_data$biodata$ages)
@@ -222,7 +222,8 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   # set up population age bin structure
   ss3_data$N_agebins <- length(sa_data$biodata$ages)
-  ss3_data$agebin_vector <- sa_data$biodata$ages+1 # make sure the starting age is 1 instead of 0
+  # ss3_data$agebin_vector <- sa_data$biodata$ages+1 # 1 - 7
+  ss3_data$agebin_vector <- sa_data$biodata$ages # 0 - 6
   ss3_data$N_ageerror_definitions <- 1
   ss3_data$ageerror <- matrix(c(rep(-1, ss3_data$Nages + 1), rep(0, ss3_data$Nages + 1)), nrow = 2, byrow = TRUE)
 
@@ -320,19 +321,18 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
     datlist = dir(utils::tail(dir(system.file("extdata", package = "r4ss"), pattern = "simple", full.names = TRUE), 1), pattern = "data", full.names = TRUE)
   )
 
-  ss3_ctl$EmpiricalWAA <- 0
-  # ss3_ctl$EmpiricalWAA <- 1
+  # ss3_ctl$EmpiricalWAA <- 0
+  ss3_ctl$EmpiricalWAA <- 1
   ss3_ctl$recr_dist_method <- 4
-  if (settlement_age == 1) ss3_ctl$recr_dist_pattern$age <- 1
+  # if (settlement_age == 1) ss3_ctl$recr_dist_pattern$age <- 1
+  if (settlement_age == 1) ss3_ctl$recr_dist_pattern$age <- 0
   ss3_ctl$N_Block_Designs <- 0 # Change to 0?
   #ss3_ctl$Block_Design[[1]] <- c(model_year[1], model_year[1])
 
   # Natural mortality
   #Age specific M
   ss3_ctl$natM_type <- 3
-  ss3_ctl$natM <- as.data.frame(c(sa_data$biodata$natural_mortality_matrix[1, 1], sa_data$biodata$natural_mortality_matrix[1, ]))
-  # ss3_ctl$natM <- as.data.frame(c(0, sa_data$biodata$natural_mortality_matrix[1, ]))
-
+  ss3_ctl$natM <- as.data.frame(c(1.7, sa_data$biodata$natural_mortality_matrix[1, ]))
   # Growth model
   ss3_ctl$GrowthModel <- 1 # vonBert with L1 &L2
   ss3_ctl$Growth_Age_for_L1 <- 0
@@ -379,7 +379,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   ss3_ctl$MG_parms[grep("Wtlen_2", rownames(ss3_ctl$MG_parms)), ] <-
     c(-3, 4, sa_data$biodata$lw_b, 0, 99, 0, -3, 0, 0, 0, 0, 0, 0, 0, 3)
 
-  # ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.5, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
+  # ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.5, 0.5, 0.5, 0, -99, 0, 0, 0, 0, 0, 0, 0, 14)
   ss3_ctl$MG_parms[grep("Frac", rownames(ss3_ctl$MG_parms)), ] <- c(0.000001, 0.99, 0.99, 0.99, 0.5, 0, -1, 0, 0, 0, 0, 0, 0, 0, 14)
 
   ss3_ctl$MG_parms <- ss3_ctl$MG_parms[-grep("RecrDist", rownames(ss3_ctl$MG_parms)), ]
@@ -392,11 +392,14 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   if (naa_y1[1] %in% sort(naa_y1)[1:round(length(naa_y1)/5)]) naa_y1[1] <- 10*mean(naa_y1)
 
   ss3_ctl$SR_function <- 3 # 3: B-H
-  #ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- log(naa_y1[1])
+
   ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "INIT"] <- r0
   ss3_ctl$SR_parms[grep("R0", rownames(ss3_ctl$SR_parms)), "PHASE"] <- r0_phase
+
+
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "INIT"] <- steepness
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PHASE"] <- -4
+
   ss3_ctl$SR_parms[grep("steep", rownames(ss3_ctl$SR_parms)), "PR_type"] <- 0
   ss3_ctl$SR_parms[grep("sigma", rownames(ss3_ctl$SR_parms)), "INIT"] <-  sigmar # recommended value from SS3
   ss3_ctl$SR_parms[grep("sigma", rownames(ss3_ctl$SR_parms)), "PHASE"] <- -2
@@ -417,7 +420,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   # Fishing mortality
   ss3_ctl$F_ballpark_year <- ss3_data$endyr
   ss3_ctl$F_Method <- 3
-  ss3_ctl$maxF <- 10
+  ss3_ctl$maxF <- 7
   ss3_ctl$F_iter <- 4
   if (initial_equilibrium_catch) ss3_ctl$init_F <- data.frame(
     "LO" = 0,
@@ -462,6 +465,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
     "LO" = rep(-10, ss3_data$Nsurveys),
     "HI" = rep(10, ss3_data$Nsurveys),
     "INIT" = log(c(0.77*1000, 0.29*1000)),
+    # "INIT" = log(c(0.77, 0.29)),
     # "INIT" = log(jitter(rep(0.05, ss3_data$Nsurveys), 30)),
     "PRIOR" = rep(0, ss3_data$Nsurveys),
     "SD" = rep(0, ss3_data$Nsurveys),
@@ -496,7 +500,7 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
   row.names(ss3_ctl$size_selex_types) <- ss3_data$fleetnames
 
   ss3_ctl$age_selex_types <- data.frame(
-    Pattern = c(19, 19, 19),
+    Pattern = c(17, 19, 19),
     Discard = 0,
     Male = 0,
     Special = 0
@@ -524,33 +528,36 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   colname <- colnames(ss3_ctl$age_selex_parms)
   ss3_ctl$size_selex_parms <- NULL
+
+
+  fleet1_selx_input <- data.frame(
+    Lo = c(-1000, rep(-10,  length(ss3_data$agebin_vector))),
+    Hi = 10,
+    INIT = c(0, 0.81, 1.64, -0.56, 0.61, -0.68, 0.36, 0), # pattern 17
+    # INIT = c(1.8, 3.1, 0.01, 0.88, 1, 0), # pattern 19
+    # INIT = c(0.75, 0.65, 0.65, 0.60, 0.60, 0.55, 0.50, 0.50), # pattern 14
+    # INIT = c(1, -5, 0, 7, 1, 0), # pattern 20
+    PRIOR = 0,
+    SD = 99,
+    PR_TYPE = 0,
+    PHASE = c(-2, 2, 2, 2, 2, 2, 2, -5),
+    matrix(0, ncol = 7, nrow = 8)
+  )
+
   ss3_ctl$age_selex_parms <- rbind(
     # Fleet 1
-    data.frame(
-      Lo = rep(0, 6),
-      Hi = max(ss3_data$agebin_vector),
-      INIT = c(1.8, 3.1, 0.01, 0.88, 1, 0),
-      PRIOR = 0,
-      SD = 99,
-      PR_TYPE = 0,
-      PHASE = c(2, 2, -2, 2, -2, -2),
-      # PHASE = 2,
-      # PHASE = -2,
-      matrix(0, ncol = 7, nrow = 6)
-    ),
+    fleet1_selx_input,
 
     # Survey 1
     data.frame(
       Lo = rep(0, 6),
       Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
-      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
+      # INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 0, 0),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(2, 2, 2, 2, -2, -2),
-      # PHASE = c(-2, 2, 2, 2, -2, -2),
-      # PHASE = -2,
-      # PHASE = 2,
+      PHASE = c(2, 2, -2, 2, -2, -2), # selected
       matrix(0, ncol = 7, nrow = 6)
     ),
 
@@ -558,14 +565,12 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
     data.frame(
       Lo = rep(0, 6),
       Hi = rep(c(max(ss3_data$agebin_vector), max(ss3_data$agebin_vector)*2), times=3),
-      INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
+      # INIT = c(2.3, 4.3, 2.3, 3.5, 1, 0),
+      INIT = c(2.3, 4.3, 2.3, 3.5, 0, 0),
       PRIOR = 0,
       SD = 99,
       PR_TYPE = 0,
-      PHASE = c(-2, 2, 2, 2, -2, -2),
-      # PHASE = c(2, 2, 2, 2, -2, -2),
-      # PHASE = -2,
-      # PHASE = 2,
+      PHASE = c(2, 2, -2, 2, -2, -2), # selected
       matrix(0, ncol = 7, nrow = 6)
     )
   )
@@ -683,12 +688,23 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
   ss3_forecast$sourcefile <- paste0(file_path, "forecast.ss")
   ss3_forecast$benchmarks <- 1
-  ss3_forecast$MSY <- 2
+
+  # if (add_environmental_effects == TRUE){
+  #   ss3_forecast$Forecast <- 1 # F(SPR)
+  #   ss3_forecast$MSY <- 1 # set to F(SPR)
+  # } else {
+  #   ss3_forecast$MSY <- 2 # calc FMSY
+  #   ss3_forecast$Forecast <- 2 # FMSY
+  # }
+
+  ss3_forecast$MSY <- 2 # calc FMSY
+  ss3_forecast$Forecast <- 2 # FMSY
+
   ss3_forecast$SPRtarget <- 0.4
   ss3_forecast$Btarget <- 0.4
   ss3_forecast$Bmark_years <- rep(ss3_data$endyr, 10)
   ss3_forecast$Bmark_relF_Basis <- 1
-  ss3_forecast$Forecast <- 2
+
   ss3_forecast$Nforecastyrs <- length(projection_year)
   ss3_forecast$F_scalar <- 0
   ss3_forecast$Fcast_years <- rep(0, 6)
@@ -716,7 +732,9 @@ generate_ss3 <- function(file_path, r0, r0_phase = 1, steepness, sigmar,
 
 
   # Write ss.wtatage ------------------------------------------------
-  wt_conversion <- 1000000 #g
+  # wt_conversion <- 1000000 #kg
+  wt_conversion <- 10000000
+  # wt_conversion <- 1000 #kg
   year_length <- length(model_year)+length(projection_year)
   waa.new <- do.call(
     "rbind",

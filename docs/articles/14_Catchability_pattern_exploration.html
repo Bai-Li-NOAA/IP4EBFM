@@ -78,49 +78,13 @@
       <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
     </li>
     <li>
-      <a href="../articles/06_Data_poor_stock_assessment.html">Data-poor stock assessment</a>
+      <a href="../articles/15_OM3_data_poor_stock_assessment_main_report.html">OM3 data-poor stock assessments</a>
     </li>
     <li>
-      <a href="../articles/07_Data_moderate_stock_assessment.html">Data-moderate stock assessment</a>
+      <a href="../articles/16_OM3_data_moderate_stock_assessment_main_report.html">OM3 data-moderate stock assessments</a>
     </li>
     <li>
-      <a href="../articles/08_Data_rich_stock_assessment.html">Data-rich stock assessment</a>
-    </li>
-    <li>
-      <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
-    </li>
-    <li>
-      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
-    </li>
-    <li>
-      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/14_Catchability_pattern_exploration.html">Catchability pattern exploration</a>
-    </li>
-    <li>
-      <a href="../articles/15_OM3_data_poor_stock_assessment_2008.html">OM3 data-poor stock assessment 2008</a>
-    </li>
-    <li>
-      <a href="../articles/15_OM3_data_poor_stock_assessment_2009.html">OM3 data-poor stock assessment 2009</a>
-    </li>
-    <li>
-      <a href="../articles/15_OM3_data_poor_stock_assessment_2012.html">OM3 data-poor stock assessment 2012</a>
-    </li>
-    <li>
-      <a href="../articles/16_OM3_Data_moderate_stock_assessment_2008.html">OM3 data-moderate stock assessment 2008</a>
-    </li>
-    <li>
-      <a href="../articles/16_OM3_Data_moderate_stock_assessment_2009.html">OM3 data-moderate stock assessment 2009</a>
-    </li>
-    <li>
-      <a href="../articles/16_OM3_Data_moderate_stock_assessment_2012.html">OM3 data-moderate stock assessment 2012</a>
+      <a href="../articles/17_OM3_data_rich_stock_assessment_main_report.html">OM3 data-rich stock assessment</a>
     </li>
   </ul>
 </li>
@@ -155,7 +119,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Catchability pattern exploration</h1>
             
-            <h4 data-toc-skip class="date">Updated on Nov 28, 2022</h4>
+            <h4 data-toc-skip class="date">Updated on Apr 04, 2024</h4>
       
       
       <div class="hidden name"><code>14_Catchability_pattern_exploration.Rmd</code></div>
@@ -168,43 +132,92 @@
 <h2 id="density-dependent-catchability-pattern">Density-dependent catchability pattern<a class="anchor" aria-label="anchor" href="#density-dependent-catchability-pattern"></a>
 </h2>
 <ul>
-<li><p>Create a density-dependent catchability pattern that follows a powered relationship (<a href="https://doi.org/10.1139/f06-111" class="external-link">Wilber and Bence, 2006</a>) where catchability declined with increasing biomass of menhaden-like species</p></li>
-<li><p><span class="math inline">\(q_t = \alpha B_t^{-\beta}\)</span> and <span class="math inline">\(F_{t, a} = q_t E_t\)</span></p></li>
+<li><p>Create a density-dependent catchability pattern that follows a
+powered relationship (<a href="https://doi.org/10.1139/f06-111" class="external-link">Wilber
+and Bence, 2006</a>) where catchability declined with increasing biomass
+of menhaden-like species</p></li>
+<li><p><span class="math inline">\(q_t = \alpha B_t^{-\beta}\)</span>
+and <span class="math inline">\(F_{t, a} = q_t E_t\)</span></p></li>
 </ul>
-<p>where <span class="math inline">\(q_t\)</span> denotes fishery catchability (<span class="math inline">\(effort^{-1}\)</span>), <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> represent parameters for density-dependent catchability. Medium values of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> can be 90 and 0.49 respectively (<a href="https://doi.org/10.1139/f06-111" class="external-link">Wilber and Bence, 2006</a>). <span class="math inline">\(F_{t,a}\)</span> and <span class="math inline">\(E_t\)</span> represent instantaneous fishing mortality rate by age and year (<span class="math inline">\(year^{-1}\)</span>) and fishery effort respectively.</p>
+<p>where <span class="math inline">\(q_t\)</span> denotes fishery
+catchability (<span class="math inline">\(effort^{-1}\)</span>), <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> represent parameters for
+density-dependent catchability. Medium values of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> can be 90 and 0.49 respectively (<a href="https://doi.org/10.1139/f06-111" class="external-link">Wilber and Bence, 2006</a>).
+<span class="math inline">\(F_{t,a}\)</span> and <span class="math inline">\(E_t\)</span> represent instantaneous fishing
+mortality rate by age and year (<span class="math inline">\(year^{-1}\)</span>) and fishery effort
+respectively.</p>
 </div>
 <div class="section level2">
 <h2 id="simulation-based-on-default-catchability-from-the-ewe-om">Simulation based on default catchability from the EwE OM<a class="anchor" aria-label="anchor" href="#simulation-based-on-default-catchability-from-the-ewe-om"></a>
 </h2>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-2-1.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-2-2.png" width="1152"></p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-3-1.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="simulation-based-on-density-dependent-catchability">Simulation based on density-dependent catchability<a class="anchor" aria-label="anchor" href="#simulation-based-on-density-dependent-catchability"></a>
 </h2>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-4-1.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-4-2.png" width="1152"></p>
 </div>
 <div class="section level2">
 <h2 id="i-think-effort-is-still-confounded-by-fishing-mortality">I think effort is still confounded by fishing mortality?<a class="anchor" aria-label="anchor" href="#i-think-effort-is-still-confounded-by-fishing-mortality"></a>
 </h2>
-<p>We can plot effort from both constant catchability (the OM) and density-dependent catchability below:</p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-5-1.png" width="1152"></p>
-<p>The scale is different but the trends still appear similar - I think this is because effort is still mostly following the trend from fishing mortality. There are a few reasons this may make sense, or not. I don’t think there should be a relationship between fishing mortality and biomass, at least in the same period, since fishing mortality is exogenous (by definition?).</p>
-<p>There might be a relationship between lagged mortality and biomass, if for example fishing more in this period affects biomass in the next period. However, this relationship seems to be positive (am I misreading this?), which also seems to imply more fishing results in more future fish. I would be worried any relationship here is spurious.</p>
-<p>An alternative is to look at catch per unit effort, and control for fishing mortality. This could follow if we were examining a fishery where catches are exogenously set by management, and harvesters always fulfill the total allowable catch, as a simplifying starting assumption.</p>
-<p>The first plot below is then catch per unit effort, with total catches per year taken from the EwE operating model. Notably, catches are not 1:1 with fishing mortality, but rather they already move with biomass, which is surprising (there’s already some kind of catchability set in the OM?).</p>
-<p>The second plot assumes we can observe true fishing mortality, and is fishing mortality per unit effort. By definition, we can then recover catchability.</p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-6-1.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-6-2.png" width="1152"></p>
-<p>Then we plot the relationship between each indicator (lagged) and biomass, where the first is fishing mortality per unit effort and the second catch per unit effort.</p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-7-1.png" width="1152"></p>
-<p>Notably, for the catch per unit effort, the relationship with biomass is positive. Catches tend to increase with biomass, and catches largely dominate the trend (compared to catchability). Then, when catches are low, biomass is relatively smaller, and future biomass is also smaller on average. I would guess that specifying catchability likely doesn’t affect the indicator in the this plot, which is largely driven by catches (which is a function of biomass?).</p>
-<p>For fishing mortality, the relationship with biomass is negative. This is due to the functional form we have specified for catchability, which decreases as biomass increases. Because biomass tends to move positively with lagged biomass, when when catchability is good, biomass is (relatively) low, and we can expect future biomass to also be smaller on average.</p>
-<p>Below, we plot lagged indicators on biomass estimates from JABBA, as well as the status of indicators over years and FMSY benchmarks.</p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-8-1.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-8-2.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-8-3.png" width="1152"><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-8-4.png" width="1152"></p>
-<p>I think, for me, the benefit of using fishing mortality is that there’s a well- defined mechanism that I can see drive the results: catchability is a function of biomass, so it should tell us something about future biomass as long as we can recover it.</p>
-<p>I think catch per unit effort would work as well here, but I don’t see a need to use catchability anymore, or at least it appears there’s already some sort of catchability implicit in EwE? As far as I can see it’s all -9999 as inputs into EwE so I’m not quite sure what’s going on here yet. But to the extent catches increase with biomass, there’s a relationship there to exploit. The story would then be if fishers catch more for the same mortality when biomass is larger, because it’s easier to catch fish conditional on the same time spent, fuel consumed, etc.</p>
-<p>I think with previous indicators like price, it could work but I’m not following the mechanism where prices have some relationship with biomass in the EwE OM. Although I’m sure I miss a lot of things so I apologize in advance!</p>
-<p><img src="14_Catchability_pattern_exploration_files/figure-html/unnamed-chunk-9-1.png" width="1152"></p>
+<p>We can plot effort from both constant catchability (the OM) and
+density-dependent catchability below:</p>
+<p>The scale is different but the trends still appear similar - I think
+this is because effort is still mostly following the trend from fishing
+mortality. There are a few reasons this may make sense, or not. I don’t
+think there should be a relationship between fishing mortality and
+biomass, at least in the same period, since fishing mortality is
+exogenous (by definition?).</p>
+<p>There might be a relationship between lagged mortality and biomass,
+if for example fishing more in this period affects biomass in the next
+period. However, this relationship seems to be positive (am I misreading
+this?), which also seems to imply more fishing results in more future
+fish. I would be worried any relationship here is spurious.</p>
+<p>An alternative is to look at catch per unit effort, and control for
+fishing mortality. This could follow if we were examining a fishery
+where catches are exogenously set by management, and harvesters always
+fulfill the total allowable catch, as a simplifying starting
+assumption.</p>
+<p>The first plot below is then catch per unit effort, with total
+catches per year taken from the EwE operating model. Notably, catches
+are not 1:1 with fishing mortality, but rather they already move with
+biomass, which is surprising (there’s already some kind of catchability
+set in the OM?).</p>
+<p>The second plot assumes we can observe true fishing mortality, and is
+fishing mortality per unit effort. By definition, we can then recover
+catchability.</p>
+<p>Then we plot the relationship between each indicator (lagged) and
+biomass, where the first is fishing mortality per unit effort and the
+second catch per unit effort.</p>
+<p>Notably, for the catch per unit effort, the relationship with biomass
+is positive. Catches tend to increase with biomass, and catches largely
+dominate the trend (compared to catchability). Then, when catches are
+low, biomass is relatively smaller, and future biomass is also smaller
+on average. I would guess that specifying catchability likely doesn’t
+affect the indicator in the this plot, which is largely driven by
+catches (which is a function of biomass?).</p>
+<p>For fishing mortality, the relationship with biomass is negative.
+This is due to the functional form we have specified for catchability,
+which decreases as biomass increases. Because biomass tends to move
+positively with lagged biomass, when when catchability is good, biomass
+is (relatively) low, and we can expect future biomass to also be smaller
+on average.</p>
+<p>Below, we plot lagged indicators on biomass estimates from JABBA, as
+well as the status of indicators over years and FMSY benchmarks.</p>
+<p>I think, for me, the benefit of using fishing mortality is that
+there’s a well- defined mechanism that I can see drive the results:
+catchability is a function of biomass, so it should tell us something
+about future biomass as long as we can recover it.</p>
+<p>I think catch per unit effort would work as well here, but I don’t
+see a need to use catchability anymore, or at least it appears there’s
+already some sort of catchability implicit in EwE? As far as I can see
+it’s all -9999 as inputs into EwE so I’m not quite sure what’s going on
+here yet. But to the extent catches increase with biomass, there’s a
+relationship there to exploit. The story would then be if fishers catch
+more for the same mortality when biomass is larger, because it’s easier
+to catch fish conditional on the same time spent, fuel consumed,
+etc.</p>
+<p>I think with previous indicators like price, it could work but I’m
+not following the mechanism where prices have some relationship with
+biomass in the EwE OM. Although I’m sure I miss a lot of things so I
+apologize in advance!</p>
 </div>
   </div>
 
@@ -225,7 +238,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

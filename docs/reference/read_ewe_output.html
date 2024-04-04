@@ -59,28 +59,13 @@
       <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
     </li>
     <li>
-      <a href="../articles/06_Data_poor_stock_assessment.html">Data-poor stock assessment</a>
+      <a href="../articles/15_OM3_data_poor_stock_assessment_main_report.html">OM3 data-poor stock assessments</a>
     </li>
     <li>
-      <a href="../articles/07_Data_moderate_stock_assessment.html">Data-moderate stock assessment</a>
+      <a href="../articles/16_OM3_data_moderate_stock_assessment_main_report.html">OM3 data-moderate stock assessments</a>
     </li>
     <li>
-      <a href="../articles/08_Data_rich_stock_assessment.html">Data-rich stock assessment</a>
-    </li>
-    <li>
-      <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
-    </li>
-    <li>
-      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
-    </li>
-    <li>
-      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
+      <a href="../articles/17_OM3_data_rich_stock_assessment_main_report.html">OM3 data-rich stock assessment</a>
     </li>
   </ul></li>
 <li>
@@ -116,33 +101,51 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">read_ewe_output</span><span class="op">(</span>
-  <span class="va">file_path</span>,
-  <span class="va">file_names</span>,
-  skip_nrows <span class="op">=</span> <span class="fl">8</span>,
-  <span class="va">functional_groups</span>,
-  plot <span class="op">=</span> <span class="cn">FALSE</span>,
-  figure_titles <span class="op">=</span> <span class="cn">NULL</span>,
-  figure_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">rainbow</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">read_ewe_output</span><span class="op">(</span></span>
+<span>  <span class="va">file_path</span>,</span>
+<span>  <span class="va">file_names</span>,</span>
+<span>  skip_nrows <span class="op">=</span> <span class="fl">8</span>,</span>
+<span>  colname_1 <span class="op">=</span> <span class="st">"Year"</span>,</span>
+<span>  <span class="va">functional_groups</span>,</span>
+<span>  plot <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  figure_titles <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  figure_colors <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/palettes.html" class="external-link">rainbow</a></span><span class="op">(</span><span class="fl">12</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>file_path</dt>
 <dd><p>a character string shows path to the working folder where EwE output csv files are located.</p></dd>
+
+
 <dt>file_names</dt>
 <dd><p>a vector of csv file names.</p></dd>
+
+
 <dt>skip_nrows</dt>
-<dd><p>interger: the number of lines of the data file to skip before reading data.</p></dd>
+<dd><p>integer: the number of lines of the data file to skip before reading data.</p></dd>
+
+
+<dt>colname_1</dt>
+<dd><p>column name of the first column. Default name is Year. The other option is FM (fishing mortality) for reading output from FMSY analysis.</p></dd>
+
+
 <dt>functional_groups</dt>
 <dd><p>a character string describes the column of the data matrix, which is functional groups in EwE case.</p></dd>
+
+
 <dt>plot</dt>
 <dd><p>logical: if <code>TRUE</code> then make figures for all output data files.</p></dd>
+
+
 <dt>figure_titles</dt>
 <dd><p>a character vector of strings describes the names of each figure.</p></dd>
+
+
 <dt>figure_colors</dt>
 <dd><p>a vector of colors.</p></dd>
+
 </dl></div>
 
   </div>
@@ -157,7 +160,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

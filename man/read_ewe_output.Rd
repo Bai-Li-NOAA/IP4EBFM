@@ -8,6 +8,7 @@ read_ewe_output(
   file_path,
   file_names,
   skip_nrows = 8,
+  colname_1 = "Year",
   functional_groups,
   plot = FALSE,
   figure_titles = NULL,
@@ -19,7 +20,9 @@ read_ewe_output(
 
 \item{file_names}{a vector of csv file names.}
 
-\item{skip_nrows}{interger: the number of lines of the data file to skip before reading data.}
+\item{skip_nrows}{integer: the number of lines of the data file to skip before reading data.}
+
+\item{colname_1}{column name of the first column. Default name is Year. The other option is FM (fishing mortality) for reading output from FMSY analysis.}
 
 \item{functional_groups}{a character string describes the column of the data matrix, which is functional groups in EwE case.}
 

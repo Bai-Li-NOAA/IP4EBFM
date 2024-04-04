@@ -14,8 +14,6 @@ knitr::opts_chunk$set(
 
 The folder contains links to all presentations (yyyymmdd_topic). 
 
-- [20240306_World Fisheries Congress 2024 presentation](https://docs.google.com/presentation/d/1KTxnZHje04uR-rt11j6kkRdqOuIKEaCdvPkQFoGZmVI/edit?usp=sharing)
-
 - [20211109_Ecosystem Modeling Approaches Review](https://docs.google.com/presentation/d/1dY6zHetwvntF746MkCbkjKP4hqRFB-ZU3iDPDow5GGM/edit?usp=sharing)
 
 - [20210907_Experimental Design](https://docs.google.com/presentation/d/12xTJWyyk6FdXYqhiu7xNpi2EIX_ODdwC0nv_syksDW0/edit?usp=sharing)

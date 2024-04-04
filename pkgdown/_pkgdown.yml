@@ -40,48 +40,12 @@ navbar:
         href: articles/04_Ecosystem_simulation_with_environmental_drivers.html
       - text: Stock assessment data simulation
         href: articles/05_Stock_assessment_data_simulation.html
-      - text: Data-poor stock assessment
-        href: articles/06_Data_poor_stock_assessment.html
-      - text: Data-moderate stock assessment
-        href: articles/07_Data_moderate_stock_assessment.html
-      - text: Data-rich stock assessment
-        href: articles/08_Data_rich_stock_assessment.html
-      - text: New ecosystem simulation
-        href: articles/09_Ecopath_with_ecosim_simulation.html
-      - text: EwE fleet dynamics
-        href: articles/10_EwE_fleet_dynamics_simulation.html
-      - text: Data-poor stock assessment with new EwE OM
-        href: articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html
-      - text: Data-moderate stock assessment with new EwE OM
-        href: articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html
-      - text: Data-rich stock assessment with new EwE OM
-        href: articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html
-      - text: Catchability pattern exploration
-        href: articles/14_Catchability_pattern_exploration.html
-      - text: OM3 data-poor stock assessment 2008
-        href: articles/15_OM3_data_poor_stock_assessment_2008.html
-      - text: OM3 data-poor stock assessment 2009
-        href: articles/15_OM3_data_poor_stock_assessment_2009.html
-      - text: OM3 data-poor stock assessment 2012
-        href: articles/15_OM3_data_poor_stock_assessment_2012.html
-      - text: OM3 data-moderate stock assessment 2008
-        href: articles/16_OM3_Data_moderate_stock_assessment_2008.html
-      - text: OM3 data-moderate stock assessment 2009
-        href: articles/16_OM3_Data_moderate_stock_assessment_2009.html
-      - text: OM3 data-moderate stock assessment 2012
-        href: articles/16_OM3_Data_moderate_stock_assessment_2012.html
-      - text: OM3 data-rich stock assessment 1995 lowCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_1995.html
-      - text: OM3 data-rich stock assessment 2002 lowCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_2002.html
-      - text: OM3 data-rich stock assessment 2012 lowCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_2012.html
-      - text: OM3 data-rich stock assessment 1995 highCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_1995_highCV_noEnv.html
-      - text: OM3 data-rich stock assessment 2002 highCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_2002_highCV_noEnv.html
-      - text: OM3 data-rich stock assessment 2012 highCV noEnv
-        href: articles/17_OM3_data_rich_stock_assessment_2012_highCV_noEnv.html
+      - text: OM3 data-poor stock assessments
+        href: articles/15_OM3_data_poor_stock_assessment_main_report.html
+      - text: OM3 data-moderate stock assessments
+        href: articles/16_OM3_data_moderate_stock_assessment_main_report.html
+      - text: OM3 data-rich stock assessment
+        href: articles/17_OM3_data_rich_stock_assessment_main_report.html
 
 
 

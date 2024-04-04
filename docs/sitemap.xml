@@ -4,9 +4,6 @@
     <loc>/404.html</loc>
   </url>
   <url>
-    <loc>/articles/009_Ecopath_with_ecosim_simulation.html</loc>
-  </url>
-  <url>
     <loc>/articles/01_litreview/01_001_Bibliography.html</loc>
   </url>
   <url>
@@ -22,43 +19,25 @@
     <loc>/articles/05_Stock_assessment_data_simulation.html</loc>
   </url>
   <url>
-    <loc>/articles/06_Data_poor_stock_assessment.html</loc>
-  </url>
-  <url>
-    <loc>/articles/07_Data_moderate_stock_assessment.html</loc>
-  </url>
-  <url>
-    <loc>/articles/08_Data_rich_stock_assessment.html</loc>
-  </url>
-  <url>
     <loc>/articles/09_Ecopath_with_ecosim_simulation.html</loc>
   </url>
   <url>
     <loc>/articles/10_EwE_fleet_dynamics_simulation.html</loc>
   </url>
   <url>
-    <loc>/articles/11_Data_poor_stock_assessment_newEcosim.html</loc>
+    <loc>/articles/14_Catchability_pattern_exploration.html</loc>
   </url>
   <url>
-    <loc>/articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html</loc>
+    <loc>/articles/15_OM3_data_poor_stock_assessment_main_report.html</loc>
   </url>
   <url>
-    <loc>/articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html</loc>
+    <loc>/articles/16_OM3_data_moderate_stock_assessment_main_report.html</loc>
   </url>
   <url>
-    <loc>/articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html</loc>
-  </url>
-  <url>
-    <loc>/articles/14_Data_rich_stock_assessmet_with_OM3.html</loc>
+    <loc>/articles/17_OM3_data_rich_stock_assessment_main_report.html</loc>
   </url>
   <url>
     <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/nofbegin.html</loc>
-  </url>
-  <url>
-    <loc>/articles/temp.html</loc>
   </url>
   <url>
     <loc>/authors.html</loc>
@@ -118,6 +97,12 @@
     <loc>/reference/logistic.html</loc>
   </url>
   <url>
+    <loc>/reference/read_ewe_effort.html</loc>
+  </url>
+  <url>
     <loc>/reference/read_ewe_output.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read_ewe_reference_points.html</loc>
   </url>
 </urlset>

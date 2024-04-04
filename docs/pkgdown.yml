@@ -1,5 +1,5 @@
-pandoc: 2.11.4
-pkgdown: 2.0.2
+pandoc: 2.19.2
+pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   01_001_Bibliography: 01_litreview/01_001_Bibliography.html
@@ -7,16 +7,11 @@ articles:
   03_Ecosystem_model_restructuring: 03_Ecosystem_model_restructuring.html
   04_Ecosystem_simulation_with_environmental_drivers: 04_Ecosystem_simulation_with_environmental_drivers.html
   05_Stock_assessment_data_simulation: 05_Stock_assessment_data_simulation.html
-  06_Data_poor_stock_assessment: 06_Data_poor_stock_assessment.html
-  07_Data_moderate_stock_assessment: 07_Data_moderate_stock_assessment.html
-  08_Data_rich_stock_assessment: 08_Data_rich_stock_assessment.html
   09_Ecopath_with_ecosim_simulation: 09_Ecopath_with_ecosim_simulation.html
   10_EwE_fleet_dynamics_simulation: 10_EwE_fleet_dynamics_simulation.html
-  11_Data_poor_stock_assessment_with_new_EwE_OM: 11_Data_poor_stock_assessment_with_new_EwE_OM.html
-  12_Data_moderate_stock_assessmet_with_new_EwE_OM: 12_Data_moderate_stock_assessmet_with_new_EwE_OM.html
-  13_Data_rich_stock_assessmet_with_new_EwE_OM: 13_Data_rich_stock_assessmet_with_new_EwE_OM.html
-  14_Data_rich_stock_assessmet_with_OM3: 14_Data_rich_stock_assessmet_with_OM3.html
-  nofbegin: nofbegin.html
-  temp: temp.html
-last_built: 2022-09-13T14:26Z
+  14_Catchability_pattern_exploration: 14_Catchability_pattern_exploration.html
+  15_OM3_data_poor_stock_assessment_main_report: 15_OM3_data_poor_stock_assessment_main_report.html
+  16_OM3_data_moderate_stock_assessment_main_report: 16_OM3_data_moderate_stock_assessment_main_report.html
+  17_OM3_data_rich_stock_assessment_main_report: 17_OM3_data_rich_stock_assessment_main_report.html
+last_built: 2024-04-04T15:47Z
 

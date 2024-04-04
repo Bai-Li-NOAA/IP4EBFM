@@ -8,7 +8,21 @@ output:
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(collapse = TRUE)
 ```
-            
+
+```{r echo = FALSE, message=FALSE, results='hide'}
+devtools::load_all()
+
+required_pkg <- c(
+  "RCurl", "XML", "plyr"
+)
+
+pkg_to_install <- required_pkg[!(required_pkg %in%
+  installed.packages()[, "Package"])]
+if (length(pkg_to_install)) install.packages(pkg_to_install, repos = "http://cran.us.r-project.org")
+
+invisible(lapply(required_pkg, library, character.only = TRUE))
+```
+
 ## 1. Ecopath with Ecosim (EwE) models
 
 - Recommendation from Desiree Tommasi: Laura Koehn's [2016 paper](https://doi.org/10.1016/j.ecolmodel.2016.05.010) and [project GitHub repository](https://github.com/koehnl/CalCurFoodWebModelECOMOD)
@@ -32,10 +46,6 @@ knitr::opts_chunk$set(collapse = TRUE)
 ```{r, echo = FALSE, message=FALSE}
 # To get a list of available EwE models and to get the input and output values for selected models
 # The source code is from the EcoBase (a database of Ecopath with Ecosim models) website: http://ecobase.ecopath.org/#docs
-
-library(RCurl)
-library(XML)
-library(plyr)
 
 # To get a list of available EwE models -----------------------------------
 

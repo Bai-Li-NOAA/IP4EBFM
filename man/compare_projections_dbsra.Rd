@@ -11,11 +11,14 @@ compare_projections_dbsra(
   model_year,
   lag = 0,
   amo,
-  pcp,
   pdsi,
   bassB,
-  price,
-  effort,
+  menhadenC,
+  menhadenE,
+  menhadenCPUE,
+  bassCPUE,
+  herringCPUE,
+  menhadenV,
   indices
 )
 }
@@ -32,15 +35,21 @@ compare_projections_dbsra(
 
 \item{amo}{AMO data.}
 
-\item{pcp}{Precipitation data.}
-
 \item{pdsi}{Palmer drought severity index data.}
 
 \item{bassB}{Biomass of Striped bass data.}
 
-\item{price}{Price of menhaden data.}
+\item{menhadenC}{Catch of menhaden-like species from the EwE operating model.}
 
-\item{effort}{Fishing effort of menhaden-like species from the EwE operating model.}
+\item{menhadenE}{Fishing effort of menhaden-like species from the EwE operating model.}
+
+\item{menhadenCPUE}{Catch per unit effort of menhaden-like species from the EwE operating model.}
+
+\item{bassCPUE}{Catch per unit effort of bass-like species from the EwE operating model.}
+
+\item{herringCPUE}{Catch per unit effort of herring-like species from the EwE operating model.}
+
+\item{menhadenV}{Ex-vessel value of menhaden-like species.}
 
 \item{indices}{Indices will be used in the analysis.}
 }

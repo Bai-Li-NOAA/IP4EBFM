@@ -1,0 +1,457 @@
+---
+title: 'OM3 data-poor stock assessments'
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: TRUE
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, 
+                      message = FALSE,
+                      warning = FALSE,
+                      fig.width = 12,
+                      fig.height = 10,
+                      results = 'asis')
+```
+
+## Depletion-Based Stock Reduction Analysis(DB-SRA) from DLMtool
+
+- GitHub repo: <https://github.com/Blue-Matter/DLMtool>
+- Package website: <https://dlmtool.openmse.com/>
+
+```{r results='hide'}
+devtools::load_all()
+
+required_pkg <- c("DLMtool", "here", "ggplot2", "reshape2",
+                  "RColorBrewer", "scales", "fmsb", 
+                  "Polychrome") ## DLMtool: version 6.0.3; 
+
+pkg_to_install <- required_pkg[!(required_pkg %in%
+                                   installed.packages()[, "Package"])]
+if (length(pkg_to_install)) install.packages(pkg_to_install, repos = "http://cran.us.r-project.org")
+
+invisible(lapply(required_pkg, library, character.only = TRUE))
+```
+# EwE without environmental effects and without fleet dynamics
+<!-- ## Year 1996 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+## Year 2012 Assessment with low CV in data and without environmental link in the estimation model
+
+```{r}
+scenario_filename <- "_lowCV"
+terminal_year <- 2012
+fishery_CV_input <- 0.05
+survey_CV_input <- 0.1
+add_environmental_effects <- FALSE
+add_fleet_dynamics <- FALSE
+cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd',
+                      envir = environment(),
+                      quiet = TRUE))
+```
+
+<!-- ## Year 1996 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2012 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2012 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- FALSE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+# EwE with environmental effects and without fleet dynamics
+<!-- ## Year 1996 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+## Year 2012 Assessment with low CV in data and without environmental link in the estimation model
+
+```{r}
+scenario_filename <- "_lowCV"
+terminal_year <- 2012
+fishery_CV_input <- 0.05
+survey_CV_input <- 0.1
+add_environmental_effects <- TRUE
+add_fleet_dynamics <- FALSE
+cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd',
+                      envir = environment(),
+                      quiet = TRUE))
+```
+
+<!-- ## Year 1996 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2012 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2012 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- FALSE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+# EwE with environmental effects and fleet dynamics
+<!-- ## Year 1996 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with low CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_lowCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.05 -->
+<!-- survey_CV_input <- 0.1 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+## Year 2012 Assessment with low CV in data and without environmental link in the estimation model
+
+```{r}
+scenario_filename <- "_lowCV"
+terminal_year <- 2012
+fishery_CV_input <- 0.05
+survey_CV_input <- 0.1
+add_environmental_effects <- TRUE
+add_fleet_dynamics <- TRUE
+cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd',
+                      envir = environment(),
+                      quiet = TRUE))
+```
+
+<!-- ## Year 1996 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1996 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 1997 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 1997 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2004 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2004 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2007 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2007 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->
+
+<!-- ## Year 2012 Assessment with high CV in data and without environmental link in the estimation model -->
+
+<!-- ```{r} -->
+<!-- scenario_filename <- "_highCV" -->
+<!-- terminal_year <- 2012 -->
+<!-- fishery_CV_input <- 0.2 -->
+<!-- survey_CV_input <- 0.5 -->
+<!-- add_environmental_effects <- TRUE -->
+<!-- add_fleet_dynamics <- TRUE -->
+<!-- cat(knitr::knit_child('_OM3_data_poor_stock_assessment_template.Rmd', -->
+<!--                       envir = environment(), -->
+<!--                       quiet = TRUE)) -->
+<!-- ``` -->

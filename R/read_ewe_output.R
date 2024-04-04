@@ -74,6 +74,50 @@ read_ewe_output <- function(file_path,
   return(data)
 }
 
+#' Read in EwE fishing effort data and make figures
+#'
+#' @description It reads in the output data from Ecopath with Ecosim (EwE) and
+#' making figures for each dataset. The timestep of the output data needs to be
+#' month. The rows of the data matrix represents month and the columns of the
+#' data represents fleets. It creates figures and save the figures where EwE
+#' output csv files are located. The potential data include: fishing effort
+#' over years.
+#'
+#' @param file_path a character string shows path to the working folder where EwE output csv files are located.
+#' @param file_names a vector of csv file names.
+#' @param skip_nrows integer: the number of lines of the data file to skip before reading data.
+#' @param colname_1 column name of the first column. Default name is Month.
+#' @param fleets a character string describes the column of the data matrix, which is fleets in EwE case.
+#' @param years a vector of years.
+#' @export
+
+read_ewe_effort <- function(file_path,
+                            file_names,
+                            skip_nrows = 8,
+                            colname_1 = "month",
+                            fleets,
+                            years) {
+  data <- vector(mode = "list", length = length(file_names))
+
+  for (file_id in 1:length(file_names)) {
+    temp <- scan(file.path(file_path, file_names[file_id]), what = "", sep = "\n")
+    data[[file_id]] <- temp[-c(1:skip_nrows)]
+
+    data[[file_id]] <- read.table(
+      text = as.character(data[[file_id]]),
+      sep = ",",
+      col.names = c(colname_1, fleets, "NA")
+    )
+
+    data[[file_id]] <- data[[file_id]][-nrow(data[[file_id]]), -ncol(data[[file_id]])]
+
+    data[[file_id]]$month <- rep(1:12, times = length(years))
+    data[[file_id]]$year <- rep(years, each = 12)
+  }
+
+  return(data)
+}
+
 #' Read in EwE MSY reference points and make figures
 #'
 #' @description It reads in the MSY reference points (i.e. MSY, FMSY, BMSY) from Ecopath with Ecosim (EwE) and making figures for yield over fishing mortality. It only works with Atlantic menhaden for now.

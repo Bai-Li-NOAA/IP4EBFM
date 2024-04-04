@@ -59,28 +59,13 @@
       <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
     </li>
     <li>
-      <a href="../articles/06_Data_poor_stock_assessment.html">Data-poor stock assessment</a>
+      <a href="../articles/15_OM3_data_poor_stock_assessment_main_report.html">OM3 data-poor stock assessments</a>
     </li>
     <li>
-      <a href="../articles/07_Data_moderate_stock_assessment.html">Data-moderate stock assessment</a>
+      <a href="../articles/16_OM3_data_moderate_stock_assessment_main_report.html">OM3 data-moderate stock assessments</a>
     </li>
     <li>
-      <a href="../articles/08_Data_rich_stock_assessment.html">Data-rich stock assessment</a>
-    </li>
-    <li>
-      <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
-    </li>
-    <li>
-      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
-    </li>
-    <li>
-      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
+      <a href="../articles/17_OM3_data_rich_stock_assessment_main_report.html">OM3 data-rich stock assessment</a>
     </li>
   </ul></li>
 <li>
@@ -116,42 +101,55 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">logistic</span><span class="op">(</span>
-  <span class="va">pattern</span>,
-  <span class="va">x</span>,
-  slope_asc <span class="op">=</span> <span class="cn">NULL</span>,
-  location_asc <span class="op">=</span> <span class="cn">NULL</span>,
-  slope_desc <span class="op">=</span> <span class="cn">NULL</span>,
-  location_desc <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">logistic</span><span class="op">(</span></span>
+<span>  <span class="va">pattern</span>,</span>
+<span>  <span class="va">x</span>,</span>
+<span>  slope_asc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location_asc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  slope_desc <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  location_desc <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>pattern</dt>
 <dd><p>logistic function option. Options: "simple_logistic" and "double_logistic"</p></dd>
+
+
 <dt>x</dt>
 <dd><p>Vector or scalar of indepenent variable</p></dd>
+
+
 <dt>slope_asc</dt>
 <dd><p>Slope parameter for ascending curve</p></dd>
+
+
 <dt>location_asc</dt>
 <dd><p>Location parameter for ascending curve</p></dd>
+
+
 <dt>slope_desc</dt>
 <dd><p>Slope parameter for descending curve</p></dd>
+
+
 <dt>location_desc</dt>
 <dd><p>Location parameter for descending curve</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Values of function at <code>x</code>.</p>
+    
+
+<p>Values of function at <code>x</code>.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">logistic</span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"simple_logistic"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, slope_asc <span class="op">=</span> <span class="fl">3</span>, location_asc <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">logistic</span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"double_logistic"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, slope_asc <span class="op">=</span> <span class="fl">3</span>, location_asc <span class="op">=</span> <span class="fl">1.5</span>, slope_desc <span class="op">=</span> <span class="fl">2</span>, location_desc <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">logistic</span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"simple_logistic"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, slope_asc <span class="op">=</span> <span class="fl">3</span>, location_asc <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">logistic</span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"double_logistic"</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>, slope_asc <span class="op">=</span> <span class="fl">3</span>, location_asc <span class="op">=</span> <span class="fl">1.5</span>, slope_desc <span class="op">=</span> <span class="fl">2</span>, location_desc <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -166,7 +164,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

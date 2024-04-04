@@ -59,28 +59,13 @@
       <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
     </li>
     <li>
-      <a href="../articles/06_Data_poor_stock_assessment.html">Data-poor stock assessment</a>
+      <a href="../articles/15_OM3_data_poor_stock_assessment_main_report.html">OM3 data-poor stock assessments</a>
     </li>
     <li>
-      <a href="../articles/07_Data_moderate_stock_assessment.html">Data-moderate stock assessment</a>
+      <a href="../articles/16_OM3_data_moderate_stock_assessment_main_report.html">OM3 data-moderate stock assessments</a>
     </li>
     <li>
-      <a href="../articles/08_Data_rich_stock_assessment.html">Data-rich stock assessment</a>
-    </li>
-    <li>
-      <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
-    </li>
-    <li>
-      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
-    </li>
-    <li>
-      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
+      <a href="../articles/17_OM3_data_rich_stock_assessment_main_report.html">OM3 data-rich stock assessment</a>
     </li>
   </ul></li>
 <li>
@@ -116,72 +101,101 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">generate_ss3</span><span class="op">(</span>
-  <span class="va">file_path</span>,
-  <span class="va">r0</span>,
-  r0_phase <span class="op">=</span> <span class="fl">1</span>,
-  <span class="va">steepness</span>,
-  <span class="va">sigmar</span>,
-  <span class="va">projection_f</span>,
-  projection_catch <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">sa_data</span>,
-  <span class="va">model_year</span>,
-  <span class="va">projection_year</span>,
-  use_depletion <span class="op">=</span> <span class="cn">FALSE</span>,
-  depletion_ratio <span class="op">=</span> <span class="cn">NULL</span>,
-  initial_equilibrium_catch <span class="op">=</span> <span class="cn">TRUE</span>,
-  settlement_age <span class="op">=</span> <span class="fl">0</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_ss3</span><span class="op">(</span></span>
+<span>  <span class="va">file_path</span>,</span>
+<span>  <span class="va">r0</span>,</span>
+<span>  r0_phase <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  <span class="va">steepness</span>,</span>
+<span>  <span class="va">sigmar</span>,</span>
+<span>  <span class="va">projection_f</span>,</span>
+<span>  projection_catch <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">sa_data</span>,</span>
+<span>  <span class="va">model_year</span>,</span>
+<span>  <span class="va">projection_year</span>,</span>
+<span>  use_depletion <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  depletion_ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  initial_equilibrium_catch <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  settlement_age <span class="op">=</span> <span class="fl">0</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>file_path</dt>
 <dd><p>A file path to a directory where the assessment input and output files will be saved.</p></dd>
+
+
 <dt>r0</dt>
 <dd><p>Unexploited recruitment from Beverton-Holt stock-recruitment model.</p></dd>
+
+
 <dt>r0_phase</dt>
 <dd><p>Phase for Unexploited recruitment from Beverton-Holt stock-recruitment model. Default value is 1.</p></dd>
+
+
 <dt>steepness</dt>
 <dd><p>Steepness from Beverton-Holt stock-recruitment model. Recruitment relative to unfished recruitment at 20% of unfished spawning biomass.</p></dd>
+
+
 <dt>sigmar</dt>
 <dd><p>Standard deviation of log recruitment.</p></dd>
+
+
 <dt>projection_f</dt>
 <dd><p>Fishing mortality inputs for projections.</p></dd>
+
+
 <dt>projection_catch</dt>
 <dd><p>Catch inputs for projections.</p></dd>
+
+
 <dt>sa_data</dt>
 <dd><p>Simulated stock assessment input data from Rscript/simulation.R.</p></dd>
+
+
 <dt>model_year</dt>
 <dd><p>A vector of years for model fitting.</p></dd>
+
+
 <dt>projection_year</dt>
 <dd><p>A vector of years for projection.</p></dd>
+
+
 <dt>use_depletion</dt>
 <dd><p>A logical value.</p></dd>
+
+
 <dt>depletion_ratio</dt>
 <dd><p>Ratio of depletion.</p></dd>
+
+
 <dt>initial_equilibrium_catch</dt>
 <dd><p>TRUE or FALSE.</p></dd>
+
+
 <dt>settlement_age</dt>
 <dd><p>Settlement age. Default value is age 0.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Outputs from Stock Synthesis 3</p>
+    
+
+<p>Outputs from Stock Synthesis 3</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">generate_ss3</span><span class="op">(</span></span>
-<span class="r-in">  file_path  <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"data_rich"</span><span class="op">)</span>,</span>
-<span class="r-in">  r0 <span class="op">=</span> <span class="fl">12</span>, steepness <span class="op">=</span> <span class="fl">0.5</span>, sigmar <span class="op">=</span><span class="fl">0.25</span>,</span>
-<span class="r-in">  projection_f <span class="op">=</span> <span class="fl">0.75</span>, projection_catch <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span class="r-in">  sa_data <span class="op">=</span> <span class="va">sa_data</span>, model_year <span class="op">=</span> <span class="fl">1985</span><span class="op">:</span><span class="fl">2012</span>,</span>
-<span class="r-in">  projection_year <span class="op">=</span> <span class="fl">2013</span><span class="op">:</span><span class="fl">2017</span>,</span>
-<span class="r-in">  use_depletion <span class="op">=</span> <span class="cn">FALSE</span>, depletion_ratio <span class="op">=</span> <span class="cn">NULL</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">generate_ss3</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  file_path  <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"data"</span>, <span class="st">"data_rich"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  r0 <span class="op">=</span> <span class="fl">12</span>, steepness <span class="op">=</span> <span class="fl">0.5</span>, sigmar <span class="op">=</span><span class="fl">0.25</span>,</span></span>
+<span class="r-in"><span>  projection_f <span class="op">=</span> <span class="fl">0.75</span>, projection_catch <span class="op">=</span> <span class="cn">NULL</span>,</span></span>
+<span class="r-in"><span>  sa_data <span class="op">=</span> <span class="va">sa_data</span>, model_year <span class="op">=</span> <span class="fl">1985</span><span class="op">:</span><span class="fl">2012</span>,</span></span>
+<span class="r-in"><span>  projection_year <span class="op">=</span> <span class="fl">2013</span><span class="op">:</span><span class="fl">2017</span>,</span></span>
+<span class="r-in"><span>  use_depletion <span class="op">=</span> <span class="cn">FALSE</span>, depletion_ratio <span class="op">=</span> <span class="cn">NULL</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -196,7 +210,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

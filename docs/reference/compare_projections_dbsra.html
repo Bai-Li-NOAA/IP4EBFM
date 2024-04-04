@@ -59,28 +59,13 @@
       <a href="../articles/05_Stock_assessment_data_simulation.html">Stock assessment data simulation</a>
     </li>
     <li>
-      <a href="../articles/06_Data_poor_stock_assessment.html">Data-poor stock assessment</a>
+      <a href="../articles/15_OM3_data_poor_stock_assessment_main_report.html">OM3 data-poor stock assessments</a>
     </li>
     <li>
-      <a href="../articles/07_Data_moderate_stock_assessment.html">Data-moderate stock assessment</a>
+      <a href="../articles/16_OM3_data_moderate_stock_assessment_main_report.html">OM3 data-moderate stock assessments</a>
     </li>
     <li>
-      <a href="../articles/08_Data_rich_stock_assessment.html">Data-rich stock assessment</a>
-    </li>
-    <li>
-      <a href="../articles/09_Ecopath_with_ecosim_simulation.html">New ecosystem simulation</a>
-    </li>
-    <li>
-      <a href="../articles/10_EwE_fleet_dynamics_simulation.html">EwE fleet dynamics</a>
-    </li>
-    <li>
-      <a href="../articles/11_Data_poor_stock_assessment_with_new_EwE_OM.html">Data-poor stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/12_Data_moderate_stock_assessmet_with_new_EwE_OM.html">Data-moderate stock assessment with new EwE OM</a>
-    </li>
-    <li>
-      <a href="../articles/13_Data_rich_stock_assessmet_with_new_EwE_OM.html">Data-rich stock assessment with new EwE OM</a>
+      <a href="../articles/17_OM3_data_rich_stock_assessment_main_report.html">OM3 data-rich stock assessment</a>
     </li>
   </ul></li>
 <li>
@@ -116,52 +101,92 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">compare_projections_dbsra</span><span class="op">(</span>
-  <span class="va">case_name</span>,
-  <span class="va">projection_output_data</span>,
-  <span class="va">projection_year</span>,
-  <span class="va">model_year</span>,
-  lag <span class="op">=</span> <span class="fl">0</span>,
-  <span class="va">amo</span>,
-  <span class="va">pcp</span>,
-  <span class="va">pdsi</span>,
-  <span class="va">bassB</span>,
-  <span class="va">price</span>,
-  <span class="va">effort</span>,
-  <span class="va">indices</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">compare_projections_dbsra</span><span class="op">(</span></span>
+<span>  <span class="va">case_name</span>,</span>
+<span>  <span class="va">projection_output_data</span>,</span>
+<span>  <span class="va">projection_year</span>,</span>
+<span>  <span class="va">model_year</span>,</span>
+<span>  lag <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  <span class="va">amo</span>,</span>
+<span>  <span class="va">pdsi</span>,</span>
+<span>  <span class="va">bassB</span>,</span>
+<span>  <span class="va">menhadenC</span>,</span>
+<span>  <span class="va">menhadenE</span>,</span>
+<span>  <span class="va">menhadenCPUE</span>,</span>
+<span>  <span class="va">bassCPUE</span>,</span>
+<span>  <span class="va">herringCPUE</span>,</span>
+<span>  <span class="va">menhadenV</span>,</span>
+<span>  <span class="va">indices</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>case_name</dt>
 <dd><p>name of a case.</p></dd>
+
+
 <dt>projection_output_data</dt>
 <dd><p>Output data frame from different DB-SRA cases.</p></dd>
+
+
 <dt>projection_year</dt>
 <dd><p>A vector of projection years.</p></dd>
+
+
 <dt>model_year</dt>
 <dd><p>A vector of model years.</p></dd>
+
+
 <dt>lag</dt>
 <dd><p>Lag between biomass of menhaden-like species and indices.</p></dd>
+
+
 <dt>amo</dt>
 <dd><p>AMO data.</p></dd>
-<dt>pcp</dt>
-<dd><p>Precipitation data.</p></dd>
+
+
 <dt>pdsi</dt>
 <dd><p>Palmer drought severity index data.</p></dd>
+
+
 <dt>bassB</dt>
 <dd><p>Biomass of Striped bass data.</p></dd>
-<dt>price</dt>
-<dd><p>Price of menhaden data.</p></dd>
-<dt>effort</dt>
+
+
+<dt>menhadenC</dt>
+<dd><p>Catch of menhaden-like species from the EwE operating model.</p></dd>
+
+
+<dt>menhadenE</dt>
 <dd><p>Fishing effort of menhaden-like species from the EwE operating model.</p></dd>
+
+
+<dt>menhadenCPUE</dt>
+<dd><p>Catch per unit effort of menhaden-like species from the EwE operating model.</p></dd>
+
+
+<dt>bassCPUE</dt>
+<dd><p>Catch per unit effort of bass-like species from the EwE operating model.</p></dd>
+
+
+<dt>herringCPUE</dt>
+<dd><p>Catch per unit effort of herring-like species from the EwE operating model.</p></dd>
+
+
+<dt>menhadenV</dt>
+<dd><p>Ex-vessel value of menhaden-like species.</p></dd>
+
+
 <dt>indices</dt>
 <dd><p>Indices will be used in the analysis.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).</p>
+    
+
+<p>A data list that includes slope values from linear regression models (lm_slope), status of indicator output (soi_data), adjusted TAC output (tac_data), reshaped status of indicator output (soi_data_melt), reshaped adjusted TAC output (tac_data_melt), and median adjusted tac over years (tac_data_melt_median).</p>
     </div>
 
   </div>
@@ -176,7 +201,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

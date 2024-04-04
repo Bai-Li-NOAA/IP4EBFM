@@ -8,6 +8,7 @@ generate_jabba(
   assessment_name,
   output_dir,
   sa_data,
+  BmsyK = 0.4,
   model_year,
   projection_year,
   effort_data = NULL,
@@ -20,6 +21,8 @@ generate_jabba(
 \item{output_dir}{A file path to a directory where the assessment output will be saved.}
 
 \item{sa_data}{Simulated stock assessment input data from Rscript/simulation.R.}
+
+\item{BmsyK}{Inflection point of the surplus production curve. Default value is 0.4.}
 
 \item{model_year}{A vector of years for model fitting.}
 
