@@ -1,3 +1,0 @@
-1 Final gradient: 0.000318813 is larger than final_conv: 0.0001
- N parameters are on or within 1% of min-max bound: 3; check results, variance may be suspect
-N warnings: 1
