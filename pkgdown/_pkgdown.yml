@@ -41,11 +41,11 @@ navbar:
       - text: Stock assessment data simulation
         href: articles/05_Stock_assessment_data_simulation.html
       - text: OM3 data-poor stock assessments
-        href: articles/15_OM3_data_poor_stock_assessment_main_report.html
+        href: articles/09_OM3_data_poor_stock_assessment_main_report.html
       - text: OM3 data-moderate stock assessments
-        href: articles/16_OM3_data_moderate_stock_assessment_main_report.html
+        href: articles/10_OM3_data_moderate_stock_assessment_main_report.html
       - text: OM3 data-rich stock assessment
-        href: articles/17_OM3_data_rich_stock_assessment_main_report.html
+        href: articles/11_OM3_data_rich_stock_assessment_main_report.html
 
 
 
