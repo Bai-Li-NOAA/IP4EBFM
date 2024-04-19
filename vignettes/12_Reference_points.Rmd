@@ -1,0 +1,345 @@
+---
+title: 'Ecological and single-species reference points'
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: TRUE
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 12,
+  fig.height = 10,
+  results = "asis"
+)
+```
+
+```{r utils, include=FALSE}
+devtools::load_all()
+read_fmsy_table <- function(file_names,
+                            skip_nrows = 12,
+                            colname = c(
+                              "Group", "TL", "Fbase", "Cbase",
+                              "Vbase", "FmsyFound", "Fmsy", "Cmsy", "Vmsy", "CmsyAll", "VmsyAll"
+                            ),
+                            functional_groups) {
+  data <- vector(mode = "list", length = length(file_names))
+
+  for (file_id in 1:length(file_names)) {
+    temp <- scan(file.path(file_names[file_id]), what = "", sep = "\n")
+    data[[file_id]] <- temp[-c(1:skip_nrows)]
+    data[[file_id]] <- read.table(
+      text = as.character(data[[file_id]]),
+      sep = ",",
+      col.names = colname
+    )
+    data[[file_id]] <- data[[file_id]][grep("menhaden", data[[file_id]]$Group), "Fmsy"]
+  }
+  return(data)
+}
+```
+
+# Evaluation of equilibrium MSY reference points
+- Single-species FMSY (stationary FMSY)
+  - Run the Ecosim model to equilibrium for a range of F values while holding biomasses of all other groups constant (except other life history stanzas for the same species in split and multi-stanza cases) 
+  - Examine predicted compensatory responses by the group caused by the foraging arena functional response and related foraging time adjustment parameters
+- Ecosystem FMSY (compensatory FMSY)
+  - Allows all groups' biomass to change in resonse to the bimoass changes of the focal FMSY groups
+  - The assessment usually produces a more optimistic estimate of MSY for each group
+  - Increases in food species abundances and decreases in predator abundances when any one group is harvested harder
+
+
+# Output comparison
+## Compensation FMSY vs stationary FMSY
+```{r compensation-vs-stationary-fmsy, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+functional_groups <- c(
+  "StripedBass0",
+  "StripedBass2_5",
+  "StripedBass6",
+  "AtlanticMenhaden0",
+  "AtlanticMenhaden1",
+  "AtlanticMenhaden2",
+  "AtlanticMenhaden3",
+  "AtlanticMenhaden4",
+  "AtlanticMenhaden5",
+  "AtlanticMenhaden6",
+  "SpinyDogfish",
+  "BluefishJuvenile",
+  "BluefishAdult",
+  "WeakfishJuvenile",
+  "WeakfishAdult",
+  "AtlanticHerring0_1",
+  "AtlanticHerring2",
+  "Anchovies",
+  "Benthos",
+  "Zooplankton",
+  "Phytoplankton",
+  "Detritus"
+)
+ages <- 0:6
+age_name <- paste0("AtlanticMenhaden", ages)
+
+# base scenario
+compensation_fmsy_s1 <- read_fmsy_table(
+  file_names = here::here(
+    "data", "ewe", "7ages_ecosim_om_msy",
+    paste0("msy_base_run_age", ages), "FMSY_fullCompensation.csv"
+  ),
+  functional_groups = functional_groups
+)
+compensation_fmsy_s1 <- c(
+  compensation_fmsy_s1,
+  read_fmsy_table(
+    file_names = here::here(
+      "data", "ewe", "7ages_ecosim_om_msy",
+      "msy_base_run_fleet", "FMSY_fullCompensation.csv"
+    ),
+    functional_groups = functional_groups
+  )
+)
+
+stationary_fmsy_s1 <- read_fmsy_table(
+  file_names = here::here(
+    "data", "ewe", "7ages_ecosim_om_msy",
+    paste0("msy_base_run_age", ages), "FMSY_StationarySystem.csv"
+  ),
+  functional_groups = functional_groups
+)
+stationary_fmsy_s1 <- c(
+  stationary_fmsy_s1,
+  read_fmsy_table(
+    file_names = here::here(
+      "data", "ewe", "7ages_ecosim_om_msy",
+      "msy_base_run_fleet", "FMSY_StationarySystem.csv"
+    ),
+    functional_groups = functional_groups
+  )
+)
+mean_difference <- all.equal(current = stationary_fmsy_s1, target = compensation_fmsy_s1)
+knitr::kable(mean_difference, caption = "Mean relative difference between compensation and staionary FMSY from base scenario S1")
+
+# Environmental forcing scenario
+compensation_fmsy_s2 <- read_fmsy_table(
+  file_names = here::here(
+    "data", "ewe", "7ages_ecosim_om_msy",
+    paste0("msy_forcing_pdsi_egg_amo1_age", ages), "FMSY_fullCompensation.csv"
+  ),
+  functional_groups = functional_groups
+)
+compensation_fmsy_s2 <- c(
+  compensation_fmsy_s2,
+  read_fmsy_table(
+    file_names = here::here(
+      "data", "ewe", "7ages_ecosim_om_msy",
+      "msy_forcing_pdsi_egg_amo1_fleet", "FMSY_fullCompensation.csv"
+    ),
+    functional_groups = functional_groups
+  )
+)
+
+stationary_fmsy_s2 <- read_fmsy_table(
+  file_names = here::here(
+    "data", "ewe", "7ages_ecosim_om_msy",
+    paste0("msy_forcing_pdsi_egg_amo1_age", ages), "FMSY_StationarySystem.csv"
+  ),
+  functional_groups = functional_groups
+)
+stationary_fmsy_s2 <- c(
+  stationary_fmsy_s2,
+  read_fmsy_table(
+    file_names = here::here(
+      "data", "ewe", "7ages_ecosim_om_msy",
+      "msy_forcing_pdsi_egg_amo1_fleet", "FMSY_StationarySystem.csv"
+    ),
+    functional_groups = functional_groups
+  )
+)
+mean_difference <- all.equal(current = stationary_fmsy_s2, target = compensation_fmsy_s2)
+knitr::kable(mean_difference, caption = "Mean relative difference between compensation and staionary FMSY from environmental forcing scenario S2")
+```
+
+- Compensation FMSY are different compared stationary FMSY, the mean relative difference across 7 age classes are 0.01
+
+## Functional group FMSY vs fleet FMSY
+```{r group-vs-fleet-fmsy, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+mean_difference <- c()
+list_length <- length(compensation_fmsy_s1)
+
+# base scenario
+for (i in seq_along(compensation_fmsy_s1)) {
+  mean_difference[i] <- all.equal(current = compensation_fmsy_s1[[list_length]], target = compensation_fmsy_s1[[i]])
+}
+knitr::kable(mean_difference, caption = "Compensation FMSY by functional group is identical to FMSY by fleet from base scenario S1")
+
+for (i in seq_along(stationary_fmsy_s1)) {
+  mean_difference[i] <- all.equal(current = stationary_fmsy_s1[[list_length]], target = stationary_fmsy_s1[[i]])
+}
+knitr::kable(mean_difference, caption = "Stationary FMSY by functional group is identical to FMSY by fleet from base scenario S1")
+
+# environmental forcing scenario
+for (i in seq_along(compensation_fmsy_s2)) {
+  mean_difference[i] <- all.equal(current = compensation_fmsy_s2[[list_length]], target = compensation_fmsy_s2[[i]])
+}
+knitr::kable(mean_difference, caption = "Compensation FMSY by functional group is identical to FMSY by fleet from environmental forcing scenario S2")
+
+for (i in seq_along(stationary_fmsy_s2)) {
+  mean_difference[i] <- all.equal(current = stationary_fmsy_s2[[list_length]], target = stationary_fmsy_s2[[i]])
+}
+knitr::kable(mean_difference, caption = "Stationary FMSY by functional group is identical to FMSY by fleet from environmental forcing scenario S2")
+```
+
+- Functional group FMsy are identical to fleet FMSY
+
+## Maximum F vs depletion
+```{r maxF-vs-depletion, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+msy_ages_label <- c(0:5, "6+")
+maxF_file_path <- here::here(
+  "data", "ewe", "7ages_ecosim_om_msy",
+  paste0("msy_forcing_pdsi_egg_amo1_age", ages, "_details")
+)
+maxF_file_path <- c(
+  maxF_file_path,
+  here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_forcing_pdsi_egg_amo1_fleet_details")
+)
+
+catch_file_names <- c(paste0("menhaden ", msy_ages_label, "_Catch_FullCompensation.csv"), "F.menhaden_Catch_FullCompensation.csv")
+biomass_file_names <- c(paste0("menhaden ", msy_ages_label, "_B_FullCompensation.csv"), "F.menhaden_B_FullCompensation.csv")
+compensation_msy_maxF <- list()
+
+for (i in seq_along(maxF_file_path)) {
+  compensation_msy_maxF[[i]] <- read_ewe_reference_points(
+    file_path = maxF_file_path[i],
+    file_names = c(
+      catch_file_names[i],
+      biomass_file_names[i]
+    ),
+    reference_points_scenario = "compensation",
+    functional_groups = functional_groups,
+    key_functional_group = "AtlanticMenhaden",
+    ages = ages,
+    plot = FALSE
+  )
+}
+
+depletion_file_path <- here::here(
+  "data", "ewe", "7ages_ecosim_om_msy",
+  paste0("msy_forcing_pdsi_egg_amo1_age", ages, "_details_depletion")
+)
+depletion_file_path <- c(
+  depletion_file_path,
+  here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_forcing_pdsi_egg_amo1_fleet_details_depletion")
+)
+
+compensation_msy_depletion <- list()
+
+for (i in seq_along(maxF_file_path)) {
+  compensation_msy_depletion[[i]] <- read_ewe_reference_points(
+    file_path = depletion_file_path[i],
+    file_names = c(
+      catch_file_names[i],
+      biomass_file_names[i]
+    ),
+    reference_points_scenario = "compensation",
+    functional_groups = functional_groups,
+    key_functional_group = "AtlanticMenhaden",
+    ages = ages,
+    plot = FALSE
+  )
+}
+
+all.equal(current = compensation_msy_maxF, target = compensation_msy_depletion)
+
+catch_file_names <- c(paste0("menhaden ", msy_ages_label, "_Catch_StationarySystem.csv"), "F.menhaden_Catch_StationarySystem.csv")
+biomass_file_names <- c(paste0("menhaden ", msy_ages_label, "_B_StationarySystem.csv"), "F.menhaden_B_StationarySystem.csv")
+stationary_msy_maxF <- list()
+
+for (i in seq_along(maxF_file_path)) {
+  stationary_msy_maxF[[i]] <- read_ewe_reference_points(
+    file_path = maxF_file_path[i],
+    file_names = c(
+      catch_file_names[i],
+      biomass_file_names[i]
+    ),
+    reference_points_scenario = "stationary",
+    functional_groups = functional_groups,
+    key_functional_group = "AtlanticMenhaden",
+    ages = ages,
+    plot = FALSE
+  )
+}
+
+stationary_msy_depletion <- list()
+for (i in seq_along(maxF_file_path)) {
+  stationary_msy_depletion[[i]] <- read_ewe_reference_points(
+    file_path = depletion_file_path[i],
+    file_names = c(
+      catch_file_names[i],
+      biomass_file_names[i]
+    ),
+    reference_points_scenario = "stationary",
+    functional_groups = functional_groups,
+    key_functional_group = "AtlanticMenhaden",
+    ages = ages,
+    plot = FALSE
+  )
+}
+
+all.equal(current = stationary_msy_maxF, target = stationary_msy_depletion)
+
+```
+
+- Run to depletion results are the same as finding FMSY from a range of F
+
+## Single FMSY vs multiple FMSY 
+```{r singleFMSY-vs-multipleFMSY, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+multiple_reference_points <- function(file_path,
+                                      file_names,
+                                      functional_groups,
+                                      key_functional_group,
+                                      ages,
+                                      reference_points_scenario,
+                                      plot) {
+
+  msy_fleet <- read_ewe_output(
+    file_path = file_path,
+    file_names = file_names,
+    skip_nrows = 12,
+    colname_1 = "FM",
+    plot = FALSE,
+    figure_titles = NULL,
+    functional_groups = functional_groups,
+    figure_colors = NULL
+  )
+
+  catch_max_id <- MSY <- FMSY <- BMSY <- c()
+  catch_max <- apply(msy_fleet[[1]][, paste0(key_functional_group, ages)], 2, max)
+  for (i in seq_along(catch_max)){
+    catch_max_id[i] <- which(msy_fleet[[1]][, age_name[i]]==catch_max[i])
+    MSY[i] <- msy_fleet[[1]][catch_max_id[i], age_name[i]]
+    FMSY[i] <- msy_fleet[[1]]$FM[catch_max_id[i]]
+    BMSY[i] <- msy_fleet[[2]][catch_max_id[i], age_name[i]]
+  }
+  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY)
+  
+  if (plot == TRUE) {
+    pdf(file = file.path(file_path, paste0(reference_points_scenario, "_yield_over_F.pdf")), onefile = T)
+    plot(msy_fleet[[1]]$FM, catch_sum,
+         xlab = "F", ylab = "Yield",
+         pch = 16, type="o")
+    abline(h = MSY, lty = 2)
+    abline(v = FMSY, lty = 3)
+    dev.off()
+  }
+
+  return(MSY_data)
+}
+
+
+
+```
+- How FMSY was determined was not clear, could not match the findings from catch over F data and the summarized FMSY data from EwE
+
