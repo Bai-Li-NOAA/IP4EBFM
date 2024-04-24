@@ -126,7 +126,7 @@ read_ewe_effort <- function(file_path,
 #' @param file_names a vector of csv file names.
 #' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
 #' @param key_functional_group a character string describes the key functional group.
-#' @param reference_points_scenario a character string describes the reference points scenario: compensation or staionary.
+#' @param reference_points_scenario a character string describes the reference points scenario: compensation or stationary.
 #' @param ages age classes of the functional groups.
 #' @param plot logical: if `TRUE` then make figures for all output data files.
 #' @export
@@ -168,3 +168,5 @@ read_ewe_reference_points <- function(file_path,
 
   return(MSY_data)
 }
+
+

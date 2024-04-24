@@ -46,6 +46,9 @@ navbar:
         href: articles/10_OM3_data_moderate_stock_assessment_main_report.html
       - text: OM3 data-rich stock assessment
         href: articles/11_OM3_data_rich_stock_assessment_main_report.html
+      - text: Ecological and single-species reference points
+        href: articles/12_Reference_points.html
+
 
 
 
