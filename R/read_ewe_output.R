@@ -136,12 +136,12 @@ read_ewe_reference_points <- function(file_path,
                                       key_functional_group,
                                       ages,
                                       reference_points_scenario,
-                                      plot) {
+                                      plot = FALSE) {
 
   msy_fleet <- read_ewe_output(
     file_path = file_path,
     file_names = file_names,
-    skip_nrows = 12,
+    skip_nrows = 16,
     colname_1 = "FM",
     plot = FALSE,
     figure_titles = NULL,

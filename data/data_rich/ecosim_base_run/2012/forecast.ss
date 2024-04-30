@@ -1,7 +1,7 @@
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2024-04-24 09:05:56.443922
+#C file write time: 2024-04-30 12:13:46.943306
 #
 1 #_benchmarks
 2 #_MSY
@@ -41,11 +41,11 @@
 -9999 -1
 99 #_InputBasis
  #_Year Seas Fleet Catch.or.F
-   2013    1     1       0.99
-   2014    1     1       0.99
-   2015    1     1       0.99
-   2016    1     1       0.99
-   2017    1     1       0.99
+   2013    1     1     0.9924
+   2014    1     1     0.9924
+   2015    1     1     0.9924
+   2016    1     1     0.9924
+   2017    1     1     0.9924
 -9999 0 0 0
 #
 999 # verify end of input 

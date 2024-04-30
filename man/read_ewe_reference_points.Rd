@@ -11,7 +11,7 @@ read_ewe_reference_points(
   key_functional_group,
   ages,
   reference_points_scenario,
-  plot
+  plot = FALSE
 )
 }
 \arguments{
@@ -25,7 +25,7 @@ read_ewe_reference_points(
 
 \item{ages}{age classes of the functional groups.}
 
-\item{reference_points_scenario}{a character string describes the reference points scenario: compensation or staionary.}
+\item{reference_points_scenario}{a character string describes the reference points scenario: compensation or stationary.}
 
 \item{plot}{logical: if \code{TRUE} then make figures for all output data files.}
 }

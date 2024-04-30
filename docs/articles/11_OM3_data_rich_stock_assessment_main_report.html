@@ -122,7 +122,7 @@
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>OM3 data-rich stock assessments</h1>
             
-            <h4 data-toc-skip class="date">2024-04-24</h4>
+            <h4 data-toc-skip class="date">2024-04-30</h4>
       
       
       <div class="hidden name"><code>11_OM3_data_rich_stock_assessment_main_report.Rmd</code></div>
@@ -200,184 +200,198 @@ link in the estimation model<a class="anchor" aria-label="anchor" href="#year-20
 <div class="section level3">
 <h3 id="case-0-stock-assessment-base-run">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run"></a>
 </h3>
-<pre><code>                   TempFile                            Size </code></pre>
-<p>“size of file gradfil1.tmp = 0” “size of file gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of file cmpdiff.tmp = 0”
-$SS_version [1] “3.30.19.01;_safe;_compile_date:_Apr 15
+<p>[1] TRUE TempFile Size “size of file gradfil1.tmp = 0” “size of file
+gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of
+file cmpdiff.tmp = 0” $SS_version [1]
+“3.30.19.01;_safe;_compile_date:_Apr 15
 2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
 <p>$SS_versionshort [1] “3.30”</p>
 <p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:05:37 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 18 seconds.”</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:13:29 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 16 seconds.”</p>
 <p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
-<p>$Nwarnings [1] 0</p>
-<p>$warnings [1] “N warnings: 0”</p>
-<p>$likelihoods_used values lambdas TOTAL 200.75900 NA Catch 0.03001 NA
-Equil_catch 0.00000 NA Survey 7.86331 NA Age_comp 182.72800 NA
-Recruitment 9.84128 1.0 InitEQ_Regime 0.00000 1.0 Forecast_Recruitment
-0.00000 1.0 Parm_priors 0.00000 1.0 Parm_softbounds 0.00073 NA Parm_devs
-0.00000 1.0 F_Ballpark 0.29609 1.0 F_Ballpark(info_only)_2012_estF_tgtF
-0.64763 0.3 Crash_Pen 0.00000 1.0</p>
+<p>$Nwarnings [1] 1</p>
+<p>$warnings [1] “1 Final gradient: 0.0126521 is larger than final_conv:
+0.0001” [2] “N warnings: 1”</p>
+<p>$likelihoods_used values lambdas TOTAL 200.738000 NA Catch 0.029853
+NA Equil_catch 0.000000 NA Survey 7.844920 NA Age_comp 182.732000 NA
+Recruitment 9.834850 1.0 InitEQ_Regime 0.000000 1.0 Forecast_Recruitment
+0.000000 1.0 Parm_priors 0.000000 1.0 Parm_softbounds 0.000726 NA
+Parm_devs 0.000000 1.0 F_Ballpark 0.296084 1.0
+F_Ballpark(info_only)_2012_estF_tgtF 0.647623 0.3 Crash_Pen 0.000000
+1.0</p>
 <p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 9.8 1 Laplace_obj_fun(info_only)
-200.8 NA</p>
+NoBias_corr_Recruitment(info_only) 9.835 1 Laplace_obj_fun(info_only)
+200.738 NA</p>
 <p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 0.03 3.0e-02 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.00 3.9e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 7.86 0.0e+00 -18 26 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 182.73 6.2e+01 59 61 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
+Catch_lambda NA 1.000e+00 1.00 1.00 182 Catch_like 0.02985 2.985e-02
+0.00 0.00 183 Init_equ_lambda NA 0.000e+00 1.00 1.00 184 Init_equ_like
+0.00000 3.901e+04 0.00 0.00 185 Surv_lambda NA 0.000e+00 1.00 1.00 186
+Surv_like 7.84492 0.000e+00 -18.48 26.32 187 Surv_N_use NA 0.000e+00
+23.00 28.00 188 Surv_N_skip NA 0.000e+00 0.00 0.00 189 Age_lambda NA
+1.000e+00 1.00 1.00 190 Age_like 182.73200 6.210e+01 59.50 61.13 191
+Age_N_use NA 2.800e+01 23.00 28.00 192 Age_N_skip NA 0.000e+00 0.00
+0.00</p>
 <p>$N_estimated_parameters [1] 48</p>
 <p>$table_of_phases</p>
 <p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
 <p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 11.41 1 3 31 20.00 OK 0.018 -0.00000220
-LnQ_base_survey1(2) 8.55 1 -10 10 6.65 OK 0.055 0.00000729
-LnQ_base_survey2(3) 6.33 1 -10 10 5.67 OK 0.034 -0.00000697
-AgeSel_P2_fleet1(1) 2.75 2 -10 10 0.81 OK 0.039 -0.00000623
-AgeSel_P3_fleet1(1) 1.68 2 -10 10 1.64 OK 0.033 0.00000129
-AgeSel_P4_fleet1(1) -0.48 2 -10 10 -0.56 OK 0.083 0.00001716
-AgeSel_P5_fleet1(1) -1.13 2 -10 10 0.61 OK 0.336 0.00000519
-AgeSel_P6_fleet1(1) -1.00 2 -10 10 -0.68 OK 2.023 0.00000337
-AgeSel_P7_fleet1(1) 1.63 2 -10 10 0.36 OK 2.127 0.00000318
-AgeSel_P1_survey1(2) 2.45 2 0 6 2.30 OK 0.199 0.00000186
-AgeSel_P2_survey1(2) 4.70 2 0 12 4.30 OK 0.135 0.00000063
-AgeSel_P4_survey1(2) 5.16 2 0 12 3.50 OK 0.971 -0.00000072
-AgeSel_P1_survey2(3) 2.12 2 0 6 2.30 OK 0.087 0.00000163
-AgeSel_P2_survey2(3) 4.80 2 0 12 4.30 OK 0.156 0.00000306
-AgeSel_P4_survey2(3) 2.80 2 0 12 3.50 OK 0.345 0.00000011 Pr_type Prior
-Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 260</p>
-<p>$maximum_gradient_component [1] 1.7e-05</p>
-<p>$parameters_with_highest_gradients Value Gradient AgeSel_P4_fleet1(1)
--0.48 1.7e-05 Main_RecrDev_1997 0.73 -7.3e-06 LnQ_base_survey1(2) 8.55
-7.3e-06 LnQ_base_survey2(3) 6.33 -7.0e-06 Main_RecrDev_2000 0.43
-6.8e-06</p>
+Parm_StDev SR_LN(R0) 11.4124 1 3 31 20.000 OK 0.01761
+LnQ_base_survey1(2) 8.5457 1 -10 10 6.646 OK 0.05463 LnQ_base_survey2(3)
+6.3272 1 -10 10 5.670 OK 0.03390 AgeSel_P2_fleet1(1) 2.7523 2 -10 10
+0.810 OK 0.03863 AgeSel_P3_fleet1(1) 1.6776 2 -10 10 1.640 OK 0.03262
+AgeSel_P4_fleet1(1) -0.4835 2 -10 10 -0.560 OK 0.08335
+AgeSel_P5_fleet1(1) -1.1294 2 -10 10 0.610 OK 0.33557
+AgeSel_P6_fleet1(1) -0.9924 2 -10 10 -0.680 OK 2.01817
+AgeSel_P7_fleet1(1) 1.6251 2 -10 10 0.360 OK 2.12221
+AgeSel_P1_survey1(2) 2.4499 2 0 6 2.300 OK 0.19880 AgeSel_P2_survey1(2)
+4.7037 2 0 12 4.300 OK 0.13482 AgeSel_P4_survey1(2) 5.1628 2 0 12 3.500
+OK 0.97126 AgeSel_P1_survey2(3) 2.1180 2 0 6 2.300 OK 0.08687
+AgeSel_P2_survey2(3) 4.8007 2 0 12 4.300 OK 0.15601 AgeSel_P4_survey2(3)
+2.8013 2 0 12 3.500 OK 0.34456 Gradient Pr_type Prior Pr_SD Pr_Like
+Afterbound SR_LN(R0) 0.01265210000 No_prior NA NA NA OK
+LnQ_base_survey1(2) 0.00000734843 No_prior NA NA NA OK
+LnQ_base_survey2(3) 0.00000129790 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.00006493490 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.00153915000 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.00076031700 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) 0.00039595500 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) 0.00027002700 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) 0.00022706000 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) 0.00000359163 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) 0.00000001233 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) -0.00000135050 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) 0.00000224762 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) 0.00000228061 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) -0.00000003862 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 260.3</p>
+<p>$maximum_gradient_component [1] 0.01265</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 11.4124
+0.0126521 AgeSel_P3_fleet1(1) 1.6776 0.0015391 AgeSel_P4_fleet1(1)
+-0.4835 0.0007603 Main_RecrDev_1997 0.7328 0.0004737 Main_RecrDev_1999
+0.5092 0.0003987</p>
 <p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.57 # 28 28 200 200 1212 5 2 0.37 # 23 23
-200 200 1213 5 3 0.36 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 408 115
-1212 200 200 NA NA 296 74 1213 200 200 NA NA 503 71 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 1124125</p>
-<p>$current_depletion [1] 0.035</p>
+min_Nsamp max_Nsamp 1211 5 1 0.5744 # 28 28 200 200 1212 5 2 0.3698 # 23
+23 200 200 1213 5 3 0.3552 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
+mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 407.0
+114.87 1212 200 200 NA NA 296.0 73.95 1213 200 200 NA NA 503.4 71.04
+Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
+<p>$SBzero [1] 1124790</p>
+<p>$current_depletion [1] 0.03489</p>
 <p>$last_years_SPR [1] 0.28</p>
 <p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
 <p>$sigma_R_in [1] 0.99</p>
 <p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 0.86 0.73 0.06 0.0042 2 Early+Main 28 0.86 0.73
-0.06 0.0042 3 Early+Main+Late 28 0.86 0.73 0.06 0.0042
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-0.86 0.87 0.87 2 0.86 0.87 0.87 3 0.86 0.87 0.87 alternative_sigma_R 1
-0.86 2 0.86 3 0.86</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.84
-0.72 1 2 early 0 0.00 0.00 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 3.35092e-05
-to 0.993365</p>
+mean_SEsquared 1 Main 28 0.857 0.7344 0.06041 0.004227 2 Early+Main 28
+0.857 0.7344 0.06041 0.004227 3 Early+Main+Late 28 0.857 0.7344 0.06041
+0.004227 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 0.8595 0.8657 0.8681 2 0.8595 0.8657 0.8681 3
+0.8595 0.8657 0.8681 alternative_sigma_R 1 0.8595 2 0.8595 3 0.8595</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.8416
+0.7226 1 2 early 0 0.0000 0.0000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.000121101
+to 0.993362</p>
 <p>$cormessage2 [1] 4 correlations above threshold (cormax=0.95)</p>
 <p>$cormessage3 label.i label.j corr 1 AgeSel_P7_fleet1(1)
-AgeSel_P6_fleet1(1) -0.97 2 AgeSel_P4_survey1(2) AgeSel_P1_survey1(2)
-0.99 3 AgeSel_P2_survey2(3) AgeSel_P1_survey2(3) -0.97 4
-AgeSel_P4_survey2(3) AgeSel_P1_survey2(3) 0.97</p>
+AgeSel_P6_fleet1(1) -0.9730 2 AgeSel_P4_survey1(2) AgeSel_P1_survey1(2)
+0.9934 3 AgeSel_P2_survey2(3) AgeSel_P1_survey2(3) -0.9684 4
+AgeSel_P4_survey2(3) AgeSel_P1_survey2(3) 0.9691</p>
 <p>$cormessage7 [1] No uncorrelated parameters below threshold
 (cormin=0.01)</p>
-<p>FMSY: 0.99 TempFile Size “size of file gradfil1.tmp = 0” “size of
+<p>FMSY: 0.9924 TempFile Size “size of file gradfil1.tmp = 0” “size of
 file gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size
 of file cmpdiff.tmp = 0” $SS_version [1]
 “3.30.19.01;_safe;_compile_date:_Apr 15
 2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
 <p>$SS_versionshort [1] “3.30”</p>
 <p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:05:56 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 17 seconds.”</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:13:47 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 10 seconds.”</p>
 <p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
 <p>$Nwarnings [1] 0</p>
 <p>$warnings [1] “N warnings: 0”</p>
-<p>$likelihoods_used values lambdas TOTAL 223.24100 NA Catch 0.03799 NA
-Equil_catch 0.00000 NA Survey 25.15250 NA Age_comp 188.52500 NA
-Recruitment 9.17493 1.0 InitEQ_Regime 0.00000 1.0 Forecast_Recruitment
-0.00000 1.0 Parm_priors 0.00000 1.0 Parm_softbounds 0.00072 NA Parm_devs
-0.00000 1.0 F_Ballpark 0.34984 1.0 F_Ballpark(info_only)_2012_estF_tgtF
-0.69246 0.3 Crash_Pen 0.00000 1.0</p>
+<p>$likelihoods_used values lambdas TOTAL 223.2610000 NA Catch 0.0378029
+NA Equil_catch 0.0000000 NA Survey 25.1655000 NA Age_comp 188.5420000 NA
+Recruitment 9.1653400 1.0 InitEQ_Regime 0.0000000 1.0
+Forecast_Recruitment 0.0000000 1.0 Parm_priors 0.0000000 1.0
+Parm_softbounds 0.0007159 NA Parm_devs 0.0000000 1.0 F_Ballpark
+0.3499580 1.0 F_Ballpark(info_only)_2012_estF_tgtF 0.6925600 0.3
+Crash_Pen 0.0000000 1.0</p>
 <p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 9.2 1 Laplace_obj_fun(info_only)
-223.2 NA</p>
+NoBias_corr_Recruitment(info_only) 9.165 1 Laplace_obj_fun(info_only)
+223.261 NA</p>
 <p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 0.038 3.8e-02 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.000 3.8e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 25.152 0.0e+00 -17 42 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 188.525 6.5e+01 62 61 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
+Catch_lambda NA 1.0000 1.00 1.00 182 Catch_like 0.0378 0.0378 0.00 0.00
+183 Init_equ_lambda NA 0.0000 1.00 1.00 184 Init_equ_like 0.0000
+38206.2000 0.00 0.00 185 Surv_lambda NA 0.0000 1.00 1.00 186 Surv_like
+25.1655 0.0000 -17.31 42.48 187 Surv_N_use NA 0.0000 23.00 28.00 188
+Surv_N_skip NA 0.0000 0.00 0.00 189 Age_lambda NA 1.0000 1.00 1.00 190
+Age_like 188.5420 65.1548 62.25 61.13 191 Age_N_use NA 28.0000 23.00
+28.00 192 Age_N_skip NA 0.0000 0.00 0.00</p>
 <p>$N_estimated_parameters [1] 48</p>
 <p>$table_of_phases</p>
 <p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
 <p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 11.26 1 3 31 20.00 OK 0.019 -0.00005968
-LnQ_base_survey1(2) 8.61 1 -10 10 6.65 OK 0.064 -0.00001126
-LnQ_base_survey2(3) 6.38 1 -10 10 5.67 OK 0.039 0.00003276
-AgeSel_P2_fleet1(1) 2.76 2 -10 10 0.81 OK 0.039 0.00001369
-AgeSel_P3_fleet1(1) 1.69 2 -10 10 1.64 OK 0.034 0.00001579
-AgeSel_P4_fleet1(1) -0.46 2 -10 10 -0.56 OK 0.082 0.00006516
-AgeSel_P5_fleet1(1) -1.12 2 -10 10 0.61 OK 0.333 0.00001218
-AgeSel_P6_fleet1(1) -0.94 2 -10 10 -0.68 OK 1.853 0.00000342
-AgeSel_P7_fleet1(1) 1.54 2 -10 10 0.36 OK 1.949 0.00000139
-AgeSel_P1_survey1(2) 2.48 2 0 6 2.30 OK 0.211 0.00000918
-AgeSel_P2_survey1(2) 4.73 2 0 12 4.30 OK 0.132 0.00001632
-AgeSel_P4_survey1(2) 5.29 2 0 12 3.50 OK 1.045 -0.00000116
-AgeSel_P1_survey2(3) 2.12 2 0 6 2.30 OK 0.088 0.00000161
-AgeSel_P2_survey2(3) 4.82 2 0 12 4.30 OK 0.154 0.00000191
-AgeSel_P4_survey2(3) 2.77 2 0 12 3.50 OK 0.351 -0.00000022 Pr_type Prior
-Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 263</p>
-<p>$maximum_gradient_component [1] 6.5e-05</p>
-<p>$parameters_with_highest_gradients Value Gradient AgeSel_P4_fleet1(1)
--0.46 6.5e-05 SR_LN(R0) 11.26 -6.0e-05 LnQ_base_survey2(3) 6.38 3.3e-05
-AgeSel_P2_survey1(2) 4.73 1.6e-05 AgeSel_P3_fleet1(1) 1.69 1.6e-05</p>
+Parm_StDev SR_LN(R0) 11.2576 1 3 31 20.000 OK 0.01864
+LnQ_base_survey1(2) 8.6136 1 -10 10 6.646 OK 0.06385 LnQ_base_survey2(3)
+6.3777 1 -10 10 5.670 OK 0.03933 AgeSel_P2_fleet1(1) 2.7640 2 -10 10
+0.810 OK 0.03870 AgeSel_P3_fleet1(1) 1.6943 2 -10 10 1.640 OK 0.03392
+AgeSel_P4_fleet1(1) -0.4576 2 -10 10 -0.560 OK 0.08228
+AgeSel_P5_fleet1(1) -1.1156 2 -10 10 0.610 OK 0.33317
+AgeSel_P6_fleet1(1) -0.9330 2 -10 10 -0.680 OK 1.84743
+AgeSel_P7_fleet1(1) 1.5346 2 -10 10 0.360 OK 1.94349
+AgeSel_P1_survey1(2) 2.4799 2 0 6 2.300 OK 0.21097 AgeSel_P2_survey1(2)
+4.7330 2 0 12 4.300 OK 0.13161 AgeSel_P4_survey1(2) 5.2913 2 0 12 3.500
+OK 1.04491 AgeSel_P1_survey2(3) 2.1248 2 0 6 2.300 OK 0.08752
+AgeSel_P2_survey2(3) 4.8151 2 0 12 4.300 OK 0.15433 AgeSel_P4_survey2(3)
+2.7723 2 0 12 3.500 OK 0.35106 Gradient Pr_type Prior Pr_SD Pr_Like
+Afterbound SR_LN(R0) -0.0000407790 No_prior NA NA NA OK
+LnQ_base_survey1(2) -0.0000061197 No_prior NA NA NA OK
+LnQ_base_survey2(3) 0.0000079933 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.0000065666 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.0000138182 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.0000057585 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) -0.0000063578 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) -0.0000045141 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) -0.0000036028 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) -0.0000049099 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) 0.0000010491 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) 0.0000022634 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) -0.0000006966 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) 0.0000003590 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) 0.0000010837 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 262.9</p>
+<p>$maximum_gradient_component [1] 0.00004078</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 11.2576
+-0.00004078 Main_RecrDev_1998 0.5398 0.00002402 Main_RecrDev_1999 0.5464
+-0.00002147 Main_RecrDev_1995 0.6538 -0.00001951 Main_RecrDev_1994
+0.7322 0.00001727</p>
 <p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.54 # 28 28 200 200 1212 5 2 0.35 # 23 23
-200 200 1213 5 3 0.35 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 378 109
-1212 200 200 NA NA 287 70 1213 200 200 NA NA 541 70 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 963180</p>
-<p>$current_depletion [1] 0.038</p>
-<p>$last_years_SPR [1] 0.19</p>
+min_Nsamp max_Nsamp 1211 5 1 0.5447 # 28 28 200 200 1212 5 2 0.3499 # 23
+23 200 200 1213 5 3 0.3514 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
+mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 377.6
+108.94 1212 200 200 NA NA 287.3 69.99 1213 200 200 NA NA 541.6 70.27
+Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
+<p>$SBzero [1] 963465</p>
+<p>$current_depletion [1] 0.03783</p>
+<p>$last_years_SPR [1] 0.1937</p>
 <p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
-<p>$sigma_R_in [1] 0.86</p>
+<p>$sigma_R_in [1] 0.8595</p>
 <p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 0.86 0.73 0.061 0.0043 2 Early+Main 28 0.86
-0.73 0.061 0.0043 3 Early+Main+Late 28 0.86 0.73 0.061 0.0043
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-0.86 1 1 2 0.86 1 1 3 0.86 1 1 alternative_sigma_R 1 0.86 2 0.86 3
-0.86</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.84
-0.96 1 2 early 0 0.00 0.00 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.000122124
+mean_SEsquared 1 Main 28 0.8565 0.7335 0.06064 0.004303 2 Early+Main 28
+0.8565 0.7335 0.06064 0.004303 3 Early+Main+Late 28 0.8565 0.7335
+0.06064 0.004303 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 0.859 0.9965 0.9994 2 0.859 0.9965 0.9994 3
+0.859 0.9965 0.9994 alternative_sigma_R 1 0.859 2 0.859 3 0.859</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.841
+0.9576 1 2 early 0 0.000 0.0000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.000115932
 to 0.994101</p>
 <p>$cormessage2 [1] 4 correlations above threshold (cormax=0.95)</p>
 <p>$cormessage3 label.i label.j corr 1 AgeSel_P7_fleet1(1)
-AgeSel_P6_fleet1(1) -0.97 2 AgeSel_P4_survey1(2) AgeSel_P1_survey1(2)
-0.99 3 AgeSel_P2_survey2(3) AgeSel_P1_survey2(3) -0.97 4
-AgeSel_P4_survey2(3) AgeSel_P1_survey2(3) 0.97</p>
+AgeSel_P6_fleet1(1) -0.9683 2 AgeSel_P4_survey1(2) AgeSel_P1_survey1(2)
+0.9941 3 AgeSel_P2_survey2(3) AgeSel_P1_survey2(3) -0.9669 4
+AgeSel_P4_survey2(3) AgeSel_P1_survey2(3) 0.9684</p>
 <p>$cormessage7 [1] No uncorrelated parameters below threshold
 (cormin=0.01)</p>
 <p>Running ‘SS_html’: By default, this function will look in the
@@ -393,27 +407,27 @@ Opening HTML file in your default web-browser.</p>
 <h4 id="linear-regression-analysis">Linear regression analysis<a class="anchor" aria-label="anchor" href="#linear-regression-analysis"></a>
 </h4>
 <pre><code>Shapiro-Wilk normality test</code></pre>
-<p>data: meanage W = 0.9, p-value = 0.009</p>
+<p>data: meanage W = 0.91, p-value = 0.009</p>
 <p>pdf 2</p>
 </div>
 <div class="section level4">
 <h4 id="projection">Projection<a class="anchor" aria-label="anchor" href="#projection"></a>
 </h4>
 <p><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-14-1.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-14-2.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-14-3.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-14-4.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-14-5.png" width="1152"></p>
-<table style="width:100%;" class="table">
+<table class="table">
 <colgroup>
-<col width="12%">
-<col width="13%">
-<col width="5%">
-<col width="4%">
-<col width="4%">
-<col width="8%">
-<col width="8%">
-<col width="10%">
-<col width="7%">
 <col width="9%">
-<col width="8%">
+<col width="9%">
+<col width="4%">
+<col width="3%">
+<col width="13%">
 <col width="6%">
+<col width="6%">
+<col width="8%">
+<col width="13%">
+<col width="13%">
+<col width="6%">
+<col width="4%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">case</th>
@@ -433,72 +447,72 @@ Opening HTML file in your default web-browser.</p>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">1</td>
-<td align="left">-4.04*</td>
+<td align="left">-4.04*~</td>
 <td align="left">-0.86</td>
-<td align="left">0</td>
+<td align="left">-1.51850982303557e-06</td>
 <td align="left">0.19</td>
 <td align="left">-0.63*</td>
-<td align="left">1.26*</td>
-<td align="left">0</td>
-<td align="left">0</td>
+<td align="left">1.26*^~</td>
+<td align="left">-0.000366909334517523</td>
+<td align="left">-1.78057871610944e-06</td>
 <td align="left">0.16</td>
-<td align="left">10.69*</td>
+<td align="left">10.7*^~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">2</td>
-<td align="left">-4.04*</td>
+<td align="left">-4.04*~</td>
 <td align="left">-0.86</td>
-<td align="left">0</td>
+<td align="left">-1.51850982303557e-06</td>
 <td align="left">0.19</td>
 <td align="left">-0.63*</td>
-<td align="left">1.26*</td>
-<td align="left">0</td>
-<td align="left">0</td>
+<td align="left">1.26*^~</td>
+<td align="left">-0.000366909334517523</td>
+<td align="left">-1.78057871610944e-06</td>
 <td align="left">0.16</td>
-<td align="left">10.69*</td>
+<td align="left">10.7*^~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">3</td>
-<td align="left">-4.04*</td>
+<td align="left">-4.04*~</td>
 <td align="left">-0.86</td>
-<td align="left">0</td>
+<td align="left">-1.51850982303557e-06</td>
 <td align="left">0.19</td>
 <td align="left">-0.63*</td>
-<td align="left">1.26*</td>
-<td align="left">0</td>
-<td align="left">0</td>
+<td align="left">1.26*^~</td>
+<td align="left">-0.000366909334517523</td>
+<td align="left">-1.78057871610944e-06</td>
 <td align="left">0.16</td>
-<td align="left">10.69*</td>
+<td align="left">10.7*^~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">4</td>
-<td align="left">-4.04*</td>
+<td align="left">-4.04*~</td>
 <td align="left">-0.86</td>
-<td align="left">0</td>
+<td align="left">-1.51850982303557e-06</td>
 <td align="left">0.19</td>
 <td align="left">-0.63*</td>
-<td align="left">1.26*</td>
-<td align="left">0</td>
-<td align="left">0</td>
+<td align="left">1.26*^~</td>
+<td align="left">-0.000366909334517523</td>
+<td align="left">-1.78057871610944e-06</td>
 <td align="left">0.16</td>
-<td align="left">10.69*</td>
+<td align="left">10.7*^~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">5</td>
-<td align="left">-4.04*</td>
+<td align="left">-4.04*~</td>
 <td align="left">-0.86</td>
-<td align="left">0</td>
+<td align="left">-1.51850982303557e-06</td>
 <td align="left">0.19</td>
 <td align="left">-0.63*</td>
-<td align="left">1.26*</td>
-<td align="left">0</td>
-<td align="left">0</td>
+<td align="left">1.26*^~</td>
+<td align="left">-0.000366909334517523</td>
+<td align="left">-1.78057871610944e-06</td>
 <td align="left">0.16</td>
-<td align="left">10.69*</td>
+<td align="left">10.7*^~</td>
 </tr>
 </tbody>
 </table>
@@ -607,182 +621,196 @@ link in the estimation model<a class="anchor" aria-label="anchor" href="#year-20
 <div class="section level3">
 <h3 id="case-0-stock-assessment-base-run-1">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run-1"></a>
 </h3>
-<pre><code>                   TempFile                            Size </code></pre>
-<p>“size of file gradfil1.tmp = 0” “size of file gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of file cmpdiff.tmp = 0”
-$SS_version [1] “3.30.19.01;_safe;_compile_date:_Apr 15
-2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
-<p>$SS_versionshort [1] “3.30”</p>
-<p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:06:43 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 7 seconds.”</p>
-<p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
-<p>$Nwarnings [1] 1</p>
-<p>$warnings [1] “1 Final gradient: 0.000857115 is larger than
-final_conv: 0.0001” [2] “N warnings: 1”</p>
-<p>$likelihoods_used values lambdas TOTAL 1070.09000 NA Catch 0.00798 NA
-Equil_catch 0.00000 NA Survey 384.36300 NA Age_comp 675.68900 NA
-Recruitment 9.94614 1.0 InitEQ_Regime 0.00000 1.0 Forecast_Recruitment
-0.00000 1.0 Parm_priors 0.00000 1.0 Parm_softbounds 0.00076 NA Parm_devs
-0.00000 1.0 F_Ballpark 0.08196 1.0 F_Ballpark(info_only)_2012_estF_tgtF
-0.44973 0.3 Crash_Pen 0.00000 1.0</p>
-<p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 9.9 1 Laplace_obj_fun(info_only)
-1070.1 NA</p>
-<p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 0.008 8.0e-03 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.000 3.5e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 384.363 0.0e+00 165 219 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 675.689 1.7e+02 222 284 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
-<p>$N_estimated_parameters [1] 48</p>
-<p>$table_of_phases</p>
-<p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
-<p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 10.75 1 3 31 15.00 OK 0.018 -0.0008576
-LnQ_base_survey1(2) 8.46 1 -10 10 6.65 OK 0.053 -0.0000327
-LnQ_base_survey2(3) 6.26 1 -10 10 5.67 OK 0.034 -0.0000234
-AgeSel_P2_fleet1(1) 2.71 2 -10 10 0.81 OK 0.041 0.0000220
-AgeSel_P3_fleet1(1) 1.71 2 -10 10 1.64 OK 0.036 -0.0000727
-AgeSel_P4_fleet1(1) -0.51 2 -10 10 -0.56 OK 0.069 -0.0000621
-AgeSel_P5_fleet1(1) -0.69 2 -10 10 0.61 OK 0.168 -0.0000074
-AgeSel_P6_fleet1(1) -1.34 2 -10 10 -0.68 OK 0.610 -0.0000179
-AgeSel_P7_fleet1(1) 0.81 2 -10 10 0.36 OK 0.652 -0.0000113
-AgeSel_P1_survey1(2) 2.13 2 0 6 2.30 OK 0.070 -0.0000195
-AgeSel_P2_survey1(2) 4.78 2 0 12 4.30 OK 0.111 -0.0000022
-AgeSel_P4_survey1(2) 3.39 2 0 12 3.50 OK 0.284 0.0000104
-AgeSel_P1_survey2(3) 2.37 2 0 6 2.30 OK 0.104 -0.0000195
-AgeSel_P2_survey2(3) 4.51 2 0 12 4.30 OK 0.090 0.0000085
-AgeSel_P4_survey2(3) 3.62 2 0 12 3.50 OK 0.460 0.0000078 Pr_type Prior
-Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 261</p>
-<p>$maximum_gradient_component [1] 0.00086</p>
-<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 10.75
--8.6e-04 AgeSel_P3_fleet1(1) 1.71 -7.3e-05 Main_RecrDev_1996 1.54
--6.7e-05 AgeSel_P4_fleet1(1) -0.51 -6.2e-05 Main_RecrDev_2010 0.86
-4.8e-05</p>
-<p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.183 # 28 28 200 200 1212 5 2 0.078 # 23
-23 200 200 1213 5 3 0.056 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 237 37
-1212 200 200 NA NA 61 16 1213 200 200 NA NA 73 11 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 593365</p>
-<p>$current_depletion [1] 0.26</p>
-<p>$last_years_SPR [1] 0.29</p>
-<p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
-<p>$sigma_R_in [1] 0.99</p>
-<p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 0.86 0.74 0.063 0.0047 2 Early+Main 28 0.86
-0.74 0.063 0.0047 3 Early+Main+Late 28 0.86 0.74 0.063 0.0047
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-0.86 0.87 0.87 2 0.86 0.87 0.87 3 0.86 0.87 0.87 alternative_sigma_R 1
-0.86 2 0.86 3 0.86</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.85
-0.73 1 2 early 0 0.00 0.00 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 6.66225e-05
-to 0.986976</p>
-<p>$cormessage2 [1] 1 correlation above threshold (cormax=0.95)</p>
-<p>$cormessage3 label.i label.j corr 1 AgeSel_P4_survey2(3)
-AgeSel_P1_survey2(3) 0.99</p>
-<p>$cormessage7 [1] No uncorrelated parameters below threshold
-(cormin=0.01)</p>
-<p>FMSY: 1 TempFile Size “size of file gradfil1.tmp = 0” “size of file
+<p>[1] TRUE TempFile Size “size of file gradfil1.tmp = 0” “size of file
 gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of
 file cmpdiff.tmp = 0” $SS_version [1]
 “3.30.19.01;_safe;_compile_date:_Apr 15
 2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
 <p>$SS_versionshort [1] “3.30”</p>
 <p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:06:51 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 6 seconds.”</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:14:39 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 11 seconds.”</p>
 <p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
 <p>$Nwarnings [1] 1</p>
-<p>$warnings [1] “1 Final gradient: 0.000788962 is larger than
+<p>$warnings [1] “1 Final gradient: 0.00135045 is larger than
 final_conv: 0.0001” [2] “N warnings: 1”</p>
-<p>$likelihoods_used values lambdas TOTAL 1.1e+03 NA Catch 9.9e-03 NA
-Equil_catch 0.0e+00 NA Survey 4.1e+02 NA Age_comp 6.9e+02 NA Recruitment
-9.3e+00 1.0 InitEQ_Regime 1.7e-33 1.0 Forecast_Recruitment 0.0e+00 1.0
-Parm_priors 0.0e+00 1.0 Parm_softbounds 7.5e-04 NA Parm_devs 0.0e+00 1.0
-F_Ballpark 9.9e-02 1.0 F_Ballpark(info_only)_2012_estF_tgtF 4.7e-01 0.3
-Crash_Pen 0.0e+00 1.0</p>
+<p>$likelihoods_used values lambdas TOTAL 1070.1600000 NA Catch
+0.0079803 NA Equil_catch 0.0000000 NA Survey 384.3830000 NA Age_comp
+675.7350000 NA Recruitment 9.9508500 1.0 InitEQ_Regime 0.0000000 1.0
+Forecast_Recruitment 0.0000000 1.0 Parm_priors 0.0000000 1.0
+Parm_softbounds 0.0007564 NA Parm_devs 0.0000000 1.0 F_Ballpark
+0.0817631 1.0 F_Ballpark(info_only)_2012_estF_tgtF 0.4495140 0.3
+Crash_Pen 0.0000000 1.0</p>
 <p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 9.3 1 Laplace_obj_fun(info_only)
-1108.9 NA</p>
+NoBias_corr_Recruitment(info_only) 9.951 1 Laplace_obj_fun(info_only)
+1070.160 NA</p>
 <p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 9.9e-03 9.9e-03 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.0e+00 3.4e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 4.1e+02 0.0e+00 166 248 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 6.9e+02 1.8e+02 223 287 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
+Catch_lambda NA 1.000e+00 1.0 1.0 182 Catch_like 0.00798 7.980e-03 0.0
+0.0 183 Init_equ_lambda NA 0.000e+00 1.0 1.0 184 Init_equ_like 0.00000
+3.473e+04 0.0 0.0 185 Surv_lambda NA 0.000e+00 1.0 1.0 186 Surv_like
+384.38300 0.000e+00 165.1 219.3 187 Surv_N_use NA 0.000e+00 23.0 28.0
+188 Surv_N_skip NA 0.000e+00 0.0 0.0 189 Age_lambda NA 1.000e+00 1.0 1.0
+190 Age_like 675.73500 1.704e+02 221.5 283.8 191 Age_N_use NA 2.800e+01
+23.0 28.0 192 Age_N_skip NA 0.000e+00 0.0 0.0</p>
 <p>$N_estimated_parameters [1] 48</p>
 <p>$table_of_phases</p>
 <p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
 <p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 10.61 1 3 31 15.00 OK 0.018 0.0007860730
-LnQ_base_survey1(2) 8.50 1 -10 10 6.65 OK 0.053 0.0000000027
-LnQ_base_survey2(3) 6.30 1 -10 10 5.67 OK 0.034 0.0000071941
-AgeSel_P2_fleet1(1) 2.72 2 -10 10 0.81 OK 0.041 -0.0000075481
-AgeSel_P3_fleet1(1) 1.72 2 -10 10 1.64 OK 0.036 0.0000894064
-AgeSel_P4_fleet1(1) -0.50 2 -10 10 -0.56 OK 0.069 0.0000588336
-AgeSel_P5_fleet1(1) -0.67 2 -10 10 0.61 OK 0.168 0.0000309709
-AgeSel_P6_fleet1(1) -1.33 2 -10 10 -0.68 OK 0.612 0.0000146459
-AgeSel_P7_fleet1(1) 0.81 2 -10 10 0.36 OK 0.655 0.0000119344
-AgeSel_P1_survey1(2) 2.15 2 0 6 2.30 OK 0.072 -0.0000026723
-AgeSel_P2_survey1(2) 4.78 2 0 12 4.30 OK 0.110 -0.0000014048
-AgeSel_P4_survey1(2) 3.42 2 0 12 3.50 OK 0.297 0.0000004197
-AgeSel_P1_survey2(3) 2.38 2 0 6 2.30 OK 0.105 -0.0000006310
-AgeSel_P2_survey2(3) 4.51 2 0 12 4.30 OK 0.090 -0.0000006898
-AgeSel_P4_survey2(3) 3.62 2 0 12 3.50 OK 0.471 -0.0000000461 Pr_type
-Prior Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 263</p>
-<p>$maximum_gradient_component [1] 0.00079</p>
-<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 10.6
-7.9e-04 AgeSel_P3_fleet1(1) 1.7 8.9e-05 AgeSel_P4_fleet1(1) -0.5 5.9e-05
-Main_RecrDev_1997 1.3 5.7e-05 Main_RecrDev_1996 1.5 5.4e-05</p>
+Parm_StDev SR_LN(R0) 10.7499 1 3 31 15.000 OK 0.01805
+LnQ_base_survey1(2) 8.4608 1 -10 10 6.646 OK 0.05251 LnQ_base_survey2(3)
+6.2611 1 -10 10 5.670 OK 0.03430 AgeSel_P2_fleet1(1) 2.7139 2 -10 10
+0.810 OK 0.04082 AgeSel_P3_fleet1(1) 1.7075 2 -10 10 1.640 OK 0.03619
+AgeSel_P4_fleet1(1) -0.5086 2 -10 10 -0.560 OK 0.06931
+AgeSel_P5_fleet1(1) -0.6913 2 -10 10 0.610 OK 0.16753
+AgeSel_P6_fleet1(1) -1.3378 2 -10 10 -0.680 OK 0.60977
+AgeSel_P7_fleet1(1) 0.8077 2 -10 10 0.360 OK 0.65169
+AgeSel_P1_survey1(2) 2.1345 2 0 6 2.300 OK 0.07021 AgeSel_P2_survey1(2)
+4.7790 2 0 12 4.300 OK 0.11071 AgeSel_P4_survey1(2) 3.3894 2 0 12 3.500
+OK 0.28405 AgeSel_P1_survey2(3) 2.3700 2 0 6 2.300 OK 0.10362
+AgeSel_P2_survey2(3) 4.5051 2 0 12 4.300 OK 0.09043 AgeSel_P4_survey2(3)
+3.6243 2 0 12 3.500 OK 0.46006 Gradient Pr_type Prior Pr_SD Pr_Like
+Afterbound SR_LN(R0) 0.0048763300 No_prior NA NA NA OK
+LnQ_base_survey1(2) -0.0000025270 No_prior NA NA NA OK
+LnQ_base_survey2(3) -0.0000025427 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.0000192366 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.0005959400 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.0003601340 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) 0.0001977060 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) 0.0000960981 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) 0.0000758810 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) 0.0000006902 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) -0.0000039544 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) -0.0000009533 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) 0.0000030463 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) -0.0000031620 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) -0.0000018578 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 261.3</p>
+<p>$maximum_gradient_component [1] 0.00135</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 10.7499
+0.0048763 AgeSel_P3_fleet1(1) 1.7075 0.0005959 Main_RecrDev_1997 1.3137
+0.0003741 AgeSel_P4_fleet1(1) -0.5086 0.0003601 Main_RecrDev_1996 1.5362
+0.0003491</p>
 <p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.178 # 28 28 200 200 1212 5 2 0.078 # 23
-23 200 200 1213 5 3 0.056 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 229 36
-1212 200 200 NA NA 59 16 1213 200 200 NA NA 71 11 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 516190</p>
-<p>$current_depletion [1] 0.29</p>
-<p>$last_years_SPR [1] 0.2</p>
+min_Nsamp max_Nsamp 1211 5 1 0.18315 # 28 28 200 200 1212 5 2 0.07813 #
+23 23 200 200 1213 5 3 0.05637 # 28 28 200 200 mean_Nsamp_in
+mean_Nsamp_adj mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200
+200 NA NA 236.97 36.63 1212 200 200 NA NA 61.16 15.63 1213 200 200 NA NA
+72.65 11.27 Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1
+survey2</p>
+<p>$SBzero [1] 593080</p>
+<p>$current_depletion [1] 0.2625</p>
+<p>$last_years_SPR [1] 0.2887</p>
 <p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
-<p>$sigma_R_in [1] 0.86</p>
+<p>$sigma_R_in [1] 0.99</p>
 <p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 0.86 0.74 0.062 0.0046 2 Early+Main 28 0.86
-0.74 0.062 0.0046 3 Early+Main+Late 28 0.86 0.74 0.062 0.0046
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-0.86 1 1 2 0.86 1 1 3 0.86 1 1 alternative_sigma_R 1 0.86 2 0.86 3
-0.86</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.85
-0.96 1 2 early 0 0.00 0.00 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.000170798
+mean_SEsquared 1 Main 28 0.8619 0.7429 0.06264 0.00471 2 Early+Main 28
+0.8619 0.7429 0.06264 0.00471 3 Early+Main+Late 28 0.8619 0.7429 0.06264
+0.00471 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 0.8646 0.8706 0.8734 2 0.8646 0.8706 0.8734 3
+0.8646 0.8706 0.8734 alternative_sigma_R 1 0.8646 2 0.8646 3 0.8646</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.8464
+0.7309 1 2 early 0 0.0000 0.0000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.0000846533
+to 0.986978</p>
+<p>$cormessage2 [1] 1 correlation above threshold (cormax=0.95)</p>
+<p>$cormessage3 label.i label.j corr 1 AgeSel_P4_survey2(3)
+AgeSel_P1_survey2(3) 0.987</p>
+<p>$cormessage7 [1] No uncorrelated parameters below threshold
+(cormin=0.01)</p>
+<p>FMSY: 1.027 TempFile Size “size of file gradfil1.tmp = 0” “size of
+file gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size
+of file cmpdiff.tmp = 0” $SS_version [1]
+“3.30.19.01;_safe;_compile_date:_Apr 15
+2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
+<p>$SS_versionshort [1] “3.30”</p>
+<p>$SS_versionNumeric [1] 3.3</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:14:52 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 7 seconds.”</p>
+<p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
+<p>$Nwarnings [1] 1</p>
+<p>$warnings [1] “1 Final gradient: 0.00256187 is larger than
+final_conv: 0.0001” [2] “N warnings: 1”</p>
+<p>$likelihoods_used values lambdas TOTAL 1.109e+03 NA Catch 9.867e-03
+NA Equil_catch 0.000e+00 NA Survey 4.143e+02 NA Age_comp 6.852e+02 NA
+Recruitment 9.316e+00 1.0 InitEQ_Regime 1.745e-33 1.0
+Forecast_Recruitment 0.000e+00 1.0 Parm_priors 0.000e+00 1.0
+Parm_softbounds 7.456e-04 NA Parm_devs 0.000e+00 1.0 F_Ballpark
+9.843e-02 1.0 F_Ballpark(info_only)_2012_estF_tgtF 4.675e-01 0.3
+Crash_Pen 0.000e+00 1.0</p>
+<p>$likelihoods_laplace values lambdas
+NoBias_corr_Recruitment(info_only) 9.316 1 Laplace_obj_fun(info_only)
+1108.900 NA</p>
+<p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
+Catch_lambda NA 1.000e+00 1.0 1.0 182 Catch_like 0.009867 9.867e-03 0.0
+0.0 183 Init_equ_lambda NA 0.000e+00 1.0 1.0 184 Init_equ_like 0.000000
+3.404e+04 0.0 0.0 185 Surv_lambda NA 0.000e+00 1.0 1.0 186 Surv_like
+414.280000 0.000e+00 166.5 247.8 187 Surv_N_use NA 0.000e+00 23.0 28.0
+188 Surv_N_skip NA 0.000e+00 0.0 0.0 189 Age_lambda NA 1.000e+00 1.0 1.0
+190 Age_like 685.191000 1.751e+02 223.1 287.0 191 Age_N_use NA 2.800e+01
+23.0 28.0 192 Age_N_skip NA 0.000e+00 0.0 0.0</p>
+<p>$N_estimated_parameters [1] 48</p>
+<p>$table_of_phases</p>
+<p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
+<p>$estimated_non_dev_parameters Value Phase Min Max Init Status
+Parm_StDev SR_LN(R0) 10.6108 1 3 31 15.000 OK 0.01794
+LnQ_base_survey1(2) 8.4998 1 -10 10 6.646 OK 0.05332 LnQ_base_survey2(3)
+6.2957 1 -10 10 5.670 OK 0.03448 AgeSel_P2_fleet1(1) 2.7184 2 -10 10
+0.810 OK 0.04080 AgeSel_P3_fleet1(1) 1.7192 2 -10 10 1.640 OK 0.03628
+AgeSel_P4_fleet1(1) -0.4951 2 -10 10 -0.560 OK 0.06930
+AgeSel_P5_fleet1(1) -0.6730 2 -10 10 0.610 OK 0.16792
+AgeSel_P6_fleet1(1) -1.3277 2 -10 10 -0.680 OK 0.61168
+AgeSel_P7_fleet1(1) 0.8137 2 -10 10 0.360 OK 0.65498
+AgeSel_P1_survey1(2) 2.1491 2 0 6 2.300 OK 0.07228 AgeSel_P2_survey1(2)
+4.7821 2 0 12 4.300 OK 0.10976 AgeSel_P4_survey1(2) 3.4219 2 0 12 3.500
+OK 0.29715 AgeSel_P1_survey2(3) 2.3780 2 0 6 2.300 OK 0.10533
+AgeSel_P2_survey2(3) 4.5135 2 0 12 4.300 OK 0.09029 AgeSel_P4_survey2(3)
+3.6248 2 0 12 3.500 OK 0.47062 Gradient Pr_type Prior Pr_SD Pr_Like
+Afterbound SR_LN(R0) 0.0025639300 No_prior NA NA NA OK
+LnQ_base_survey1(2) -0.0000217515 No_prior NA NA NA OK
+LnQ_base_survey2(3) -0.0000270049 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.0000164253 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.0003364340 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.0002142090 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) 0.0001075140 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) 0.0000566348 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) 0.0000455749 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) 0.0000521810 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) 0.0000454054 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) -0.0000111555 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) 0.0000013973 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) 0.0000091900 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) 0.0000007297 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 263.2</p>
+<p>$maximum_gradient_component [1] 0.002562</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 10.6108
+0.0025639 AgeSel_P3_fleet1(1) 1.7192 0.0003364 AgeSel_P4_fleet1(1)
+-0.4951 0.0002142 Main_RecrDev_1996 1.5436 0.0001877 Main_RecrDev_1997
+1.3251 0.0001874</p>
+<p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
+min_Nsamp max_Nsamp 1211 5 1 0.17760 # 28 28 200 200 1212 5 2 0.07777 #
+23 23 200 200 1213 5 3 0.05567 # 28 28 200 200 mean_Nsamp_in
+mean_Nsamp_adj mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200
+200 NA NA 228.94 35.52 1212 200 200 NA NA 58.62 15.55 1213 200 200 NA NA
+70.50 11.13 Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1
+survey2</p>
+<p>$SBzero [1] 516050</p>
+<p>$current_depletion [1] 0.289</p>
+<p>$last_years_SPR [1] 0.1942</p>
+<p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
+<p>$sigma_R_in [1] 0.8646</p>
+<p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
+mean_SEsquared 1 Main 28 0.861 0.7414 0.06183 0.004584 2 Early+Main 28
+0.861 0.7414 0.06183 0.004584 3 Early+Main+Late 28 0.861 0.7414 0.06183
+0.004584 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 0.8637 0.9959 0.9989 2 0.8637 0.9959 0.9989 3
+0.8637 0.9959 0.9989 alternative_sigma_R 1 0.8637 2 0.8637 3 0.8637</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 0.8455
+0.9563 1 2 early 0 0.0000 0.0000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.000187652
 to 0.987401</p>
 <p>$cormessage2 [1] 1 correlation above threshold (cormax=0.95)</p>
 <p>$cormessage3 label.i label.j corr 1 AgeSel_P4_survey2(3)
-AgeSel_P1_survey2(3) 0.99</p>
+AgeSel_P1_survey2(3) 0.9874</p>
 <p>$cormessage7 [1] No uncorrelated parameters below threshold
 (cormin=0.01)</p>
 <p>Running ‘SS_html’: By default, this function will look in the
@@ -798,7 +826,7 @@ Opening HTML file in your default web-browser.</p>
 <h4 id="linear-regression-analysis-1">Linear regression analysis<a class="anchor" aria-label="anchor" href="#linear-regression-analysis-1"></a>
 </h4>
 <pre><code>Shapiro-Wilk normality test</code></pre>
-<p>data: meanage W = 1, p-value = 0.5</p>
+<p>data: meanage W = 0.97, p-value = 0.5</p>
 <p>pdf 2</p>
 </div>
 <div class="section level4">
@@ -807,18 +835,18 @@ Opening HTML file in your default web-browser.</p>
 <p><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-38-1.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-38-2.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-38-3.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-38-4.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-38-5.png" width="1152"></p>
 <table style="width:100%;" class="table">
 <colgroup>
-<col width="12%">
-<col width="13%">
-<col width="5%">
-<col width="4%">
-<col width="4%">
-<col width="8%">
-<col width="8%">
-<col width="10%">
-<col width="7%">
 <col width="9%">
-<col width="8%">
+<col width="9%">
+<col width="4%">
+<col width="3%">
+<col width="13%">
 <col width="6%">
+<col width="6%">
+<col width="7%">
+<col width="13%">
+<col width="13%">
+<col width="6%">
+<col width="4%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">case</th>
@@ -838,72 +866,72 @@ Opening HTML file in your default web-browser.</p>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">1</td>
-<td align="left">-2.17*</td>
+<td align="left">-2.17*~</td>
 <td align="left">-0.25</td>
-<td align="left">0*</td>
+<td align="left">-6.96705403745111e-06*</td>
 <td align="left">-0.16</td>
-<td align="left">-0.39*</td>
-<td align="left">1.05*</td>
-<td align="left">0*</td>
-<td align="left">0*</td>
+<td align="left">-0.39*~</td>
+<td align="left">1.05*^~</td>
+<td align="left">-0.000352572475109435*</td>
+<td align="left">-5.03974878525203e-06*</td>
 <td align="left">-0.17</td>
-<td align="left">1.36*</td>
+<td align="left">1.36*~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">2</td>
-<td align="left">-2.17*</td>
+<td align="left">-2.17*~</td>
 <td align="left">-0.25</td>
-<td align="left">0*</td>
+<td align="left">-6.96705403745111e-06*</td>
 <td align="left">-0.16</td>
-<td align="left">-0.39*</td>
-<td align="left">1.05*</td>
-<td align="left">0*</td>
-<td align="left">0*</td>
+<td align="left">-0.39*~</td>
+<td align="left">1.05*^~</td>
+<td align="left">-0.000352572475109435*</td>
+<td align="left">-5.03974878525203e-06*</td>
 <td align="left">-0.17</td>
-<td align="left">1.36*</td>
+<td align="left">1.36*~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">3</td>
-<td align="left">-2.17*</td>
+<td align="left">-2.17*~</td>
 <td align="left">-0.25</td>
-<td align="left">0*</td>
+<td align="left">-6.96705403745111e-06*</td>
 <td align="left">-0.16</td>
-<td align="left">-0.39*</td>
-<td align="left">1.05*</td>
-<td align="left">0*</td>
-<td align="left">0*</td>
+<td align="left">-0.39*~</td>
+<td align="left">1.05*^~</td>
+<td align="left">-0.000352572475109435*</td>
+<td align="left">-5.03974878525203e-06*</td>
 <td align="left">-0.17</td>
-<td align="left">1.36*</td>
+<td align="left">1.36*~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">4</td>
-<td align="left">-2.17*</td>
+<td align="left">-2.17*~</td>
 <td align="left">-0.25</td>
-<td align="left">0*</td>
+<td align="left">-6.96705403745111e-06*</td>
 <td align="left">-0.16</td>
-<td align="left">-0.39*</td>
-<td align="left">1.05*</td>
-<td align="left">0*</td>
-<td align="left">0*</td>
+<td align="left">-0.39*~</td>
+<td align="left">1.05*^~</td>
+<td align="left">-0.000352572475109435*</td>
+<td align="left">-5.03974878525203e-06*</td>
 <td align="left">-0.17</td>
-<td align="left">1.36*</td>
+<td align="left">1.36*~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">5</td>
-<td align="left">-2.17*</td>
+<td align="left">-2.17*~</td>
 <td align="left">-0.25</td>
-<td align="left">0*</td>
+<td align="left">-6.96705403745111e-06*</td>
 <td align="left">-0.16</td>
-<td align="left">-0.39*</td>
-<td align="left">1.05*</td>
-<td align="left">0*</td>
-<td align="left">0*</td>
+<td align="left">-0.39*~</td>
+<td align="left">1.05*^~</td>
+<td align="left">-0.000352572475109435*</td>
+<td align="left">-5.03974878525203e-06*</td>
 <td align="left">-0.17</td>
-<td align="left">1.36*</td>
+<td align="left">1.36*~</td>
 </tr>
 </tbody>
 </table>
@@ -1013,92 +1041,98 @@ link in the estimation model<a class="anchor" aria-label="anchor" href="#year-20
 <div class="section level3">
 <h3 id="case-0-stock-assessment-base-run-2">Case 0: stock assessment base run<a class="anchor" aria-label="anchor" href="#case-0-stock-assessment-base-run-2"></a>
 </h3>
-<pre><code>                   TempFile                            Size </code></pre>
-<p>“size of file gradfil1.tmp = 0” “size of file gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of file cmpdiff.tmp = 0”
-$SS_version [1] “3.30.19.01;_safe;_compile_date:_Apr 15
+<p>[1] TRUE TempFile Size “size of file gradfil1.tmp = 0” “size of file
+gradfil2.tmp = 0” <na><na> “size of file varssave.tmp = 0” “size of
+file cmpdiff.tmp = 0” $SS_version [1]
+“3.30.19.01;_safe;_compile_date:_Apr 15
 2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
 <p>$SS_versionshort [1] “3.30”</p>
 <p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:07:32 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 9 seconds.”</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:15:30 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 5 seconds.”</p>
 <p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
 <p>$Nwarnings [1] 0</p>
 <p>$warnings [1] “N warnings: 0”</p>
-<p>$likelihoods_used values lambdas TOTAL 644.65100 NA Catch 0.00042 NA
-Equil_catch 0.00000 NA Survey 115.82500 NA Age_comp 513.04500 NA
-Recruitment 15.68800 1.0 InitEQ_Regime 0.00000 1.0 Forecast_Recruitment
-0.00000 1.0 Parm_priors 0.00000 1.0 Parm_softbounds 0.00091 NA Parm_devs
-0.00000 1.0 F_Ballpark 0.09158 1.0 F_Ballpark(info_only)_2012_estF_tgtF
-0.46025 0.3 Crash_Pen 0.00000 1.0</p>
+<p>$likelihoods_used values lambdas TOTAL 644.6470000 NA Catch 0.0004228
+NA Equil_catch 0.0000000 NA Survey 115.8170000 NA Age_comp 513.0480000
+NA Recruitment 15.6883000 1.0 InitEQ_Regime 0.0000000 1.0
+Forecast_Recruitment 0.0000000 1.0 Parm_priors 0.0000000 1.0
+Parm_softbounds 0.0009067 NA Parm_devs 0.0000000 1.0 F_Ballpark
+0.0919999 1.0 F_Ballpark(info_only)_2012_estF_tgtF 0.4606950 0.3
+Crash_Pen 0.0000000 1.0</p>
 <p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 16 1 Laplace_obj_fun(info_only) 645
-NA</p>
+NoBias_corr_Recruitment(info_only) 15.69 1 Laplace_obj_fun(info_only)
+644.65 NA</p>
 <p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 4.2e-04 4.2e-04 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.0e+00 3.9e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 1.2e+02 0.0e+00 71 45 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 5.1e+02 9.8e+01 213 202 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
+Catch_lambda NA 1.000e+00 1.00 1.00 182 Catch_like 4.228e-04 4.228e-04
+0.00 0.00 183 Init_equ_lambda NA 0.000e+00 1.00 1.00 184 Init_equ_like
+0.000e+00 3.919e+04 0.00 0.00 185 Surv_lambda NA 0.000e+00 1.00 1.00 186
+Surv_like 1.158e+02 0.000e+00 70.93 44.89 187 Surv_N_use NA 0.000e+00
+23.00 28.00 188 Surv_N_skip NA 0.000e+00 0.00 0.00 189 Age_lambda NA
+1.000e+00 1.00 1.00 190 Age_like 5.130e+02 9.771e+01 212.87 202.47 191
+Age_N_use NA 2.800e+01 23.00 28.00 192 Age_N_skip NA 0.000e+00 0.00
+0.00</p>
 <p>$N_estimated_parameters [1] 48</p>
 <p>$table_of_phases</p>
 <p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
 <p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 11.24 1 3 31 15.00 OK 0.049 0.0000152
-LnQ_base_survey1(2) 8.38 1 -10 10 6.65 OK 0.067 0.0000746
-LnQ_base_survey2(3) 6.57 1 -10 10 5.67 OK 0.059 -0.0000367
-AgeSel_P2_fleet1(1) 0.80 2 -10 10 0.81 OK 0.039 -0.0000953
-AgeSel_P3_fleet1(1) 1.69 2 -10 10 1.64 OK 0.042 -0.0000885
-AgeSel_P4_fleet1(1) -0.53 2 -10 10 -0.56 OK 0.073 -0.0000460
-AgeSel_P5_fleet1(1) 0.64 2 -10 10 0.61 OK 0.100 -0.0000512
-AgeSel_P6_fleet1(1) -0.66 2 -10 10 -0.68 OK 0.187 -0.0000104
-AgeSel_P7_fleet1(1) 0.43 2 -10 10 0.36 OK 0.260 0.0000044
-AgeSel_P1_survey1(2) 1.94 2 0 6 2.30 OK 0.052 -0.0000569
-AgeSel_P2_survey1(2) 4.81 2 0 12 4.30 OK 0.134 0.0000022
-AgeSel_P4_survey1(2) 2.56 2 0 12 3.50 OK 0.158 0.0000346
-AgeSel_P1_survey2(3) 2.31 2 0 6 2.30 OK 0.067 -0.0000438
-AgeSel_P2_survey2(3) 4.64 2 0 12 4.30 OK 0.075 -0.0000058
-AgeSel_P4_survey2(3) 3.56 2 0 12 3.50 OK 0.297 0.0000158 Pr_type Prior
-Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 252</p>
-<p>$maximum_gradient_component [1] 9.5e-05</p>
-<p>$parameters_with_highest_gradients Value Gradient AgeSel_P2_fleet1(1)
-0.80 -9.5e-05 AgeSel_P3_fleet1(1) 1.69 -8.8e-05 LnQ_base_survey1(2) 8.38
-7.5e-05 AgeSel_P1_survey1(2) 1.94 -5.7e-05 AgeSel_P5_fleet1(1) 0.64
--5.1e-05</p>
+Parm_StDev SR_LN(R0) 11.2349 1 3 31 15.000 OK 0.04923
+LnQ_base_survey1(2) 8.3773 1 -10 10 6.646 OK 0.06728 LnQ_base_survey2(3)
+6.5677 1 -10 10 5.670 OK 0.05851 AgeSel_P2_fleet1(1) 0.7986 2 -10 10
+0.810 OK 0.03890 AgeSel_P3_fleet1(1) 1.6884 2 -10 10 1.640 OK 0.04233
+AgeSel_P4_fleet1(1) -0.5292 2 -10 10 -0.560 OK 0.07260
+AgeSel_P5_fleet1(1) 0.6423 2 -10 10 0.610 OK 0.09992 AgeSel_P6_fleet1(1)
+-0.6637 2 -10 10 -0.680 OK 0.18668 AgeSel_P7_fleet1(1) 0.4288 2 -10 10
+0.360 OK 0.26050 AgeSel_P1_survey1(2) 1.9442 2 0 6 2.300 OK 0.05172
+AgeSel_P2_survey1(2) 4.8113 2 0 12 4.300 OK 0.13440 AgeSel_P4_survey1(2)
+2.5591 2 0 12 3.500 OK 0.15821 AgeSel_P1_survey2(3) 2.3092 2 0 6 2.300
+OK 0.06661 AgeSel_P2_survey2(3) 4.6430 2 0 12 4.300 OK 0.07546
+AgeSel_P4_survey2(3) 3.5617 2 0 12 3.500 OK 0.29713 Gradient Pr_type
+Prior Pr_SD Pr_Like Afterbound SR_LN(R0) 0.0000773235 No_prior NA NA NA
+OK LnQ_base_survey1(2) 0.0000085614 No_prior NA NA NA OK
+LnQ_base_survey2(3) -0.0000399637 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.0000058153 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.0000276408 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.0000233273 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) 0.0000190152 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) 0.0000173515 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) 0.0000088990 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) 0.0000168421 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) 0.0000055356 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) -0.0000056416 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) -0.0000000919 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) -0.0000020215 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) -0.0000009997 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 251.7</p>
+<p>$maximum_gradient_component [1] 0.00007732</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 11.2349
+0.00007732 LnQ_base_survey2(3) 6.5677 -0.00003996 AgeSel_P3_fleet1(1)
+1.6884 0.00002764 AgeSel_P4_fleet1(1) -0.5292 0.00002333
+AgeSel_P5_fleet1(1) 0.6423 0.00001902</p>
 <p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.480 # 28 28 200 200 1212 5 2 0.086 # 23
-23 200 200 1213 5 3 0.118 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 209 96
-1212 200 200 NA NA 168 17 1213 200 200 NA NA 519 24 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 950440</p>
-<p>$current_depletion [1] 0.28</p>
-<p>$last_years_SPR [1] 0.26</p>
+min_Nsamp max_Nsamp 1211 5 1 0.4798 # 28 28 200 200 1212 5 2 0.0857 # 23
+23 200 200 1213 5 3 0.1178 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
+mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 208.5
+95.96 1212 200 200 NA NA 167.9 17.14 1213 200 200 NA NA 518.6 23.55
+Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
+<p>$SBzero [1] 949360</p>
+<p>$current_depletion [1] 0.2811</p>
+<p>$last_years_SPR [1] 0.2607</p>
 <p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
 <p>$sigma_R_in [1] 0.99</p>
 <p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 1.1 1.2 0.062 0.0043 2 Early+Main 28 1.1 1.2
-0.062 0.0043 3 Early+Main+Late 28 1.1 1.2 0.062 0.0043
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-1.1 1.1 1.1 2 1.1 1.1 1.1 3 1.1 1.1 1.1 alternative_sigma_R 1 1.1 2 1.1
-3 1.1</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 1.1
-1.1 1 2 early 0 0.0 0.0 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 7.89951e-05
-to 0.979311</p>
+mean_SEsquared 1 Main 28 1.077 1.159 0.06156 0.004252 2 Early+Main 28
+1.077 1.159 0.06156 0.004252 3 Early+Main+Late 28 1.077 1.159 0.06156
+0.004252 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 1.079 1.088 1.09 2 1.079 1.088 1.09 3 1.079
+1.088 1.09 alternative_sigma_R 1 1.079 2 1.079 3 1.079</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 1.057
+1.141 1 2 early 0 0.000 0.000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.0000774467
+to 0.979312</p>
 <p>$cormessage2 [1] 1 correlation above threshold (cormax=0.95)</p>
 <p>$cormessage3 label.i label.j corr 1 AgeSel_P4_survey2(3)
-AgeSel_P1_survey2(3) 0.98</p>
+AgeSel_P1_survey2(3) 0.9793</p>
 <p>$cormessage7 [1] No uncorrelated parameters below threshold
 (cormin=0.01)</p>
 <p>FMSY: 1 TempFile Size “size of file gradfil1.tmp = 0” “size of file
@@ -1108,85 +1142,92 @@ file cmpdiff.tmp = 0” $SS_version [1]
 2022;<em>Stock_Synthesis_by_Richard_Methot</em>(NOAA)_using_ADMB_12.3”</na></na></p>
 <p>$SS_versionshort [1] “3.30”</p>
 <p>$SS_versionNumeric [1] 3.3</p>
-<p>$StartTime [1] “StartTime: Wed Apr 24 09:07:43 2024”</p>
-<p>$RunTime [1] “0 hours, 0 minutes, 7 seconds.”</p>
+<p>$StartTime [1] “StartTime: Tue Apr 30 12:15:36 2024”</p>
+<p>$RunTime [1] “0 hours, 0 minutes, 5 seconds.”</p>
 <p>$Files_used [1] “Data_File: data.ss Control_File: control.ss”</p>
 <p>$Nwarnings [1] 0</p>
 <p>$warnings [1] “N warnings: 0”</p>
-<p>$likelihoods_used values lambdas TOTAL 635.27300 NA Catch 0.00039 NA
-Equil_catch 0.00000 NA Survey 108.47200 NA Age_comp 511.19700 NA
-Recruitment 15.52230 1.0 InitEQ_Regime 0.00000 1.0 Forecast_Recruitment
-0.00000 1.0 Parm_priors 0.00000 1.0 Parm_softbounds 0.00090 NA Parm_devs
-0.00000 1.0 F_Ballpark 0.08011 1.0 F_Ballpark(info_only)_2012_estF_tgtF
-0.44767 0.3 Crash_Pen 0.00000 1.0</p>
+<p>$likelihoods_used values lambdas TOTAL 635.2670000 NA Catch 0.0003935
+NA Equil_catch 0.0000000 NA Survey 108.4630000 NA Age_comp 511.1990000
+NA Recruitment 15.5226000 1.0 InitEQ_Regime 0.0000000 1.0
+Forecast_Recruitment 0.0000000 1.0 Parm_priors 0.0000000 1.0
+Parm_softbounds 0.0009039 NA Parm_devs 0.0000000 1.0 F_Ballpark
+0.0804992 1.0 F_Ballpark(info_only)_2012_estF_tgtF 0.4481060 0.3
+Crash_Pen 0.0000000 1.0</p>
 <p>$likelihoods_laplace values lambdas
-NoBias_corr_Recruitment(info_only) 16 1 Laplace_obj_fun(info_only) 635
-NA</p>
+NoBias_corr_Recruitment(info_only) 15.52 1 Laplace_obj_fun(info_only)
+635.27 NA</p>
 <p>$likelihoods_by_fleet Label ALL fleet1 survey1 survey2 181
-Catch_lambda NA 1.0e+00 1 1 182 Catch_like 3.9e-04 3.9e-04 0 0 183
-Init_equ_lambda NA 0.0e+00 1 1 184 Init_equ_like 0.0e+00 4.0e+04 0 0 185
-Surv_lambda NA 0.0e+00 1 1 186 Surv_like 1.1e+02 0.0e+00 71 38 187
-Surv_N_use NA 0.0e+00 23 28 188 Surv_N_skip NA 0.0e+00 0 0 189
-Age_lambda NA 1.0e+00 1 1 190 Age_like 5.1e+02 9.6e+01 212 203 191
-Age_N_use NA 2.8e+01 23 28 192 Age_N_skip NA 0.0e+00 0 0</p>
+Catch_lambda NA 1.000e+00 1.00 1.00 182 Catch_like 3.935e-04 3.935e-04
+0.00 0.00 183 Init_equ_lambda NA 0.000e+00 1.00 1.00 184 Init_equ_like
+0.000e+00 3.989e+04 0.00 0.00 185 Surv_lambda NA 0.000e+00 1.00 1.00 186
+Surv_like 1.085e+02 0.000e+00 70.92 37.54 187 Surv_N_use NA 0.000e+00
+23.00 28.00 188 Surv_N_skip NA 0.000e+00 0.00 0.00 189 Age_lambda NA
+1.000e+00 1.00 1.00 190 Age_like 5.112e+02 9.603e+01 211.91 203.26 191
+Age_N_use NA 2.800e+01 23.00 28.00 192 Age_N_skip NA 0.000e+00 0.00
+0.00</p>
 <p>$N_estimated_parameters [1] 48</p>
 <p>$table_of_phases</p>
 <p>-99 -5 -4 -3 -2 -1 1 2 3 1 1 2 11 8 3 3 40 5</p>
 <p>$estimated_non_dev_parameters Value Phase Min Max Init Status
-Parm_StDev Gradient SR_LN(R0) 11.35 1 3 31 15.00 OK 0.050 0.00005009
-LnQ_base_survey1(2) 8.36 1 -10 10 6.65 OK 0.068 -0.00000810
-LnQ_base_survey2(3) 6.54 1 -10 10 5.67 OK 0.059 0.00003302
-AgeSel_P2_fleet1(1) 0.79 2 -10 10 0.81 OK 0.039 0.00001197
-AgeSel_P3_fleet1(1) 1.68 2 -10 10 1.64 OK 0.042 0.00001160
-AgeSel_P4_fleet1(1) -0.54 2 -10 10 -0.56 OK 0.073 0.00000764
-AgeSel_P5_fleet1(1) 0.62 2 -10 10 0.61 OK 0.100 0.00000471
-AgeSel_P6_fleet1(1) -0.67 2 -10 10 -0.68 OK 0.187 0.00000327
-AgeSel_P7_fleet1(1) 0.42 2 -10 10 0.36 OK 0.260 0.00000216
-AgeSel_P1_survey1(2) 1.94 2 0 6 2.30 OK 0.052 0.00000493
-AgeSel_P2_survey1(2) 4.81 2 0 12 4.30 OK 0.135 0.00000521
-AgeSel_P4_survey1(2) 2.56 2 0 12 3.50 OK 0.157 0.00000111
-AgeSel_P1_survey2(3) 2.31 2 0 6 2.30 OK 0.067 0.00000965
-AgeSel_P2_survey2(3) 4.64 2 0 12 4.30 OK 0.075 0.00000026
-AgeSel_P4_survey2(3) 3.58 2 0 12 3.50 OK 0.297 -0.00000461 Pr_type Prior
-Pr_SD Pr_Like Afterbound SR_LN(R0) No_prior NA NA NA OK
-LnQ_base_survey1(2) No_prior NA NA NA OK LnQ_base_survey2(3) No_prior NA
-NA NA OK AgeSel_P2_fleet1(1) No_prior NA NA NA OK AgeSel_P3_fleet1(1)
-No_prior NA NA NA OK AgeSel_P4_fleet1(1) No_prior NA NA NA OK
-AgeSel_P5_fleet1(1) No_prior NA NA NA OK AgeSel_P6_fleet1(1) No_prior NA
-NA NA OK AgeSel_P7_fleet1(1) No_prior NA NA NA OK AgeSel_P1_survey1(2)
-No_prior NA NA NA OK AgeSel_P2_survey1(2) No_prior NA NA NA OK
-AgeSel_P4_survey1(2) No_prior NA NA NA OK AgeSel_P1_survey2(3) No_prior
-NA NA NA OK AgeSel_P2_survey2(3) No_prior NA NA NA OK
-AgeSel_P4_survey2(3) No_prior NA NA NA OK</p>
-<p>$log_det_hessian [1] 251</p>
-<p>$maximum_gradient_component [1] 5e-05</p>
-<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 11.35
-5.0e-05 LnQ_base_survey2(3) 6.54 3.3e-05 AgeSel_P2_fleet1(1) 0.79
-1.2e-05 AgeSel_P3_fleet1(1) 1.68 1.2e-05 AgeSel_P1_survey2(3) 2.31
-9.6e-06</p>
+Parm_StDev SR_LN(R0) 11.3458 1 3 31 15.000 OK 0.05006
+LnQ_base_survey1(2) 8.3573 1 -10 10 6.646 OK 0.06813 LnQ_base_survey2(3)
+6.5404 1 -10 10 5.670 OK 0.05934 AgeSel_P2_fleet1(1) 0.7929 2 -10 10
+0.810 OK 0.03892 AgeSel_P3_fleet1(1) 1.6821 2 -10 10 1.640 OK 0.04235
+AgeSel_P4_fleet1(1) -0.5419 2 -10 10 -0.560 OK 0.07273
+AgeSel_P5_fleet1(1) 0.6244 2 -10 10 0.610 OK 0.09972 AgeSel_P6_fleet1(1)
+-0.6687 2 -10 10 -0.680 OK 0.18670 AgeSel_P7_fleet1(1) 0.4161 2 -10 10
+0.360 OK 0.26023 AgeSel_P1_survey1(2) 1.9423 2 0 6 2.300 OK 0.05151
+AgeSel_P2_survey1(2) 4.8125 2 0 12 4.300 OK 0.13452 AgeSel_P4_survey1(2)
+2.5618 2 0 12 3.500 OK 0.15718 AgeSel_P1_survey2(3) 2.3094 2 0 6 2.300
+OK 0.06665 AgeSel_P2_survey2(3) 4.6382 2 0 12 4.300 OK 0.07541
+AgeSel_P4_survey2(3) 3.5762 2 0 12 3.500 OK 0.29679 Gradient Pr_type
+Prior Pr_SD Pr_Like Afterbound SR_LN(R0) -0.0000722499 No_prior NA NA NA
+OK LnQ_base_survey1(2) -0.0000002780 No_prior NA NA NA OK
+LnQ_base_survey2(3) -0.0000287101 No_prior NA NA NA OK
+AgeSel_P2_fleet1(1) -0.0000004897 No_prior NA NA NA OK
+AgeSel_P3_fleet1(1) 0.0000016671 No_prior NA NA NA OK
+AgeSel_P4_fleet1(1) 0.0000024448 No_prior NA NA NA OK
+AgeSel_P5_fleet1(1) 0.0000027090 No_prior NA NA NA OK
+AgeSel_P6_fleet1(1) 0.0000005891 No_prior NA NA NA OK
+AgeSel_P7_fleet1(1) -0.0000004560 No_prior NA NA NA OK
+AgeSel_P1_survey1(2) -0.0000171550 No_prior NA NA NA OK
+AgeSel_P2_survey1(2) -0.0000120170 No_prior NA NA NA OK
+AgeSel_P4_survey1(2) 0.0000034037 No_prior NA NA NA OK
+AgeSel_P1_survey2(3) -0.0000069147 No_prior NA NA NA OK
+AgeSel_P2_survey2(3) -0.0000014483 No_prior NA NA NA OK
+AgeSel_P4_survey2(3) 0.0000025071 No_prior NA NA NA OK</p>
+<p>$log_det_hessian [1] 250.6</p>
+<p>$maximum_gradient_component [1] 0.00007225</p>
+<p>$parameters_with_highest_gradients Value Gradient SR_LN(R0) 11.346
+-7.225e-05 LnQ_base_survey2(3) 6.540 -2.871e-05 AgeSel_P1_survey1(2)
+1.942 -1.716e-05 AgeSel_P2_survey1(2) 4.813 -1.202e-05
+AgeSel_P1_survey2(3) 2.309 -6.915e-06</p>
 <p>$Age_Comp_Fit_Summary Factor Fleet Recommend_var_adj # Nsamp_adj Npos
-min_Nsamp max_Nsamp 1211 5 1 0.491 # 28 28 200 200 1212 5 2 0.086 # 23
-23 200 200 1213 5 3 0.117 # 28 28 200 200 mean_Nsamp_in mean_Nsamp_adj
-mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200 200 NA NA 221 98
-1212 200 200 NA NA 169 17 1213 200 200 NA NA 418 23 Curr_Var_Adj
-Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1 survey2</p>
-<p>$SBzero [1] 1061870</p>
+min_Nsamp max_Nsamp 1211 5 1 0.49096 # 28 28 200 200 1212 5 2 0.08593 #
+23 23 200 200 1213 5 3 0.11732 # 28 28 200 200 mean_Nsamp_in
+mean_Nsamp_adj mean_Nsamp_DM DM_theta mean_effN HarMean_effN 1211 200
+200 NA NA 220.8 98.19 1212 200 200 NA NA 168.9 17.19 1213 200 200 NA NA
+417.8 23.46 Curr_Var_Adj Fleet_name 1211 1 fleet1 1212 1 survey1 1213 1
+survey2</p>
+<p>$SBzero [1] 1060675</p>
 <p>$current_depletion [1] 0.26</p>
-<p>$last_years_SPR [1] 0.18</p>
+<p>$last_years_SPR [1] 0.1804</p>
 <p>$SPRratioLabel [1] “(1-SPR)/(1-SPR_40%)”</p>
-<p>$sigma_R_in [1] 1.1</p>
+<p>$sigma_R_in [1] 1.079</p>
 <p>$sigma_R_info period N_devs SD_of_devs Var_of_devs mean_SE
-mean_SEsquared 1 Main 28 1.1 1.2 0.062 0.0043 2 Early+Main 28 1.1 1.2
-0.062 0.0043 3 Early+Main+Late 28 1.1 1.2 0.062 0.0043
-sqrt_sum_of_components SD_of_devs_over_sigma_R sqrt_sum_over_sigma_R 1
-1.1 1 1 2 1.1 1 1 3 1.1 1 1 alternative_sigma_R 1 1.1 2 1.1 3 1.1</p>
-<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 1.1
-0.96 1 2 early 0 0.0 0.00 0</p>
-<p>$cormessage1 [1] Range of abs(parameter correlations) is 8.3771e-05
-to 0.979308</p>
+mean_SEsquared 1 Main 28 1.075 1.155 0.06171 0.004277 2 Early+Main 28
+1.075 1.155 0.06171 0.004277 3 Early+Main+Late 28 1.075 1.155 0.06171
+0.004277 sqrt_sum_of_components SD_of_devs_over_sigma_R
+sqrt_sum_over_sigma_R 1 1.077 0.9963 0.9982 2 1.077 0.9963 0.9982 3
+1.077 0.9963 0.9982 alternative_sigma_R 1 1.077 2 1.077 3 1.077</p>
+<p>$rmse_table ERA N RMSE RMSE_over_sigmaR mean_BiasAdj 1 main 28 1.055
+0.9572 1 2 early 0 0.000 0.0000 0</p>
+<p>$cormessage1 [1] Range of abs(parameter correlations) is 0.0000854047
+to 0.979305</p>
 <p>$cormessage2 [1] 1 correlation above threshold (cormax=0.95)</p>
 <p>$cormessage3 label.i label.j corr 1 AgeSel_P4_survey2(3)
-AgeSel_P1_survey2(3) 0.98</p>
+AgeSel_P1_survey2(3) 0.9793</p>
 <p>$cormessage7 [1] No uncorrelated parameters below threshold
 (cormin=0.01)</p>
 <p>Running ‘SS_html’: By default, this function will look in the
@@ -1202,7 +1243,7 @@ Opening HTML file in your default web-browser.</p>
 <h4 id="linear-regression-analysis-2">Linear regression analysis<a class="anchor" aria-label="anchor" href="#linear-regression-analysis-2"></a>
 </h4>
 <pre><code>Shapiro-Wilk normality test</code></pre>
-<p>data: meanage W = 0.9, p-value = 0.03</p>
+<p>data: meanage W = 0.93, p-value = 0.03</p>
 <p>pdf 2</p>
 </div>
 <div class="section level4">
@@ -1211,18 +1252,18 @@ Opening HTML file in your default web-browser.</p>
 <p><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-62-1.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-62-2.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-62-3.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-62-4.png" width="1152"><img src="11_OM3_data_rich_stock_assessment_main_report_files/figure-html/unnamed-chunk-62-5.png" width="1152"></p>
 <table class="table">
 <colgroup>
+<col width="8%">
+<col width="9%">
+<col width="3%">
+<col width="2%">
 <col width="12%">
-<col width="13%">
-<col width="4%">
-<col width="4%">
 <col width="5%">
-<col width="8%">
-<col width="8%">
-<col width="10%">
+<col width="5%">
 <col width="7%">
-<col width="10%">
-<col width="8%">
-<col width="6%">
+<col width="13%">
+<col width="13%">
+<col width="12%">
+<col width="4%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">case</th>
@@ -1242,72 +1283,72 @@ Opening HTML file in your default web-browser.</p>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">1</td>
-<td align="left">0.36</td>
-<td align="left">0.1</td>
-<td align="left">0</td>
-<td align="left">0.04</td>
-<td align="left">-0.01</td>
-<td align="left">0.17*</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.01</td>
+<td align="left">0.36~</td>
+<td align="left">0.1~</td>
+<td align="left">-1.3820535816324e-06~</td>
+<td align="left">0.04~</td>
+<td align="left">-0.01~</td>
+<td align="left">0.17*~</td>
+<td align="left">-0.000084661230618836~</td>
+<td align="left">-6.23995132126705e-06~</td>
+<td align="left">0.00298126374978249~</td>
+<td align="left">0.01~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">2</td>
-<td align="left">0.36</td>
-<td align="left">0.1</td>
-<td align="left">0</td>
-<td align="left">0.04</td>
-<td align="left">-0.01</td>
-<td align="left">0.17*</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.01</td>
+<td align="left">0.36~</td>
+<td align="left">0.1~</td>
+<td align="left">-1.3820535816324e-06~</td>
+<td align="left">0.04~</td>
+<td align="left">-0.01~</td>
+<td align="left">0.17*~</td>
+<td align="left">-0.000084661230618836~</td>
+<td align="left">-6.23995132126705e-06~</td>
+<td align="left">0.00298126374978249~</td>
+<td align="left">0.01~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">3</td>
-<td align="left">0.36</td>
-<td align="left">0.1</td>
-<td align="left">0</td>
-<td align="left">0.04</td>
-<td align="left">-0.01</td>
-<td align="left">0.17*</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.01</td>
+<td align="left">0.36~</td>
+<td align="left">0.1~</td>
+<td align="left">-1.3820535816324e-06~</td>
+<td align="left">0.04~</td>
+<td align="left">-0.01~</td>
+<td align="left">0.17*~</td>
+<td align="left">-0.000084661230618836~</td>
+<td align="left">-6.23995132126705e-06~</td>
+<td align="left">0.00298126374978249~</td>
+<td align="left">0.01~</td>
 </tr>
 <tr class="even">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">4</td>
-<td align="left">0.36</td>
-<td align="left">0.1</td>
-<td align="left">0</td>
-<td align="left">0.04</td>
-<td align="left">-0.01</td>
-<td align="left">0.17*</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.01</td>
+<td align="left">0.36~</td>
+<td align="left">0.1~</td>
+<td align="left">-1.3820535816324e-06~</td>
+<td align="left">0.04~</td>
+<td align="left">-0.01~</td>
+<td align="left">0.17*~</td>
+<td align="left">-0.000084661230618836~</td>
+<td align="left">-6.23995132126705e-06~</td>
+<td align="left">0.00298126374978249~</td>
+<td align="left">0.01~</td>
 </tr>
 <tr class="odd">
 <td align="left">PDSI+AMO1 Case</td>
 <td align="right">5</td>
-<td align="left">0.36</td>
-<td align="left">0.1</td>
-<td align="left">0</td>
-<td align="left">0.04</td>
-<td align="left">-0.01</td>
-<td align="left">0.17*</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0</td>
-<td align="left">0.01</td>
+<td align="left">0.36~</td>
+<td align="left">0.1~</td>
+<td align="left">-1.3820535816324e-06~</td>
+<td align="left">0.04~</td>
+<td align="left">-0.01~</td>
+<td align="left">0.17*~</td>
+<td align="left">-0.000084661230618836~</td>
+<td align="left">-6.23995132126705e-06~</td>
+<td align="left">0.00298126374978249~</td>
+<td align="left">0.01~</td>
 </tr>
 </tbody>
 </table>
