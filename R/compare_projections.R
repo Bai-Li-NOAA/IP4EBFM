@@ -32,7 +32,6 @@ compare_projections_dbsra <- function(case_name,
                                       herringCPUE,
                                       menhadenV,
                                       indices) {
-
   amo_unsmooth_lag1 <- amo
   palmer_drought_severity_index <- pdsi
   bass_bio <- bassB
@@ -59,19 +58,19 @@ compare_projections_dbsra <- function(case_name,
 
   Bt_BMSY_list <- vector(mode = "list", length = length(projection_year))
 
-  for (projection_year_id in 1:length(projection_year)){
+  for (projection_year_id in 1:length(projection_year)) {
     projection_output <- projection_output_data
     menhaden_b <- apply(projection_output[[projection_year_id]]$Btrend, 2, median)
-    year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year)+projection_year_id-1)]
+    year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)[1:(length(model_year) + projection_year_id - 1)]
 
     if (projection_year_id == 1) {
-      index_year = model_year
+      index_year <- model_year
     } else {
-      index_year <- c(model_year, projection_year[1:(projection_year_id-1)])
+      index_year <- c(model_year, projection_year[1:(projection_year_id - 1)])
     }
 
-    biomass_lag_id <- (1+lag):length(index_year)
-    index_lag_id <- 1:(length(index_year)-lag)
+    biomass_lag_id <- (1 + lag):length(index_year)
+    index_lag_id <- 1:(length(index_year) - lag)
 
     shapiro.test(menhaden_b[biomass_lag_id]) # < 0.05, data is not normally distributed
     shapiro.test(log(menhaden_b[biomass_lag_id])) # < 0.05, data is not normally distributed
@@ -83,25 +82,64 @@ compare_projections_dbsra <- function(case_name,
     amo_lm <- lm(log_menhaden_b ~ amo$scaled_value[index_lag_id])
     summary(amo_lm)
     amo_fit <- fitted(amo_lm)
+    amo_shapiro <- shapiro.test(summary(amo_lm)$residuals)
     lm_slope$amo[projection_year_id] <- paste0(
-      round(summary(amo_lm)$coefficients[2, 1], digits = 2),
-      if(summary(amo_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(amo_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(amo_lm)$coefficients[2, 1],
+             round(summary(amo_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(amo_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(amo_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (amo_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     pdsi <- palmer_drought_severity_index[year_id, ]
     pdsi_lm <- lm(log_menhaden_b ~ pdsi$scaled_value[index_lag_id])
     pdsi_fit <- fitted(pdsi_lm)
+    pdsi_shapiro <- shapiro.test(summary(pdsi_lm)$residuals)
     lm_slope$pdsi[projection_year_id] <- paste0(
-      round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
-      if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(pdsi_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(pdsi_lm)$coefficients[2, 1],
+             round(summary(pdsi_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(pdsi_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (pdsi_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     bassB <- bass_bio[bass_bio$Year %in% year_id, ]
     shapiro.test(bassB$bass_bio[index_lag_id]) # > 0.05, data is normally distributed
     bassB_lm <- lm(log_menhaden_b ~ bassB$bass_bio[index_lag_id])
     summary(bassB_lm)
     bassB_fit <- fitted(bassB_lm)
+    bassB_shapiro <- shapiro.test(summary(bassB_lm)$residuals)
     lm_slope$bassB[projection_year_id] <- paste0(
-      round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
-      if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(bassB_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(bassB_lm)$coefficients[2, 1],
+             round(summary(bassB_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(bassB_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(bassB_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (bassB_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     menhadenC <- sa_data$fishery$obs_total_catch_biomass$fleet1[1:length(year_id)]
     shapiro.test(menhadenC) # < 0.05, data is not normally distributed
@@ -109,9 +147,22 @@ compare_projections_dbsra <- function(case_name,
     menhadenC_lm <- lm(log_menhaden_b ~ log(menhadenC[index_lag_id]))
     summary(menhadenC_lm)
     menhadenC_fit <- fitted(menhadenC_lm)
+    menhadenC_shapiro <- shapiro.test(summary(menhadenC_lm)$residuals)
     lm_slope$menhadenC[projection_year_id] <- paste0(
-      round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2),
-      if(summary(menhadenC_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(menhadenC_lm)$coefficients[2, 1],
+             round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(menhadenC_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(menhadenC_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (menhadenC_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     menhadenE <- menhaden_effort[1:length(year_id)]
     shapiro.test(menhadenE) # < 0.05, data is not normally distributed
@@ -119,9 +170,22 @@ compare_projections_dbsra <- function(case_name,
     menhadenE_lm <- lm(log_menhaden_b ~ log(menhadenE[index_lag_id]))
     summary(menhadenE_lm)
     menhadenE_fit <- fitted(menhadenE_lm)
+    menhadenE_shapiro <- shapiro.test(summary(menhadenE_lm)$residuals)
     lm_slope$menhadenE[projection_year_id] <- paste0(
-      round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2),
-      if(summary(menhadenE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(menhadenE_lm)$coefficients[2, 1],
+             round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(menhadenE_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(menhadenE_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (menhadenE_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     menhadenCPUE <- menhaden_cpue[1:length(year_id)]
     shapiro.test(menhadenCPUE) # < 0.05, data is not normally distributed
@@ -129,18 +193,44 @@ compare_projections_dbsra <- function(case_name,
     menhadenCPUE_lm <- lm(log_menhaden_b ~ menhadenCPUE[index_lag_id])
     summary(menhadenCPUE_lm)
     menhadenCPUE_fit <- fitted(menhadenCPUE_lm)
+    menhadenCPUE_shapiro <- shapiro.test(summary(menhadenCPUE_lm)$residuals)
     lm_slope$menhadenCPUE[projection_year_id] <- paste0(
-      round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2),
-      if(summary(menhadenCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(menhadenCPUE_lm)$coefficients[2, 1],
+             round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(menhadenCPUE_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(menhadenCPUE_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (menhadenCPUE_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     bassCPUE <- bass_cpue[1:length(year_id)]
     shapiro.test(bassCPUE) # > 0.05, data is normally distributed
     bassCPUE_lm <- lm(log_menhaden_b ~ bassCPUE[index_lag_id])
     summary(bassCPUE_lm)
     bassCPUE_fit <- fitted(bassCPUE_lm)
+    bassCPUE_shapiro <- shapiro.test(summary(bassCPUE_lm)$residuals)
     lm_slope$bassCPUE[projection_year_id] <- paste0(
-      round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2),
-      if(summary(bassCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(bassCPUE_lm)$coefficients[2, 1],
+             round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(bassCPUE_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(bassCPUE_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (bassCPUE_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     herringCPUE <- herring_cpue[1:length(year_id)]
     shapiro.test(herringCPUE) # < 0.05, data is not normally distributed
@@ -148,9 +238,22 @@ compare_projections_dbsra <- function(case_name,
     herringCPUE_lm <- lm(log_menhaden_b ~ herringCPUE[index_lag_id])
     summary(herringCPUE_lm)
     herringCPUE_fit <- fitted(herringCPUE_lm)
+    herringCPUE_shapiro <- shapiro.test(summary(herringCPUE_lm)$residuals)
     lm_slope$herringCPUE[projection_year_id] <- paste0(
-      round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2),
-      if(summary(herringCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(herringCPUE_lm)$coefficients[2, 1],
+             round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(herringCPUE_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(herringCPUE_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (herringCPUE_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     menhadenV <- menhaden_value[1:length(year_id)]
     shapiro.test(menhadenV) # < 0.05, data is not normally distributed
@@ -158,9 +261,22 @@ compare_projections_dbsra <- function(case_name,
     menhadenV_lm <- lm(log_menhaden_b ~ log(menhadenV[index_lag_id]))
     summary(menhadenV_lm)
     menhadenV_fit <- fitted(menhadenV_lm)
+    menhadenV_shapiro <- shapiro.test(summary(menhadenV_lm)$residuals)
     lm_slope$menhadenV[projection_year_id] <- paste0(
-      round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2),
-      if(summary(menhadenV_lm)$coefficients[2, 4] <= 0.05) {"*"})
+      ifelse(round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2) == 0,
+             summary(menhadenV_lm)$coefficients[2, 1],
+             round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2)
+      ),
+      if (summary(menhadenV_lm)$coefficients[2, 4] <= 0.05) {
+        "*"
+      },
+      if (summary(menhadenV_lm)$r.squared >= 0.6) {
+        "^"
+      },
+      if (menhadenV_shapiro$p.value > 0.05) {
+        "~"
+      }
+    )
 
     if (projection_year_id == 1) {
       lm_data_em <- rbind(
@@ -318,16 +434,16 @@ compare_projections_dbsra <- function(case_name,
       scaled_data <- data.frame(
         year = model_year,
         projection_year_id = projection_year[projection_year_id],
-        amo = scale(amo$scaled_value)[,1],
-        pdsi = scale(pdsi$scaled_value)[,1],
-        bassB = scale(bassB$bass_bio)[,1],
-        menhadenC = scale(menhadenC)[,1],
-        menhadenE = scale(menhadenE)[,1],
-        menhadenCPUE = scale(menhadenCPUE)[,1],
-        bassCPUE = scale(bassCPUE)[,1],
-        herringCPUE = scale(herringCPUE)[,1],
-        menhadenV = scale(menhadenV)[,1],
-        menhadenB = scale(menhaden_b)[,1]
+        amo = scale(amo$scaled_value)[, 1],
+        pdsi = scale(pdsi$scaled_value)[, 1],
+        bassB = scale(bassB$bass_bio)[, 1],
+        menhadenC = scale(menhadenC)[, 1],
+        menhadenE = scale(menhadenE)[, 1],
+        menhadenCPUE = scale(menhadenCPUE)[, 1],
+        bassCPUE = scale(bassCPUE)[, 1],
+        herringCPUE = scale(herringCPUE)[, 1],
+        menhadenV = scale(menhadenV)[, 1],
+        menhadenB = scale(menhaden_b)[, 1]
       )
 
       soi_data <- data.frame(
@@ -343,22 +459,22 @@ compare_projections_dbsra <- function(case_name,
         herringCPUE = herringCPUE_soi,
         menhadenV = menhadenV_soi
       )
-    } else{
+    } else {
       scaled_data <- rbind(
         scaled_data,
         data.frame(
           year = index_year,
           projection_year_id = projection_year[projection_year_id],
-          amo = scale(amo$scaled_value)[,1],
-          pdsi = scale(pdsi$scaled_value)[,1],
-          bassB = scale(bassB$bass_bio)[,1],
-          menhadenC = scale(menhadenC)[,1],
-          menhadenE = scale(menhadenE)[,1],
-          menhadenCPUE = scale(menhadenCPUE)[,1],
-          bassCPUE = scale(bassCPUE)[,1],
-          herringCPUE = scale(herringCPUE)[,1],
-          menhadenV = scale(menhadenV)[,1],
-          menhadenB = scale(menhaden_b)[,1]
+          amo = scale(amo$scaled_value)[, 1],
+          pdsi = scale(pdsi$scaled_value)[, 1],
+          bassB = scale(bassB$bass_bio)[, 1],
+          menhadenC = scale(menhadenC)[, 1],
+          menhadenE = scale(menhadenE)[, 1],
+          menhadenCPUE = scale(menhadenCPUE)[, 1],
+          bassCPUE = scale(bassCPUE)[, 1],
+          herringCPUE = scale(herringCPUE)[, 1],
+          menhadenV = scale(menhadenV)[, 1],
+          menhadenB = scale(menhaden_b)[, 1]
         )
       )
 
@@ -439,7 +555,7 @@ compare_projections_dbsra <- function(case_name,
       Bt_BMSY = Bt_BMSY
     )
 
-    if (projection_year_id == 1){
+    if (projection_year_id == 1) {
       tac_data <- data.frame(
         iter = 1:length(amo_tac),
         projection_year_id = projection_year[projection_year_id],
@@ -496,7 +612,7 @@ compare_projections_dbsra <- function(case_name,
   )
   tac_data_melt$projection_year_id <- as.factor(tac_data_melt$projection_year_id)
 
-  tac_data_melt_median <- aggregate(value ~ projection_year_id+variable, data = tac_data_melt, median)
+  tac_data_melt_median <- aggregate(value ~ projection_year_id + variable, data = tac_data_melt, median)
   tac_data_melt_median$projection_year_id <- as.numeric(as.character(tac_data_melt_median$projection_year_id))
 
   fmsy_data_melt <- reshape2::melt(
@@ -505,7 +621,7 @@ compare_projections_dbsra <- function(case_name,
   )
   fmsy_data_melt$projection_year_id <- as.factor(fmsy_data_melt$projection_year_id)
 
-  fmsy_data_melt_median <- aggregate(value ~ projection_year_id+variable, data = fmsy_data_melt, median)
+  fmsy_data_melt_median <- aggregate(value ~ projection_year_id + variable, data = fmsy_data_melt, median)
   fmsy_data_melt_median$projection_year_id <- as.numeric(as.character(fmsy_data_melt_median$projection_year_id))
 
   return(list(
@@ -520,5 +636,4 @@ compare_projections_dbsra <- function(case_name,
     fmsy_data_melt_median = fmsy_data_melt_median,
     Bt_BMSY_list = Bt_BMSY_list
   ))
-
 }

@@ -5,7 +5,7 @@ library(reshape2)
 library(here)
 set.seed(999)
 
-options(digits = 2)
+options(scipen = 1, digits = 4)
 
 # specify working directories ---------------------------------------------
 

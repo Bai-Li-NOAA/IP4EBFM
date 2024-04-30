@@ -1,4 +1,3 @@
-
 # Load AMO index --------------------------------------------------
 
 amo_unsmooth_lag0 <- read.csv(
@@ -39,7 +38,7 @@ ewe_output <- read_ewe_output(
 
 bass_bio <- data.frame(
   Year = ewe_output[[1]]$Year,
-  bass_bio = apply(ewe_output[[1]][grep("StripedBass",names(ewe_output[[1]]))], 1, sum)*1000000
+  bass_bio = apply(ewe_output[[1]][grep("StripedBass", names(ewe_output[[1]]))], 1, sum) * 1000000
 )
 
 
@@ -54,12 +53,14 @@ catch <- read_ewe_output(
   figure_colors = NULL
 )
 
-catch_fleet_name <- c("StripedBass",
-                      "AtlanticMenhaden",
-                      "SpinyDogfish",
-                      "Bluefish",
-                      "Weakfish",
-                      "AtlanticHerring")
+catch_fleet_name <- c(
+  "StripedBass",
+  "AtlanticMenhaden",
+  "SpinyDogfish",
+  "Bluefish",
+  "Weakfish",
+  "AtlanticHerring"
+)
 
 effort_all <- read.csv(
   here::here("data", "ewe", "7ages_ecosim_om", paste0(ewe_scenario_name, "_effort_all.csv"))
@@ -74,28 +75,26 @@ effort_fleet_name <- c(
   "F.herring"
 )
 
-if (add_fleet_dynamics == TRUE){
-
+if (add_fleet_dynamics == TRUE) {
   catch_all <- cpue_all <- effort_all
 
-  for (i in seq_along(effort_fleet_name)){
+  for (i in seq_along(effort_fleet_name)) {
     catch_all[, effort_fleet_name[i]] <- apply(as.data.frame(catch[[1]][, grep(catch_fleet_name[i], names(catch[[1]]))]), 1, sum)
-    cpue_all[, effort_fleet_name[i]] <- catch_all[, effort_fleet_name[i]]/effort_all[, effort_fleet_name[i]]
+    cpue_all[, effort_fleet_name[i]] <- catch_all[, effort_fleet_name[i]] / effort_all[, effort_fleet_name[i]]
   }
-
 }
 
-if (add_fleet_dynamics == FALSE){
+if (add_fleet_dynamics == FALSE) {
   fatage_all <- read.csv(
     here::here("data", "ewe", "7ages_ecosim_om", paste0(ewe_scenario_name, "_fatage_all.csv"))
   )
 
   cpue_all <- effort_all
 
-  for (i in seq_along(effort_fleet_name)){
+  for (i in seq_along(effort_fleet_name)) {
     apical_f_all <- apply(as.data.frame(fatage_all[, grep(catch_fleet_name[i], names(fatage_all))]), 1, max)
     # cpue = C/E = C/(F/q) where q is fixed value
-    cpue_all[, effort_fleet_name[i]] <- apply(as.data.frame(catch[[1]][, grep(catch_fleet_name[i], names(catch[[1]]))]), 1, sum)/
+    cpue_all[, effort_fleet_name[i]] <- apply(as.data.frame(catch[[1]][, grep(catch_fleet_name[i], names(catch[[1]]))]), 1, sum) /
       apical_f_all
   }
 }
@@ -142,10 +141,10 @@ off_vessel_price <- data.frame(
   "F.herring" = 0.0972
 )
 
-for (i in seq_along(effort_fleet_name)){
+for (i in seq_along(effort_fleet_name)) {
   catch_all[, effort_fleet_name[i]] <- apply(as.data.frame(catch[[1]][, grep(catch_fleet_name[i], names(catch[[1]]))]), 1, sum)
   # convert catch_all to mt: *1000000; convert price/lb to price/mt: /0.000453592
-  value_all[, effort_fleet_name[i]] <- catch_all[, effort_fleet_name[i]] *1000000 * as.numeric(off_vessel_price[effort_fleet_name[i]])/0.000453592
+  value_all[, effort_fleet_name[i]] <- catch_all[, effort_fleet_name[i]] * 1000000 * as.numeric(off_vessel_price[effort_fleet_name[i]]) / 0.000453592
 }
 
 
@@ -167,20 +166,26 @@ for (i in seq_along(effort_fleet_name)){
 # )
 
 # Load catchability data ------------------------------------------
-menhadenCatchability <- read.csv(file.path(ewe_output_path,
-                                       "NWACS AM 7ages-Ecosim_catchbility_F.menhaden.csv"))
-menhadenCatchability <- subset(menhadenCatchability, select=-c(X))
+menhadenCatchability <- read.csv(file.path(
+  ewe_output_path,
+  "NWACS AM 7ages-Ecosim_catchbility_F.menhaden.csv"
+))
+menhadenCatchability <- subset(menhadenCatchability, select = -c(X))
 menhadenCatchability <- menhadenCatchability[, grep("menhaden", colnames(menhadenCatchability))]
 
 
-bassCatchability <- read.csv(file.path(ewe_output_path,
-                                       "NWACS AM 7ages-Ecosim_catchbility_F.striped bass.csv"))
-bassCatchability <- subset(bassCatchability, select=-c(X))
+bassCatchability <- read.csv(file.path(
+  ewe_output_path,
+  "NWACS AM 7ages-Ecosim_catchbility_F.striped bass.csv"
+))
+bassCatchability <- subset(bassCatchability, select = -c(X))
 bassCatchability <- bassCatchability[, grep("striped.bass", colnames(bassCatchability))]
 
-herringCatchability <- read.csv(file.path(ewe_output_path,
-                                         "NWACS AM 7ages-Ecosim_catchbility_F.herring.csv"))
-herringCatchability <- subset(herringCatchability, select=-c(X))
+herringCatchability <- read.csv(file.path(
+  ewe_output_path,
+  "NWACS AM 7ages-Ecosim_catchbility_F.herring.csv"
+))
+herringCatchability <- subset(herringCatchability, select = -c(X))
 herringCatchability <- herringCatchability[, grep("Atlantic.herring", colnames(herringCatchability))]
 # Load fishing mortality at age data ------------------------------
 # ewe_faa <- read.csv(here::here("data", "ewe", "7ages_newsim_final", "fatage.csv"))
@@ -203,9 +208,9 @@ lm_slope <- data.frame(
 
 year_id <- seq(1, nrow(amo_unsmooth_lag1), by = 12)
 index_year <- c(model_year)
-lag = 1
-biomass_lag_id <- (1+lag):length(index_year)
-index_lag_id <- 1:(length(index_year)-lag)
+lag <- 1
+biomass_lag_id <- (1 + lag):length(index_year)
+index_lag_id <- 1:(length(index_year) - lag)
 
 shapiro.test(biomass_ewe[time_id][biomass_lag_id]) # < 0.05, data is not normally distributed
 shapiro.test(log(biomass_ewe[time_id][biomass_lag_id])) # > 0.05, data is normally distributed
@@ -216,10 +221,20 @@ shapiro.test(amo$scaled_value[index_lag_id]) # > 0.05, data is normally distribu
 # amo_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ amo$scaled_value[index_lag_id])
 amo_lm <- lm(log_biomass_ewe ~ amo$scaled_value[index_lag_id])
 amo_fit <- fitted(amo_lm)
+amo_shapiro <- shapiro.test(summary(amo_lm)$residuals)
 lm_slope$amo <- paste0(
-  round(summary(amo_lm)$coefficients[2, 1], digits = 2),
+  ifelse(round(summary(amo_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(amo_lm)$coefficients[2, 1],
+         round(summary(amo_lm)$coefficients[2, 1], digits = 2)
+  ),
   if (summary(amo_lm)$coefficients[2, 4] <= 0.05) {
     "*"
+  },
+  if (summary(amo_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (amo_shapiro$p.value > 0.05) {
+    "~"
   }
 )
 
@@ -228,14 +243,26 @@ shapiro.test(pdsi$scaled_value[index_lag_id]) # > 0.05, data is normally distrib
 # pdsi_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ pdsi$scaled_value[index_lag_id])
 pdsi_lm <- lm(log_biomass_ewe ~ pdsi$scaled_value[index_lag_id])
 pdsi_fit <- fitted(pdsi_lm)
+pdsi_shapiro <- shapiro.test(summary(pdsi_lm)$residuals)
 lm_slope$pdsi <- paste0(
-  round(summary(pdsi_lm)$coefficients[2, 1], digits = 2),
-  if(summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {"*"})
-
+  ifelse(round(summary(pdsi_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(pdsi_lm)$coefficients[2, 1],
+         round(summary(pdsi_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(pdsi_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(pdsi_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (pdsi_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 # if (add_fleet_dynamics == TRUE){
 #   bassB <- log(bass_bio[bass_bio$Year %in% year_id, ])
 # } else {
-  bassB <- bass_bio[bass_bio$Year %in% year_id, ]
+bassB <- bass_bio[bass_bio$Year %in% year_id, ]
 # }
 # bassB_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ bassB$bass_bio[index_lag_id])
 shapiro.test(bassB$bass_bio[index_lag_id]) # > 0.05, data is normally distributed
@@ -245,33 +272,59 @@ shapiro.test(log(bassB$bass_bio[index_lag_id])) # > 0.05, data is normally distr
 
 bassB_lm <- lm(log_biomass_ewe ~ bassB$bass_bio[index_lag_id])
 bassB_fit <- fitted(bassB_lm)
+bassB_shapiro <- shapiro.test(summary(bassB_lm)$residuals)
 lm_slope$bassB <- paste0(
-  round(summary(bassB_lm)$coefficients[2, 1], digits = 2),
-  if(summary(bassB_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(bassB_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(bassB_lm)$coefficients[2, 1],
+         round(summary(bassB_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(bassB_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(bassB_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (bassB_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
 # sub_menhadenP <- menhaden_price$Inflation.Adjust.Price.Per.MT[menhaden_price$Year %in% index_year]
 # price_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ sub_menhadenP[index_lag_id])
 # price_fit <- fitted(price_lm)
 # lm_slope$price <- paste0(
-#   round(summary(price_lm)$coefficients[2, 1], digits = 2),
+#   round(summary(price_lm)$coefficients[2, 1], digits = 4),
 #   if(summary(price_lm)$coefficients[2, 4] <= 0.05) {"*"})
 
-menhadenCatch <- apply(as.data.frame(catch[[1]][, grep("AtlanticMenhaden", names(catch[[1]]))]), 1, sum) *1000000
+menhadenCatch <- apply(as.data.frame(catch[[1]][, grep("AtlanticMenhaden", names(catch[[1]]))]), 1, sum) * 1000000
 shapiro.test(menhadenCatch) # < 0.05, data is not normally distributed
 shapiro.test(log(menhadenCatch)) # < 0.05, data is not normally distributed
 # if (add_fleet_dynamics == TRUE){
 #   menhadenC <- log(menhadenCatch[year_id])
 # } else {
-  menhadenC <- menhadenCatch[year_id]
+menhadenC <- menhadenCatch[year_id]
 # }
 menhadenC_lm <- lm(log_biomass_ewe ~ log(menhadenC[index_lag_id]))
 # menhadenC_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ menhadenC[index_lag_id])
 menhadenC_fit <- fitted(menhadenC_lm)
+menhadenC_shapiro <- shapiro.test(summary(menhadenC_lm)$residuals)
 lm_slope$menhadenC <- paste0(
-  round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhadenC_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(menhadenC_lm)$coefficients[2, 1],
+         round(summary(menhadenC_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(menhadenC_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(menhadenC_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (menhadenC_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
-if (add_fleet_dynamics == TRUE){
+if (add_fleet_dynamics == TRUE) {
   menhadenEffort <- effort_all[, "F.menhaden"]
   menhadenE <- menhadenEffort[year_id]
 } else {
@@ -282,76 +335,141 @@ shapiro.test(log(menhadenE)) # < 0.05, data is not normally distributed
 # menhadenE_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ menhadenE[index_lag_id])
 menhadenE_lm <- lm(log_biomass_ewe ~ log(menhadenE[index_lag_id]))
 menhadenE_fit <- fitted(menhadenE_lm)
+menhadenE_shapiro <- shapiro.test(summary(menhadenE_lm)$residuals)
 lm_slope$menhadenE <- paste0(
-  round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhadenE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(menhadenE_lm)$coefficients[2, 1],
+         round(summary(menhadenE_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(menhadenE_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(menhadenE_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (menhadenE_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
-if (add_fleet_dynamics == TRUE){
-  menhadenCPUE <- menhadenC/menhadenEffort[year_id]
+if (add_fleet_dynamics == TRUE) {
+  menhadenCPUE <- menhadenC / menhadenEffort[year_id]
 } else {
-  menhadenCPUE <- menhadenC/menhadenE
+  menhadenCPUE <- menhadenC / menhadenE
 }
 shapiro.test(menhadenCPUE) # < 0.05, data is not normally distributed
 shapiro.test(log(menhadenCPUE)) # = 0.05
 # menhadenCPUE_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ menhadenCPUE[index_lag_id])
 menhadenCPUE_lm <- lm(log_biomass_ewe ~ log(menhadenCPUE[index_lag_id]))
 menhadenCPUE_fit <- fitted(menhadenCPUE_lm)
+menhadenCPUE_shapiro <- shapiro.test(summary(menhadenCPUE_lm)$residuals)
 lm_slope$menhadenCPUE <- paste0(
-  round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhadenCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(menhadenCPUE_lm)$coefficients[2, 1],
+         round(summary(menhadenCPUE_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(menhadenCPUE_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(menhadenCPUE_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (menhadenCPUE_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
-bassCatch <- apply(as.data.frame(catch[[1]][, grep("StripedBass", names(catch[[1]]))]), 1, sum) *1000000
+bassCatch <- apply(as.data.frame(catch[[1]][, grep("StripedBass", names(catch[[1]]))]), 1, sum) * 1000000
 bassC <- bassCatch[year_id]
-if (add_fleet_dynamics == TRUE){
+if (add_fleet_dynamics == TRUE) {
   bassEffort <- effort_all[, "F.striped.bass"]
   bassE <- bassEffort[year_id]
 }
-if (add_fleet_dynamics == FALSE){
+if (add_fleet_dynamics == FALSE) {
   bassE <- apply(fatage_all[year_id, grep("StripedBass", colnames(fatage_all))] / bassCatchability[year_id, grep("striped.bass", colnames(bassCatchability))], 1, sum)
 }
 
-bassCPUE <- bassC/bassE
+bassCPUE <- bassC / bassE
 shapiro.test(bassCPUE) # > 0.05, data is normally distributed
 # bassCPUE_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ bassCPUE[index_lag_id])
 bassCPUE_lm <- lm(log_biomass_ewe ~ bassCPUE[index_lag_id])
 bassCPUE_fit <- fitted(bassCPUE_lm)
+bassCPUE_shapiro <- shapiro.test(summary(bassCPUE_lm)$residuals)
 lm_slope$bassCPUE <- paste0(
-  round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2),
-  if(summary(bassCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(bassCPUE_lm)$coefficients[2, 1],
+         round(summary(bassCPUE_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(bassCPUE_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(bassCPUE_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (bassCPUE_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
-herringCatch <- apply(as.data.frame(catch[[1]][, grep("AtlanticHerring", names(catch[[1]]))]), 1, sum) *1000000
+herringCatch <- apply(as.data.frame(catch[[1]][, grep("AtlanticHerring", names(catch[[1]]))]), 1, sum) * 1000000
 herringC <- herringCatch[year_id]
-if (add_fleet_dynamics == TRUE){
+if (add_fleet_dynamics == TRUE) {
   herringEffort <- effort_all[, "F.herring"]
   herringE <- herringEffort[year_id]
 }
-if (add_fleet_dynamics == FALSE){
+if (add_fleet_dynamics == FALSE) {
   herringE <- apply(fatage_all[year_id, grep("AtlanticHerring", colnames(fatage_all))] / herringCatchability[year_id, grep("Atlantic.herring", colnames(herringCatchability))], 1, sum)
 }
 
-herringCPUE <- herringC/herringE
+herringCPUE <- herringC / herringE
 shapiro.test(herringCPUE) # > 0.05, data is normally distributed
 # herringCPUE_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ herringCPUE[index_lag_id])
 herringCPUE_lm <- lm(log_biomass_ewe ~ herringCPUE[index_lag_id])
 herringCPUE_fit <- fitted(herringCPUE_lm)
+herringCPUE_shapiro <- shapiro.test(summary(herringCPUE_lm)$residuals)
 lm_slope$herringCPUE <- paste0(
-  round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2),
-  if(summary(herringCPUE_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(herringCPUE_lm)$coefficients[2, 1],
+         round(summary(herringCPUE_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(herringCPUE_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(herringCPUE_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (herringCPUE_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
-menhadenValue = value_all[, "F.menhaden"]
+menhadenValue <- value_all[, "F.menhaden"]
 # if (add_fleet_dynamics == TRUE){
 #   menhadenV <- log(menhadenValue[year_id])
 # } else {
-  menhadenV <- menhadenValue[year_id]
+menhadenV <- menhadenValue[year_id]
 # }
 shapiro.test(menhadenV) # < 0.05, data is not normally distributed
 shapiro.test(log(menhadenV)) # < 0.05, data is not normally distributed
 # menhadenV_lm <- lm(biomass_ewe[time_id][biomass_lag_id] ~ menhadenV[index_lag_id])
-menhadenV_lm <- lm(log_biomass_ewe~ log(menhadenV[index_lag_id]))
+menhadenV_lm <- lm(log_biomass_ewe ~ log(menhadenV[index_lag_id]))
 menhadenV_fit <- fitted(menhadenV_lm)
+menhadenV_shapiro <- shapiro.test(summary(menhadenV_lm)$residuals)
 lm_slope$menhadenV <- paste0(
-  round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhadenV_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  ifelse(round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2) == 0,
+         summary(menhadenV_lm)$coefficients[2, 1],
+         round(summary(menhadenV_lm)$coefficients[2, 1], digits = 2)
+  ),
+  if (summary(menhadenV_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  },
+  if (summary(menhadenV_lm)$r.squared >= 0.6) {
+    "^"
+  },
+  if (menhadenV_shapiro$p.value > 0.05) {
+    "~"
+  }
+)
 
 write.csv(lm_slope, here::here("data", paste0(ewe_scenario_name, "_om_lm_slope_", terminal_year, scenario_filename, ".csv")))
 # linear regression analysis summary table
@@ -423,14 +541,20 @@ menhaden_herring_lm <- lm(log(menhadenCPUE[biomass_lag_id]) ~ log(herringCPUE[in
 menhaden_herring_fit <- fitted(menhaden_herring_lm)
 
 cpue_lm_slope$menhaden_herring <- paste0(
-  round(summary(menhaden_herring_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhaden_herring_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  round(summary(menhaden_herring_lm)$coefficients[2, 1], digits = 4),
+  if (summary(menhaden_herring_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  }
+)
 
 menhaden_bass_lm <- lm(log(menhadenCPUE[biomass_lag_id]) ~ log(bassCPUE[index_lag_id]))
 menhaden_bass_fit <- fitted(menhaden_bass_lm)
 
 cpue_lm_slope$menhaden_bass <- paste0(
-  round(summary(menhaden_bass_lm)$coefficients[2, 1], digits = 2),
-  if(summary(menhaden_bass_lm)$coefficients[2, 4] <= 0.05) {"*"})
+  round(summary(menhaden_bass_lm)$coefficients[2, 1], digits = 4),
+  if (summary(menhaden_bass_lm)$coefficients[2, 4] <= 0.05) {
+    "*"
+  }
+)
 
 write.csv(cpue_lm_slope, here::here("data", paste0(ewe_scenario_name, "_cpue_lm_slope_", terminal_year, scenario_filename, ".csv")))
