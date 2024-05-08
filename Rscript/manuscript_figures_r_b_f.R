@@ -228,9 +228,11 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
   F_average_projection <- apply(mortality_projection, 1, mean)
 
   f_data <- data.frame(
-    median = F_average_projection,
+    # median = F_average_projection,
+    median = F_apical_projection,
     Year = projection_year,
-    Data_type = "F_average"
+    # Data_type = "F_average"
+    Data_type = "F_apical"
   )
   f_data_reshape <- reshape2::melt(f_data, id = c("Year", "Data_type"))
   colnames(f_data_reshape) <- c("Year", "variable", "Data_type", "value")
@@ -244,14 +246,12 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                   "amo", "pdsi",
                   "bassb",
                   "menhadenc",
-                  "basscpue", "herringcpue",
-                  "menhadenv")
+                  "basscpue", "herringcpue")
   indicators_fmsy <- c("DBSRA",
                        "amo", "pdsi",
                        "bassB",
                        "menhadenC",
-                       "bassCPUE", "herringCPUE",
-                       "menhadenV")
+                       "bassCPUE", "herringCPUE")
 
   for (indicators_id in seq_along(indicators)){
     if (ewe_scenario_name == "ecosim_fleet_dynamics") {
@@ -366,14 +366,12 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                   "amo", "pdsi",
                   "bassb",
                   "menhadenc", "menhadene", "menhadencpue",
-                  "basscpue", "herringcpue",
-                  "menhadenv")
+                  "basscpue", "herringcpue")
   indicators_fmsy <- c("JABBA",
                        "amo", "pdsi",
                        "bassB",
                        "menhadenC", "menhadenE", "menhadenCPUE",
-                       "bassCPUE", "herringCPUE",
-                       "menhadenV")
+                       "bassCPUE", "herringCPUE")
 
   for (indicators_id in seq_along(indicators)){
     if (ewe_scenario_name == "ecosim_fleet_dynamics") {
@@ -458,14 +456,12 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                            "amo", "pdsi",
                            "bassb", "meanage",
                            "menhadenc", "menhadene", "menhadencpue",
-                           "basscpue", "herringcpue",
-                           "menhadenv")
+                           "basscpue", "herringcpue")
   indicators_fmsy <- c("SS3",
                   "amo", "pdsi",
                   "bassB", "meanage",
                   "menhadenC", "menhadenE", "menhadenCPUE",
-                  "bassCPUE", "herringCPUE",
-                  "menhadenV")
+                  "bassCPUE", "herringCPUE")
 
   for (indicators_id in seq_along(indicators)){
     if (ewe_scenario_name == "ecosim_fleet_dynamics") {
@@ -541,16 +537,15 @@ indicators <- c("dbsra",
                 "amo", "pdsi",
                 "bassb",
                 "menhadenc",
-                "basscpue", "herringcpue",
-                "menhadenv")
+                "basscpue", "herringcpue")
 
 data_poor_data <- summary_data[which((summary_data$variable %in% data_poor_variable) & summary_data$Model %in% c("OM", "Data-poor EM", paste0("Data-poor ", indicators))),]
 
 data_poor_data$Model <- factor(data_poor_data$Model, levels = c("OM", "Data-poor EM", "Data-poor dbsra", "Data-poor amo", "Data-poor pdsi", "Data-poor bassb",
                                                                 "Data-poor basscpue", "Data-poor herringcpue", "Data-poor menhadenc", "Data-poor menhadenv"))
-levels(data_poor_data$Model) <- c("OM", "Data-poor EM", "FMSY-EM", "Fadj-AMO", "Fadj-PDSI", "Fadj-Predator biomass",
-                                  "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Catch",
-                                  "Fadj-Prey 1 Ex-vessel Value")
+levels(data_poor_data$Model) <- c("OM", "Data-poor EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
+                                  "Fadj-I5", "Fadj-I6", "Fadj-I7",
+                                  "Fadj-IV")
 
 data_poor_data$Year_type[data_poor_data$Year %in% model_year] <- "Fit"
 data_poor_data$Year_type[data_poor_data$Year %in% projection_year] <- "Projection"
@@ -650,22 +645,22 @@ ggsave(file.path(figure_path, paste0(ewe_scenario_name, "_", terminal_year, scen
 
 data_moderate_variable <- intersect(unique(summary_data$variable[which(summary_data$Model == "OM")]),
                                 unique(summary_data$variable[which(summary_data$Model == "Data-moderate EM")]))
+data_moderate_variable <- c(data_moderate_variable, "F_apical")
 
 indicators <- c("jabba",
                 "amo", "pdsi",
                 "bassb",
                 "menhadenc", "menhadene", "menhadencpue",
-                "basscpue", "herringcpue",
-                "menhadenv")
+                "basscpue", "herringcpue")
 
 data_moderate_data <- summary_data[which((summary_data$variable %in% data_moderate_variable) & summary_data$Model %in% c("OM", "Data-moderate EM", paste0("Data-moderate ", indicators))),]
 
 data_moderate_data$Model <- factor(data_moderate_data$Model, levels = c("OM", "Data-moderate EM", "Data-moderate jabba", "Data-moderate amo", "Data-moderate pdsi", "Data-moderate bassb",
                                                                 "Data-moderate basscpue", "Data-moderate herringcpue", "Data-moderate menhadenc", "Data-moderate menhadenv", "Data-moderate menhadene", "Data-moderate menhadencpue"))
-levels(data_moderate_data$Model) <- c("OM", "Data-moderate EM", "FMSY-EM", "Fadj-AMO", "Fadj-PDSI", "Fadj-Predator biomass",
-                                  "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Catch",
-                                  "Fadj-Prey 1 Ex-vessel Value", "Fadj-Prey 1 Fishing Effort",
-                                  "Fadj-Prey 1 CPUE")
+levels(data_moderate_data$Model) <- c("OM", "Data-moderate EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
+                                  "Fadj-I5", "Fadj-I6", "Fadj-I7",
+                                  "Fadj-IV", "Fadj-I8",
+                                  "Fadj-I9")
 
 data_moderate_data$Year_type[data_moderate_data$Year %in% model_year] <- "Fit"
 data_moderate_data$Year_type[data_moderate_data$Year %in% projection_year] <- "Projection"
@@ -728,17 +723,16 @@ indicators <- c("ss3",
                 "amo", "pdsi",
                 "bassb", "meanage",
                 "menhadenc", "menhadene", "menhadencpue",
-                "basscpue", "herringcpue",
-                "menhadenv")
+                "basscpue", "herringcpue")
 
 data_rich_data <- summary_data[which((summary_data$variable %in% data_rich_variable) & summary_data$Model %in% c("OM", "Data-rich EM", paste0("Data-rich ", indicators))),]
 
 data_rich_data$Model <- factor(data_rich_data$Model, levels = c("OM", "Data-rich EM", "Data-rich ss3", "Data-rich amo", "Data-rich pdsi", "Data-rich bassb", "Data-rich meanage",
                                                         "Data-rich basscpue", "Data-rich herringcpue", "Data-rich menhadenc", "Data-rich menhadenv", "Data-rich menhadene", "Data-rich menhadencpue"))
-levels(data_rich_data$Model) <- c("OM", "Data-rich EM", "FMSY-EM", "Fadj-AMO", "Fadj-PDSI", "Fadj-Predator biomass", "Fadj-Prey 1 Mean Age",
-                              "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Catch",
-                              "Fadj-Prey 1 Ex-vessel Value", "Fadj-Prey 1 Fishing Effort",
-                              "Fadj-Prey 1 CPUE")
+levels(data_rich_data$Model) <- c("OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3", "Fadj-I4",
+                              "Fadj-I5", "Fadj-I6", "Fadj-I7",
+                              "Fadj-IV", "Fadj-I8",
+                              "Fadj-I9")
 
 data_rich_data$Year_type[data_rich_data$Year %in% model_year] <- "Fit"
 data_rich_data$Year_type[data_rich_data$Year %in% projection_year] <- "Projection"

@@ -3,8 +3,18 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
                             projection_indicator_name,
                             model_year, projection_year, figure_path,
                             scale_projection = TRUE) {
-  # Linear regression analysis figures
+  model_color <- hue_pal()(4)
+  names(model_color) <- c(
+    "OM", "Data-poor EM",
+    "Data-moderate EM",
+    "Data-rich EM"
+  )
+  indicator_color <- hue_pal()(11)
+  names(indicator_color) <- c("OM", "FMSY-EM", paste0("Fadj-I", 1:9))
 
+  indicator_shape <- 0:10
+  names(indicator_shape) <- c("OM", "FMSY-EM", paste0("Fadj-I", 1:9))
+  # Linear regression analysis figures
   data_subset <- lm_data[which(lm_data$model %in% c("OM", em_name) &
     lm_data$scenario == scenario &
     lm_data$Variable %in% indicator_id), ]
@@ -14,6 +24,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     aes(x = Index_Value, y = Menhaden_Biomass, color = model)
   ) +
     geom_point() +
+    scale_colour_manual(values = model_color[c("OM", em_name)]) +
     geom_smooth(method = lm) +
     facet_wrap(~ scenario + Variable, scales = "free", labeller = labeller(.multi_line = F)) +
     labs(
@@ -21,13 +32,15 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       y = "Log biomass (mt)"
     ) +
     theme_bw() +
-    theme(legend.position = "none",
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold"))
+    theme(
+      legend.position = "none",
+      axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+      strip.text = element_text(size = 15),
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 15, face = "bold"),
+      legend.text = element_text(size = 15),
+      legend.title = element_text(size = 15, face = "bold")
+    )
 
   # Status of indicators
 
@@ -40,8 +53,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     data_subset,
     aes(x = year, y = value, color = model)
   ) +
-    geom_point(data_subset[which(data_subset$year == tail(model_year, n = 1)), ], mapping = aes(x = year, y = value), size = 2, alpha = 0.5) +
-    geom_line(alpha = 0.5, linewidth = 1) +
+    geom_point(data_subset[which(data_subset$year == tail(model_year, n = 1)), ],
+      mapping = aes(x = year, y = value, pch = model), size = 2, alpha = 0.5
+    ) +
+    scale_colour_manual(values = model_color[c("OM", em_name)]) +
+    geom_line(alpha = 0.5, linewidth = 1, aes(linetype = model)) +
     geom_hline(yintercept = 0.5, lty = 2) +
     facet_wrap(~ scenario + variable, labeller = labeller(.multi_line = F)) +
     labs(
@@ -53,11 +69,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     theme(
       axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
       legend.position = "bottom",
-      strip.text = element_text(size=15),
-      axis.text=element_text(size=12),
-      axis.title=element_text(size=15,face="bold"),
-      legend.text=element_text(size=15),
-      legend.title=element_text(size=15,face="bold")
+      strip.text = element_text(size = 15),
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 15, face = "bold"),
+      legend.text = element_text(size = 15),
+      legend.title = element_text(size = 15, face = "bold")
     )
 
   # Bratio
@@ -65,16 +81,29 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
   data_subset <- bratio_data[which(bratio_data$model %in% c("OM", em_name) &
     bratio_data$scenario == scenario), ]
 
-  bratio_figure <- ggplot(data_subset, aes(x = scenario, y = bratio)) +
-    geom_boxplot(outlier.size = 0.5, col = "black") +
+  bratio_figure <- ggplot(
+    data_subset[!(data_subset$model == "OM"), ],
+    aes(x = scenario, y = bratio)
+  ) +
+    geom_boxplot(outlier.size = 0.5, color = model_color[em_name]) +
     labs(
       x = "Scenario",
       y = bquote(B[2012] / B[MSY])
     ) +
+    geom_point(data_subset[data_subset$model == "OM", ],
+      mapping = aes(x = scenario, y = bratio), pch = 8,
+      color = model_color["OM"], size = 5
+    ) +
     theme_bw() +
-    theme(legend.position = "none",
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"))
+    theme(
+      axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+      legend.position = "bottom",
+      strip.text = element_text(size = 15),
+      axis.text = element_text(size = 12),
+      axis.title = element_text(size = 15, face = "bold"),
+      legend.text = element_text(size = 15),
+      legend.title = element_text(size = 15, face = "bold")
+    )
 
 
   # Projection
@@ -85,8 +114,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
   ), ]
 
   ensemble_data <- data_subset[which(data_subset$Year_type == "Projection" &
-                                       data_subset$Data_type == "median" &
-                                       !(data_subset$Model == "FMSY-EM")), ]
+    data_subset$Data_type == "median" &
+    !(data_subset$Model == "FMSY-EM")), ]
   ensemble_projection <- aggregate(value ~ Year + variable, data = ensemble_data, mean)
   ensemble_projection$Model <- "Ensemble model"
   ensemble_projection$Scenario <- scenario
@@ -98,23 +127,27 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
   percentage_change <- data_subset[which(data_subset$Year_type == "Projection"), ]
   percentage_change <- percentage_change %>%
     group_by(Year, variable) %>%
-    mutate(percentage_change = (value-value[Model == "FMSY-EM"]) / value[Model == "FMSY-EM"]*100)
+    mutate(percentage_change = (value - value[Model == "OM"]) / value[Model == "OM"] * 100)
+  # percentage_change <- percentage_change %>%
+  #   group_by(Year, variable) %>%
+  #   mutate(percentage_change = (value-value[Model == "FMSY-EM"]) / value[Model == "FMSY-EM"]*100)
   merged_percentage_change <- merge(data_subset, percentage_change,
-                                    by = c("Year", "Model", "Scenario", "Data_type", "variable", "Year_type"))
+    by = c("Year", "Model", "Scenario", "Data_type", "variable", "Year_type")
+  )
   colnames(merged_percentage_change) <- c("Year", "Model", "Scenario", "Data_type", "variable", "Year_type", "value", "value.y", "percentage_change")
 
   if (em_name == "Data-poor EM") {
-
-    if (scale_projection == TRUE){
+    if (scale_projection == TRUE) {
       projection_figure <- ggplot() +
         geom_point(
           data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ],
           mapping = aes(x = Year, y = value), color = "black"
         ) +
-        geom_point(
-          merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM"), ],
-          mapping = aes(x = Year, y = percentage_change), color = "gray50"
-        ) +
+        # geom_point(
+        #   merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM" &
+        #                                    !(merged_percentage_change$variable == "F_apical")), ],
+        #   mapping = aes(x = Year, y = percentage_change), color = "gray50"
+        # ) +
         geom_line(
           data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ],
           mapping = aes(x = Year, y = value), color = "gray50"
@@ -129,17 +162,64 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           data_subset[which(data_subset$Data_type == "ci_upper"), ],
           mapping = aes(x = Year, y = value), color = "gray50"
         ) +
-        geom_line(
-          merged_percentage_change[which(merged_percentage_change$Data_type == "median" & !(merged_percentage_change$Model == "FMSY-EM") & !(merged_percentage_change$Model == "Data-poor EM")), ],
-          mapping = aes(x = Year, y = percentage_change, colour = Model), linewidth = 0.7
+        #############################################################
+      geom_line(
+        data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
+                            !(data_subset$Model %in% c("Data-poor EM", "Ensemble model"))), ],
+        mapping = aes(
+          x = Year, y = value,
+          color = Model
+        ),
+        linewidth = 0.7
+      ) +
+        geom_point(
+          data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
+                              !(data_subset$Model %in% c("Data-poor EM", "Ensemble model"))), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model, shape = Model
+          )
         ) +
-        geom_line(linetype = 2, merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean"), ], mapping = aes(x = Year, y = percentage_change), color = "gray50") +
+
+        geom_line(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-poor EM") &
+                                           !(merged_percentage_change$variable == "F_apical") &
+                                           !(merged_percentage_change$Model == "Ensemble model")), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model
+          ),
+          linewidth = 0.7
+        ) +
+        geom_point(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-poor EM") &
+                                           !(merged_percentage_change$variable == "F_apical")&
+                                           !(merged_percentage_change$Model == "Ensemble model")), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model, shape = Model
+          )
+        ) +
+
+        geom_line(
+          linetype = 2,
+          merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean" &
+                                           !(merged_percentage_change$variable == "F_apical")), ],
+          mapping = aes(x = Year, y = percentage_change), color = "gray50"
+        ) +
         facet_wrap(
           Scenario ~ variable + Year_type,
           scales = "free", ncol = 4, labeller = labeller(.multi_line = F)
         ) +
+        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
           color = "Augmented F",
+          shape = "Augmented F",
           x = "Year",
           y = "Value"
         ) +
@@ -147,11 +227,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
 
       projection_withoutci_figure <- ggplot() +
@@ -160,7 +240,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           mapping = aes(x = Year, y = value), color = "black"
         ) +
         geom_point(
-          merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM"), ],
+          merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM" &
+            !(merged_percentage_change$variable == "F_average")), ],
           mapping = aes(x = Year, y = percentage_change), color = "gray50"
         ) +
         geom_line(
@@ -185,13 +266,12 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
-
     } else {
       projection_figure <- ggplot() +
         geom_point(
@@ -234,11 +314,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
 
       projection_withoutci_figure <- ggplot() +
@@ -272,29 +352,88 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
     }
   }
 
   if (em_name == "Data-moderate EM") {
-
-    if(scale_projection == TRUE){
+    if (scale_projection == TRUE) {
       projection_figure <- ggplot() +
-        geom_point(data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ], mapping = aes(x = Year, y = value), size = 0.8, color = "black") +
-        geom_point(merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM"), ], mapping = aes(x = Year, y = percentage_change), color = "gray50") +
-        geom_line(data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_lower"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_upper"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(merged_percentage_change[which(merged_percentage_change$Data_type == "median" & !(merged_percentage_change$Model == "FMSY-EM")), ], mapping = aes(x = Year, y = percentage_change, colour = Model), size = 0.7) +
-        geom_line(linetype = 2, merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean"), ], mapping = aes(x = Year, y = percentage_change), color = "gray50") +
+        geom_point(data_subset[which(data_subset$Model == "OM" &
+                                       !(data_subset$Year %in% projection_year) &
+                                       !(data_subset$variable == "F_apical")), ],
+                   mapping = aes(x = Year, y = value), size = 0.8, color = "black"
+        ) +
+        # geom_point(merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM" &
+        #                                             !(merged_percentage_change$variable %in% c("F_average", "F_apical"))), ],
+        #            mapping = aes(x = Year, y = percentage_change), color = "gray50"
+        # ) +
+        geom_line(data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ],
+                  mapping = aes(x = Year, y = value), color = "gray50"
+        ) +
+        geom_line(
+          linetype = 2, data_subset[which(data_subset$Data_type == "ci_lower"), ],
+          mapping = aes(x = Year, y = value), color = "gray50"
+        ) +
+        geom_line(
+          linetype = 2, data_subset[which(data_subset$Data_type == "ci_upper"), ],
+          mapping = aes(x = Year, y = value), color = "gray50"
+        ) +
+        geom_line(data_subset[which(data_subset$Year_type == "Projection" &
+                                      data_subset$variable == "F_apical" &
+                                      !(data_subset$Model == "Data-moderate EM")), ],
+                  mapping = aes(
+                    x = Year, y = value,
+                    color = Model
+                  ), size = 0.7
+        ) +
+        geom_point(
+          data_subset[which(data_subset$Year_type == "Projection" &
+                              data_subset$variable == "F_apical" &
+                              !(data_subset$Model == "Data-moderate EM")), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model, shape = Model
+          )
+        ) +
+        geom_line(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-moderate EM") &
+                                           !(merged_percentage_change$variable %in% c("F_average", "F_apical"))), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model
+          ),
+          linewidth = 0.7
+        ) +
+        geom_point(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-moderate EM") &
+                                           !(merged_percentage_change$variable %in% c("F_average", "F_apical"))), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model, shape = Model
+          )
+        ) +
+        geom_line(
+          linetype = 2,
+          merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean"&
+                                           !(merged_percentage_change$variable %in% c("F_average", "F_apical"))), ],
+          mapping = aes(x = Year, y = percentage_change), color = "gray50"
+        ) +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
+        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
           color = "Augmented F",
+          shape = "Augmented F",
           x = "Year",
           y = "Value"
         ) +
@@ -302,13 +441,12 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
-
     } else {
       projection_figure <- ggplot() +
         geom_point(data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ], mapping = aes(x = Year, y = value), size = 0.8, color = "black") +
@@ -328,31 +466,80 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
-
     }
-
-
   }
 
   if (em_name == "Data-rich EM") {
-    if (scale_projection == TRUE){
+    if (scale_projection == TRUE) {
       projection_figure <- ggplot() +
-        geom_point(data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ], mapping = aes(x = Year, y = value), size = 0.8, color = "black") +
-        geom_point(merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM"), ], mapping = aes(x = Year, y = percentage_change), color = "gray50") +
-        geom_line(data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_lower"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_upper"), ], mapping = aes(x = Year, y = value), color = "gray50") +
-        geom_line(merged_percentage_change[which(merged_percentage_change$Data_type == "median" & !(merged_percentage_change$Model == "FMSY-EM")), ], mapping = aes(x = Year, y = percentage_change, colour = Model), linewidth = 0.7) +
-        geom_line(linetype = 2, merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean"), ], mapping = aes(x = Year, y = percentage_change), color = "gray50") +
+        geom_point(data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ],
+                   mapping = aes(x = Year, y = value), size = 0.8, color = "black") +
+
+        # geom_point(merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM"&
+        #                                             !(merged_percentage_change$variable == "F_apical")), ],
+        #            mapping = aes(x = Year, y = percentage_change), color = "gray50") +
+
+        geom_line(data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ],
+                  mapping = aes(x = Year, y = value), color = "gray50") +
+        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_lower"), ],
+                  mapping = aes(x = Year, y = value), color = "gray50") +
+        geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ci_upper"), ],
+                  mapping = aes(x = Year, y = value), color = "gray50") +
+
+        geom_line(
+          data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
+                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model"))), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linewidth = 0.7
+        ) +
+        geom_point(
+          data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
+                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model"))), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model, shape = Model
+          )
+        ) +
+        geom_line(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-rich EM") &
+                                           !(merged_percentage_change$variable == "F_apical")), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model
+          ),
+          linewidth = 0.7
+        ) +
+        geom_point(
+          merged_percentage_change[which(merged_percentage_change$Data_type == "median" &
+                                           # !(merged_percentage_change$Model == "FMSY-EM") &
+                                           !(merged_percentage_change$Model == "Data-rich EM") &
+                                           !(merged_percentage_change$variable == "F_apical")), ],
+          mapping = aes(
+            x = Year, y = percentage_change,
+            color = Model, shape = Model
+          )
+        ) +
+        geom_line(linetype = 2,
+                  merged_percentage_change[which(merged_percentage_change$Data_type == "ensemble mean"&
+                                                   !(merged_percentage_change$variable == "F_apical")), ],
+                  mapping = aes(x = Year, y = percentage_change), color = "gray50") +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
+        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
           color = "Augmented F",
+          shape = "Augmented F",
           x = "Year",
           y = "Value"
         ) +
@@ -360,11 +547,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
     } else {
       projection_figure <- ggplot() +
@@ -385,11 +572,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         theme(
           axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size=15),
-          axis.text=element_text(size=12),
-          axis.title=element_text(size=15,face="bold"),
-          legend.text=element_text(size=15),
-          legend.title=element_text(size=15,face="bold")
+          strip.text = element_text(size = 15),
+          axis.text = element_text(size = 12),
+          axis.title = element_text(size = 15, face = "bold"),
+          legend.text = element_text(size = 15),
+          legend.title = element_text(size = 15, face = "bold")
         )
     }
   }
@@ -486,11 +673,9 @@ combine_figures(
   projection_data = data_poor_data,
   em_name = "Data-poor EM",
   scenario = "S1",
-  indicator_id = c("I3", "I5", "I6", "I7", "I8"),
+  indicator_id = c("I5"),
   projection_indicator_name = c(
-    "OM", "Data-poor EM", "FMSY-EM", "Fadj-Predator biomass",
-    "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE",
-    "Fadj-Prey 1 Catch", "Fadj-Prey 1 Ex-vessel Value"
+    "OM", "Data-poor EM", "FMSY-EM", "Fadj-I5"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -506,11 +691,11 @@ combine_figures(
   projection_data = data_poor_data,
   em_name = "Data-poor EM",
   scenario = "S2",
-  indicator_id = c("I1", "I3", "I5", "I6", "I7", "I8"),
+  indicator_id = c("I1", "I3", "I5", "I6", "I7"),
   projection_indicator_name = c(
-    "OM", "Data-poor EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass",
-    "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE",
-    "Fadj-Prey 1 Catch", "Fadj-Prey 1 Ex-vessel Value"
+    "OM", "Data-poor EM", "FMSY-EM", "Fadj-I1", "Fadj-I3",
+    "Fadj-I5", "Fadj-I6",
+    "Fadj-I7"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -526,10 +711,10 @@ combine_figures(
   projection_data = data_poor_data,
   em_name = "Data-poor EM",
   scenario = "S3",
-  indicator_id = c("I3", "I7", "I8"),
+  indicator_id = c("I3", "I7"),
   projection_indicator_name = c(
-    "OM", "Data-poor EM", "FMSY-EM", "Fadj-Predator biomass",
-    "Fadj-Prey 1 Catch", "Fadj-Prey 1 Ex-vessel Value"
+    "OM", "Data-poor EM", "FMSY-EM", "Fadj-I3",
+    "Fadj-I7"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -547,11 +732,11 @@ combine_figures(
   projection_data = data_moderate_data,
   em_name = "Data-moderate EM",
   scenario = "S1",
-  indicator_id = c("I9", "I10"),
+  indicator_id = c("I8", "I9"),
   projection_indicator_name = c(
     "OM", "Data-moderate EM", "FMSY-EM",
-    "Fadj-Prey 1 Fishing Effort",
-    "Fadj-Prey 1 CPUE"
+    "Fadj-I8",
+    "Fadj-I9"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -567,12 +752,12 @@ combine_figures(
   projection_data = data_moderate_data,
   em_name = "Data-moderate EM",
   scenario = "S2",
-  indicator_id = paste0("I", c(1, 3, 5:10)),
+  indicator_id = paste0("I", c(1, 3, 5:9)),
   projection_indicator_name = c(
-    "OM", "Data-moderate EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass",
-    "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Catch",
-    "Fadj-Prey 1 Ex-vessel Value", "Fadj-Prey 1 Fishing Effort",
-    "Fadj-Prey 1 CPUE"
+    "OM", "Data-moderate EM", "FMSY-EM", "Fadj-I1", "Fadj-I3",
+    "Fadj-I5", "Fadj-I6", "Fadj-I7",
+    "Fadj-I8",
+    "Fadj-I9"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -581,26 +766,25 @@ combine_figures(
 )
 
 # S2 for WFC
-lm_data_wfc <- lm_data[which(lm_data$scenario == "S2" & lm_data$Variable %in% paste0("I", c(1, 3, 8))), ]
-soi_data_wfc <- soi_data[which(soi_data$scenario == "S2" & soi_data$variable %in% paste0("I", c(1, 3, 8))), ]
-
-combine_figures(
-  lm_data = lm_data_wfc,
-  soi_data = soi_data_wfc,
-  bratio_data = bratio_data,
-  projection_data = data_moderate_data,
-  em_name = "Data-moderate EM",
-  scenario = "S2",
-  indicator_id = paste0("I", c(1, 3, 8)),
-  projection_indicator_name = c(
-    "OM", "Data-moderate EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass",
-    "Fadj-Prey 1 Ex-vessel Value"
-  ),
-  model_year = model_year,
-  projection_year = projection_year,
-  figure_path = file.path(figure_path, paste0(terminal_year, scenario_filename, "_data_moderate_S2_combined_wfc")),
-  scale_projection = TRUE
-)
+# lm_data_wfc <- lm_data[which(lm_data$scenario == "S2" & lm_data$Variable %in% paste0("I", c(1, 3))), ]
+# soi_data_wfc <- soi_data[which(soi_data$scenario == "S2" & soi_data$variable %in% paste0("I", c(1, 3))), ]
+#
+# combine_figures(
+#   lm_data = lm_data_wfc,
+#   soi_data = soi_data_wfc,
+#   bratio_data = bratio_data,
+#   projection_data = data_moderate_data,
+#   em_name = "Data-moderate EM",
+#   scenario = "S2",
+#   indicator_id = paste0("I", c(1, 3, 8)),
+#   projection_indicator_name = c(
+#     "OM", "Data-moderate EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass"
+#   ),
+#   model_year = model_year,
+#   projection_year = projection_year,
+#   figure_path = file.path(figure_path, paste0(terminal_year, scenario_filename, "_data_moderate_S2_combined_wfc")),
+#   scale_projection = TRUE
+# )
 
 
 # Data-rich figures -------------------------------------------------------
@@ -612,18 +796,18 @@ combine_figures(
   projection_data = data_rich_data,
   em_name = "Data-rich EM",
   scenario = "S1",
-  indicator_id = paste0("I", c(1, 4, 9, 10)),
+  indicator_id = paste0("I", c(1, 4, 8, 9)),
   projection_indicator_name = c(
-    "OM", "Data-rich EM", "FMSY-EM", "Fadj-AMO", "Fadj-Prey 1 Mean Age",
-    "Fadj-Prey 1 Fishing Effort", "Fadj-Prey 1 CPUE"
-    ),
+    "OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I4",
+    "Fadj-I8", "Fadj-I9"
+  ),
   model_year = model_year,
   projection_year = projection_year,
   figure_path = file.path(figure_path, paste0(terminal_year, scenario_filename, "_data_rich_S1_combined")),
   scale_projection = TRUE
 )
 
-#S2
+# S2
 combine_figures(
   lm_data = lm_data,
   soi_data = soi_data,
@@ -631,10 +815,12 @@ combine_figures(
   projection_data = data_rich_data,
   em_name = "Data-rich EM",
   scenario = "S2",
-  indicator_id = paste0("I", c(1, 3:6, 9:10)),
-  projection_indicator_name = c("OM", "Data-rich EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass", "Fadj-Prey 1 Mean Age",
-                                "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Fishing Effort",
-                                "Fadj-Prey 1 CPUE"),
+  indicator_id = paste0("I", c(1, 3:6, 8:9)),
+  projection_indicator_name = c(
+    "OM", "Data-rich EM", "FMSY-EM", "Fadj-AMO", "Fadj-Predator biomass", "Fadj-Prey 1 Mean Age",
+    "Fadj-Predator CPUE", "Fadj-Prey 2 CPUE", "Fadj-Prey 1 Fishing Effort",
+    "Fadj-Prey 1 CPUE"
+  ),
   model_year = model_year,
   projection_year = projection_year,
   figure_path = file.path(figure_path, paste0(terminal_year, scenario_filename, "_data_rich_S2_combined.jpeg")),
@@ -649,7 +835,7 @@ combine_figures(
   projection_data = data_rich_data,
   em_name = "Data-rich EM",
   scenario = "S3",
-  indicator_id = paste0("I", c(10)),
+  indicator_id = paste0("I", c(9)),
   projection_indicator_name = c("OM", "Data-rich EM", "FMSY-EM", "Fadj-Prey 1 CPUE"),
   model_year = model_year,
   projection_year = projection_year,

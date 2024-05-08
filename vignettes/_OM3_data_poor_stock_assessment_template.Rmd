@@ -51,12 +51,12 @@ if (!dir.exists(figure_path)) dir.create(figure_path)
 # Option 2: Full compensation or stationary system
 
 if (add_environmental_effects == TRUE){
-  msy_file_path <- here::here("data", "ewe", "7ages_ecosim_om", "msy_forcing_pdsi_egg_amo1")
+  msy_file_path <- here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_forcing_pdsi_egg_amo1_fleet_details")
 } else {
-  msy_file_path <- here::here("data", "ewe", "7ages_ecosim_om", "msy_base_run")
+  msy_file_path <- here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_base_run_fleet_details")
 }
 
-compensation_msy <- read_ewe_reference_points(
+compensation_msy <- read_ewe_reference_points_vec(
   file_path = msy_file_path,
   file_names = c(
     "F.menhaden_Catch_FullCompensation.csv",
@@ -65,31 +65,27 @@ compensation_msy <- read_ewe_reference_points(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages,
-  plot = TRUE
-) 
-# MSY, FMSY, BMSY: 0.5913518, 2.939998, 1.619142
-# MSY, FMSY, BMSY: 591352, 2.9, 1619142
+  ages = ages
+)
 
-stationary_msy <- read_ewe_reference_points(
+stationary_msy <- read_ewe_reference_points_vec(
   file_path = msy_file_path,
   file_names = c(
     "F.menhaden_Catch_StationarySystem.csv",
     "F.menhaden_B_StationarySystem.csv"
   ),
-  reference_points_scenario = "stationary",
+  reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages,
-  plot = TRUE
-) 
-# MSY, FMSY, BMSY: 0.5784879, 2.899998, 1.604036
-# MSY, FMSY, BMSY: 578488, 2.9, 1604036
+  ages = ages
+)
 
-msy_mean <- sapply(1:length(compensation_msy), function(x) {mean(c(compensation_msy[[x]], stationary_msy[[x]]))})
-names(msy_mean) <- names(compensation_msy)
-
-temp <- scan(file.path(msy_file_path, "FMSY_FullCompensation.csv"), what = "", sep = "\n")
+if (add_environmental_effects == TRUE){
+  fbase_file_path <- here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_forcing_pdsi_egg_amo1_fleet")
+} else {
+  fbase_file_path <- here::here("data", "ewe", "7ages_ecosim_om_msy", "msy_base_run_fleet")
+}
+temp <- scan(file.path(fbase_file_path, "FMSY_FullCompensation.csv"), what = "", sep = "\n")
 fmsy_data <- temp[-c(1:9)]
 fmsy_data <- read.table(
     text = as.character(fmsy_data),
@@ -101,7 +97,8 @@ fmsy_data <- read.table(
   )
 row_names <- paste("menhaden", ages)
 row_names[length(row_names)] <- "menhaden 6+"
-om_fmsy_group <- fmsy_data$Fmsy[fmsy_data$Group %in% row_names]
+
+om_fmsy_group <- fmsy_data$Fbase[fmsy_data$Group %in% row_names] * compensation_msy$FMSY
 
 # OM unfished biomass --------------------------------------------
 
@@ -244,7 +241,8 @@ ss_case0@vbLinf <- 500 # mm from FishBase
 #fmsy_m <- mean(compensation_msy$FMSY / sa_data$biodata$natural_mortality_matrix[1, ])
 
 # Use Fmsy at age
-fmsy_m <- mean(om_fmsy_group / sa_data$biodata$natural_mortality_matrix[1, ])
+# fmsy_m <- mean(om_fmsy_group / sa_data$biodata$natural_mortality_matrix[1, ])
+fmsy_m <- max(om_fmsy_group / sa_data$biodata$natural_mortality_matrix[1, ])
 
 ss_case0@FMSY_M <- fmsy_m
 
@@ -258,7 +256,7 @@ ss_case0@CV_Mort <- 0.5 # default = 0.2
 # Dick and MacCall (2011): use 0.4 if target biomass is 40% of unfished biomass
 ### ss_case0@BMSY_B0 <- 0.3 # BAM FEC30% target
 
-ss_case0@BMSY_B0 <- compensation_msy$BMSY / B0_F0_menhaden
+ss_case0@BMSY_B0 <- sum(compensation_msy$BMSY)*1000000 / B0_F0_menhaden
 # Length at 50% maturity
 age_maturity50 <- 2
 ss_case0@L50 <- ss_case0@vbLinf *
@@ -1118,7 +1116,7 @@ projection_f <- rbind(
   data.frame(
     projection_year_id = projection_year,
     variable = "om",
-    fmort = compensation_msy$FMSY
+    fmort = max(compensation_msy$FMSY)
   )
 )
 fishery_sel <- IFA4EBFM::logistic(
@@ -1135,6 +1133,7 @@ if (add_fleet_dynamics == TRUE) fishery_sel <- c(0.078, 0.17, 0.92, 0.54, 1, 0.5
 for (i in 1:nrow(projection_f)) {
     projection_f[i, paste0("fmsy_", sa_data$biodata$ages)] <- projection_f$fmort[i] * fishery_sel
 }
+projection_f[which(projection_f$variable == "om"), 3:ncol(projection_f)] <- data.frame(t(c(max(om_fmsy_group), om_fmsy_group)))
 
 write.csv(projection_f, here::here("data", "data_poor", ewe_scenario_name, paste0("fmsy_median_data3_", terminal_year, scenario_filename, ".csv")))
 
@@ -1239,8 +1238,8 @@ ggsave(file.path(figure_path, paste0(ewe_scenario_name, "_", terminal_year, scen
 
 ```{r}
 om_K <- B0_F0_menhaden
-om_bmsy <- compensation_msy$BMSY
-om_fmsy <- compensation_msy$FMSY
+om_bmsy <- sum(compensation_msy$BMSY)
+om_fmsy <- max(compensation_msy$FMSY)
 
 cases <- c("om", "dbsra",
            "amo", "pdsi",
@@ -1432,8 +1431,5 @@ legend("center", legend = rownames(evaluation_table[-c(1, 2), ]), bty = "n", pch
 
 format(evaluation_table, digits = 3)
 dev.off()
-```
-
-```{r}
 ```
 
