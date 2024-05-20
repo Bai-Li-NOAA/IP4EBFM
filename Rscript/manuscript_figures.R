@@ -409,9 +409,11 @@ ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value,
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_more_rows.jpeg")))
 
 ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = model)) +
-  geom_line(alpha = 0.8, size=1) +
+  geom_line(alpha = 0.8, size=1, aes(linetype = model)) +
   # geom_line(size=1) +
+  geom_point(aes(shape = model)) +
   facet_grid(variable~scenario) +
+  # scale_shape_manual(values = soi_data[soi_data$projection_year_id == 2013, "model"]) +
   # facet_grid(scenario~variable) +
   labs(
     x = "Year",
