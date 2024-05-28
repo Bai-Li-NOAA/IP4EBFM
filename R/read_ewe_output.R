@@ -169,4 +169,77 @@ read_ewe_reference_points <- function(file_path,
   return(MSY_data)
 }
 
+#' Read in EwE MSY reference points summary table
+#'
+#' @description It reads in the MSY reference points (i.e. MSY, FMSY, BMSY) from Ecopath with Ecosim (EwE).
+#'
+#' @param file_names a csv file names.
+#' @param skip_nrows integer: the number of lines of the data file to skip before reading data.
+#' @param colnames column names of the csv file.
+#' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
+#' @param key_functional_group a character string describes the key functional group.
+#' @export
+read_fmsy_table <- function(file_names,
+                            skip_nrows = 12,
+                            colnames = c(
+                              "Group", "TL", "Fbase", "Cbase",
+                              "Vbase", "FmsyFound", "Fmsy", "Cmsy", "Vmsy", "CmsyAll", "VmsyAll"
+                            ),
+                            functional_groups) {
+  data <- vector(mode = "list", length = length(file_names))
 
+  for (file_id in 1:length(file_names)) {
+    temp <- scan(file.path(file_names[file_id]), what = "", sep = "\n")
+    data[[file_id]] <- temp[-c(1:skip_nrows)]
+    data[[file_id]] <- read.table(
+      text = as.character(data[[file_id]]),
+      sep = ",",
+      col.names = c(
+        "Group", "TL", "Fbase", "Cbase",
+        "Vbase", "FmsyFound", "Fmsy", "Cmsy", "Vmsy", "CmsyAll", "VmsyAll"
+      )
+    )
+    data[[file_id]]$Group[grep("menhaden", data[[file_id]]$Group)] <- paste("Case stock", c(0:5, "6+"))
+    data[[file_id]] <- data[[file_id]][grep("Case stock", data[[file_id]]$Group), colnames]
+  }
+  return(data)
+}
+
+#' Extract EwE MSY reference points using catch over fishing effort multiplier table
+#'
+#' @description Extract MSY reference points (i.e. MSY, FMSY, BMSY) from Ecopath with Ecosim (EwE).
+#' @param file_path a character string shows path to the working folder where EwE reference points output csv files are located.
+#' @param file_names a csv file names.
+#' @param functional_groups a character string describes the column of the data matrix, which is functional groups in EwE case.
+#' @param key_functional_group a character string describes the key functional group.
+#' @param reference_points_scenario a character string describes the reference points scenario: compensation or stationary.
+#' @param ages age classes of the functional groups.
+#' @export
+read_ewe_reference_points_vec <- function(file_path,
+                                          file_names,
+                                          functional_groups,
+                                          key_functional_group,
+                                          ages,
+                                          reference_points_scenario) {
+  msy_fleet <- read_ewe_output(
+    file_path = file_path,
+    file_names = file_names,
+    skip_nrows = 16,
+    colname_1 = "FM",
+    plot = FALSE,
+    figure_titles = NULL,
+    functional_groups = functional_groups,
+    figure_colors = NULL
+  )
+
+  catch_max_id <- MSY <- FMSY <- BMSY <- c()
+  catch_max <- apply(msy_fleet[[1]][, paste0(key_functional_group, ages)], 2, max)
+  for (i in seq_along(catch_max)) {
+    catch_max_id[i] <- which(msy_fleet[[1]][, age_name[i]] == catch_max[i])
+    MSY[i] <- msy_fleet[[1]][catch_max_id[i], age_name[i]]
+    FMSY[i] <- msy_fleet[[1]]$FM[catch_max_id[i]]
+    BMSY[i] <- msy_fleet[[2]][catch_max_id[i], age_name[i]]
+  }
+  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY)
+  return(MSY_data)
+}

@@ -1,5 +1,5 @@
 pandoc: 2.19.2
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   01_001_Bibliography: 01_litreview/01_001_Bibliography.html
@@ -14,5 +14,5 @@ articles:
   10_OM3_data_moderate_stock_assessment_main_report: 10_OM3_data_moderate_stock_assessment_main_report.html
   11_OM3_data_rich_stock_assessment_main_report: 11_OM3_data_rich_stock_assessment_main_report.html
   12_Reference_points: 12_Reference_points.html
-last_built: 2024-04-30T15:57Z
+last_built: 2024-05-25T17:25Z
 

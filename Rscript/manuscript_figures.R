@@ -52,9 +52,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-poor RData
   data_poor_non_significant_indicator <- list(
-    c("AMO", "PDSI", "Menhaden fishing effort", "Menhaden CPUE"),
-    c("Menhaden fishing effort", "Menhaden CPUE"),
-    c("Menhaden fishing effort", "Menhaden CPUE")
+    c("AMO", "PDSI", "Menhaden Ex-vessel Value", "Menhaden fishing effort", "Menhaden CPUE"),
+    c("Menhaden Ex-vessel Value", "Menhaden Menhaden fishing effort", "Menhaden CPUE"),
+    c("Menhaden Ex-vessel Value", "Menhaden fishing effort", "Menhaden CPUE")
   )
   # data_poor_non_significant_indicator <- list(
   #   c("AMO", "PDSI", "Biomass of Striped bass", "Menhaden fishing effort", "Menhaden CPUE"),
@@ -66,7 +66,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   load(here::here("data", "data_poor", ewe_scenario_name, paste0("dbsra_soi_output3_", terminal_year, scenario_filename, ".RData"))) # data name: soi_ouput3
   temp <- rbind(soi_output3$lm_data_om, soi_output3$lm_data_em)
-  temp$Menhaden_Biomass[which(temp$Menhaden_Biomass < 0)] <- log(1.0001)
+  # temp$Menhaden_Biomass[which(temp$Menhaden_Biomass < 0)] <- log(1.0001)
   if (scenario_id == 1) temp  <-  temp[!((temp$Variable %in% c("AMO", "PDSI"))), ]
   temp  <-  temp[!((temp$Variable %in% data_poor_non_significant_indicator[[scenario_id]]) & (temp$model %in% "EM")), ]
   temp$model[temp$model == "EM"] <- "Data-poor EM"
@@ -79,9 +79,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-moderate RData
   data_moderate_non_significant_indicator <- list(
-    c("AMO", "PDSI"),
-    c(""),
-    c("")
+    c("AMO", "PDSI", "Menhaden Ex-vessel Value"),
+    c("Menhaden Ex-vessel Value"),
+    c("Menhaden Ex-vessel Value")
   )
   # data_moderate_non_significant_indicator <- list(
   #   c("AMO", "PDSI", "Biomass of Striped bass", "Menhaden Catch", "Bass CPUE",
@@ -102,9 +102,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-rich RData
   data_rich_non_significant_indicator <- list(
-    c("AMO", "PDSI"),
-    c(""),
-    c("")
+    c("AMO", "PDSI", "Menhaden Ex-vessel Value"),
+    c("Menhaden Ex-vessel Value"),
+    c("Menhaden Ex-vessel Value")
   )
   # data_rich_non_significant_indicator <- list(
   #   c("AMO", "PDSI", "Biomass of Striped bass", "Menhaden Catch",
@@ -127,9 +127,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-poor RData
   data_poor_non_significant_indicator <- list(
-    c("amo", "pdsi", "menhadenE", "menhadenCPUE"),
-    c("menhadenE", "menhadenCPUE"),
-    c("menhadenE", "menhadenCPUE")
+    c("amo", "pdsi", "menhadenV", "menhadenE", "menhadenCPUE"),
+    c("menhadenV", "menhadenE", "menhadenCPUE"),
+    c("menhadenV", "menhadenE", "menhadenCPUE")
   )
 
   # data_poor_non_significant_indicator <- list(
@@ -154,9 +154,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-moderate RData
   data_moderate_non_significant_indicator <- list(
-    c("amo", "pdsi"),
-    c(""),
-    c("")
+    c("amo", "pdsi", "menhadenV"),
+    c("menhadenV"),
+    c("menhadenV")
   )
 
 
@@ -180,9 +180,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-rich RData
   data_rich_non_significant_indicator <- list(
-    c("amo", "pdsi"),
-    c(""),
-    c("")
+    c("amo", "pdsi", "menhadenV"),
+    c("menhadenV"),
+    c("menhadenV")
   )
   # data_rich_non_significant_indicator <- list(
   #   c("amo", "pdsi", "bassB", "menhadenC",
@@ -323,7 +323,8 @@ lm_data$Variable <- factor(lm_data$Variable, levels = c("AMO", "PDSI", "Biomass 
 #                               "Predator CPUE", "Prey 2 CPUE", "Prey 1 Catch",
 #                               "Prey 1 Ex-vessel Value", "Prey 1 Fishing Effort",
 #                               "Prey 1 CPUE")
-levels(lm_data$Variable) <- paste0("I", seq_along(levels(lm_data$Variable)))
+# levels(lm_data$Variable) <- paste0("I", seq_along(levels(lm_data$Variable)))
+levels(lm_data$Variable) <- paste0("I", c(1:7, "V", 8:9))
 
 lm_data$model <- factor(lm_data$model, levels = c("OM", "Data-poor EM",
                                                   "Data-moderate EM",
@@ -349,7 +350,8 @@ ggplot(lm_data, aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
   )
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_linear_regression_more_rows.jpeg")))
 
-ggplot(lm_data, aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
+
+ggplot(lm_data[which(!lm_data$Variable == "IV"), ], aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
   geom_point() +
   geom_smooth(method = lm) +
   facet_grid(scenario~Variable, scales = "free") +
@@ -380,7 +382,7 @@ soi_data$variable <- factor(soi_data$variable, levels = c("amo", "pdsi", "bassB"
 #                                "Predator CPUE", "Prey 2 CPUE", "Prey 1 Catch",
 #                                "Prey 1 Ex-vessel Value", "Prey 1 Fishing Effort",
 #                                "Prey 1 CPUE")
-levels(soi_data$variable) <- paste0("I", seq_along(levels(soi_data$variable)))
+levels(soi_data$variable) <- paste0("I", c(1:7, "V", 8:9))
 
 soi_data$model <- factor(soi_data$model, levels = c("OM",
                                                     "Data-poor EM",
@@ -408,9 +410,11 @@ ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value,
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_more_rows.jpeg")))
 
 ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = model)) +
-  geom_line(alpha = 0.8, size=1) +
+  geom_line(alpha = 0.8, size=1, aes(linetype = model)) +
   # geom_line(size=1) +
+  geom_point(aes(shape = model)) +
   facet_grid(variable~scenario) +
+  # scale_shape_manual(values = soi_data[soi_data$projection_year_id == 2013, "model"]) +
   # facet_grid(scenario~variable) +
   labs(
     x = "Year",
@@ -430,10 +434,18 @@ ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_les
 
 
 # Bratio ------------------------------------------------------------------
+load(here::here("data", "ewe", "ewe_reference_points.RData"))
+bratio_data <- rbind(bratio_data,
+                     c("S1", "OM", reference_points$bratio["compensation_bratio_s1"]),
+                     c("S2", "OM", reference_points$bratio["compensation_bratio_s2"]),
+                     c("S3", "OM", reference_points$bratio["compensation_bratio_s3"]))
 bratio_data$model <- factor(bratio_data$model, levels = c(
+  "OM",
   "Data-poor EM",
   "Data-moderate EM",
   "Data-rich EM"))
+bratio_data$bratio <- as.numeric(bratio_data$bratio)
+
 ggplot(bratio_data, aes(x = scenario, y = bratio, color = model)) +
   geom_boxplot(outlier.size = 0.2) +
   geom_hline(yintercept = 1, lty=2) +
@@ -452,8 +464,65 @@ ggplot(bratio_data, aes(x = scenario, y = bratio, color = model)) +
     legend.text=element_text(size=15),
     legend.title=element_text(size=15,face="bold")
   )
-ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_bratio.jpeg")))
+ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_bratio_line.jpeg")))
 
+ggplot() +
+  geom_point(bratio_data[bratio_data$model %in% "OM", ],
+             mapping = aes(x = scenario, y = bratio, color = model),
+             pch = 8, size = 5) +
+  geom_boxplot(bratio_data[!(bratio_data$model %in% "OM"), ],
+               mapping = aes(x = scenario, y = bratio, color = model),
+               outlier.size = 0.2) +
+  geom_hline(yintercept = 1, lty=2) +
+  geom_hline(yintercept = 0.5, lty=2) +
+  labs(
+    x = "Scenario",
+    y = bquote(B[2012]/B[MSY])
+  ) +
+  geom_point(bratio_data[bratio_data$model %in% "OM", ],
+             mapping = aes(x = scenario, y = bratio, color = model),
+             pch = 8, size = 5) +
+  theme_bw()+
+  theme(
+    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    legend.position = "bottom",
+    strip.text = element_text(size=15),
+    axis.text=element_text(size=12),
+    axis.title=element_text(size=15,face="bold"),
+    legend.text=element_text(size=15),
+    legend.title=element_text(size=15,face="bold")
+  )
+ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_bratio_point.jpeg")))
+
+ggplot() +
+  geom_hline(bratio_data[(bratio_data$model %in% "OM"), ],
+             mapping = aes(yintercept = bratio_data[(bratio_data$model %in% "OM"), "bratio"]),
+             color=hue_pal()(4)[1],
+             linetype = "twodash",
+             lty = 2)+
+  facet_wrap(~ scenario) +
+  geom_boxplot(bratio_data[!(bratio_data$model %in% "OM"), ],
+               # mapping = aes(x = scenario, y = bratio, color = model),
+               mapping = aes(y = bratio, fill=model),
+               outlier.size = 0.2) +
+  # facet_wrap(~ scenario) +
+  scale_fill_manual(values=hue_pal()(4)[2:4]) +
+  geom_hline(yintercept = 1, lty=2) +
+  geom_hline(yintercept = 0.5, lty=2) +
+  labs(
+    x = "Model",
+    y = bquote(B[2012]/B[MSY])
+  ) +
+  theme_bw()+
+  theme(
+    axis.text.x = element_blank(),
+    legend.position = "bottom",
+    strip.text = element_text(size=15),
+    axis.text=element_text(size=12),
+    axis.title=element_text(size=15,face="bold"),
+    legend.text=element_text(size=15),
+    legend.title=element_text(size=15,face="bold")
+  )
 # F for projections -------------------------------------------------------
 
 fmsy_data$variable <- factor(fmsy_data$variable, levels = c("Default F", "amo", "pdsi", "bassB", "meanage",
@@ -464,7 +533,7 @@ fmsy_data$variable <- factor(fmsy_data$variable, levels = c("Default F", "amo", 
 #                                "Predator CPUE", "Prey 2 CPUE", "Prey 1 Catch",
 #                                "Prey 1 Ex-vessel Value", "Prey 1 Fishing Effort",
 #                                "Prey 1 CPUE")
-levels(fmsy_data$variable) <- c("Default F", paste0("I", seq_along(levels(fmsy_data$variable))), " Fadj")
+levels(fmsy_data$variable) <- c("Default F", paste0("I", c(1:7, "V", 8:9)), " Fadj")
 
 fmsy_data$model <- factor(fmsy_data$model, levels = c(
                                                     "Data-poor EM",

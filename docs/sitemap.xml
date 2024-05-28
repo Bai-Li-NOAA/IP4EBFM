@@ -126,4 +126,10 @@
   <url>
     <loc>/reference/read_ewe_reference_points.html</loc>
   </url>
+  <url>
+    <loc>/reference/read_ewe_reference_points_vec.html</loc>
+  </url>
+  <url>
+    <loc>/reference/read_fmsy_table.html</loc>
+  </url>
 </urlset>

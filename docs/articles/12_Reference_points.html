@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ecological and single-species reference points • IFA4EBFM</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -123,7 +123,7 @@
       <h1 data-toc-skip>Ecological and single-species reference
 points</h1>
             
-            <h4 data-toc-skip class="date">2024-04-30</h4>
+            <h4 data-toc-skip class="date">2024-05-25</h4>
       
       
       <div class="hidden name"><code>12_Reference_points.Rmd</code></div>
@@ -195,11 +195,11 @@ FMSY_StationarySystem.csv) show the estimate of FMSY for each functional
 group (Table 1-4).</li>
 <li>EwE also produces the catch of each functional group over a range of
 F values in F.menhaden_Catch_FullCompensation.csv or
-F.menhaden_Catch_StationarySystem.csv.</li>
-<li>How EwE summarizes FMSY-at-age is unclear. I could not reproduce the
-summarized FMSY-at-age from the catch over F table.</li>
-<li>How to extract a FMSY value from EwE output to compare it with a
-single-species FMSY?</li>
+F.menhaden_Catch_StationarySystem.csv. To extract reference points, we
+can get a vector of fishing effort multipliers that correspond to the
+maximum catch of the case stock, and them multiply the fishing effort
+multipliers with seven base fishing mortality rates from 1985 to obtain
+seven FMSY values by age.</li>
 </ul>
 <table class="table kable_wrapper">
 <caption>
@@ -651,117 +651,77 @@ EwE
 </td>
 </tr></tbody>
 </table>
-<table style="width:100%;" class="table">
+<table class="table">
 <caption>Table 5. FMSY output from catch over F output</caption>
 <colgroup>
-<col width="5%">
-<col width="12%">
-<col width="11%">
-<col width="12%">
 <col width="10%">
-<col width="12%">
-<col width="11%">
-<col width="12%">
-<col width="10%">
+<col width="23%">
+<col width="21%">
+<col width="23%">
+<col width="21%">
 </colgroup>
 <thead><tr class="header">
 <th align="left"></th>
-<th align="right">compensation_fmsy_s1_MaxSumCatch</th>
 <th align="right">compensation_fmsy_s1_CatchVec</th>
-<th align="right">stationary_fmsy_s1_MaxSumCatch</th>
 <th align="right">stationary_fmsy_s1_CatchVec</th>
-<th align="right">compensation_fmsy_s2_MaxSumCatch</th>
 <th align="right">compensation_fmsy_s2_CatchVec</th>
-<th align="right">stationary_fmsy_s2_MaxSumCatch</th>
 <th align="right">stationary_fmsy_s2_CatchVec</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">Case stock 0</td>
-<td align="right">0.0551</td>
 <td align="right">0.0569</td>
-<td align="right">0.0543</td>
 <td align="right">0.0559</td>
-<td align="right">0.0551</td>
 <td align="right">0.0569</td>
-<td align="right">0.0543</td>
 <td align="right">0.0559</td>
 </tr>
 <tr class="even">
 <td align="left">Case stock 1</td>
-<td align="right">0.2053</td>
 <td align="right">0.2392</td>
-<td align="right">0.2023</td>
 <td align="right">0.2352</td>
-<td align="right">0.2053</td>
 <td align="right">0.2392</td>
-<td align="right">0.2023</td>
 <td align="right">0.2352</td>
 </tr>
 <tr class="odd">
 <td align="left">Case stock 2</td>
-<td align="right">0.6562</td>
 <td align="right">0.6849</td>
-<td align="right">0.6467</td>
 <td align="right">0.6722</td>
-<td align="right">0.6562</td>
 <td align="right">0.6849</td>
-<td align="right">0.6467</td>
 <td align="right">0.6722</td>
 </tr>
 <tr class="even">
 <td align="left">Case stock 3</td>
-<td align="right">0.4302</td>
 <td align="right">0.3592</td>
-<td align="right">0.4239</td>
 <td align="right">0.3550</td>
-<td align="right">0.4302</td>
 <td align="right">0.3592</td>
-<td align="right">0.4239</td>
 <td align="right">0.3550</td>
 </tr>
 <tr class="odd">
 <td align="left">Case stock 4</td>
-<td align="right">0.9350</td>
 <td align="right">0.6309</td>
-<td align="right">0.9214</td>
 <td align="right">0.6264</td>
-<td align="right">0.9350</td>
 <td align="right">0.6309</td>
-<td align="right">0.9214</td>
 <td align="right">0.6264</td>
 </tr>
 <tr class="even">
 <td align="left">Case stock 5</td>
-<td align="right">0.5888</td>
 <td align="right">0.3201</td>
-<td align="right">0.5802</td>
 <td align="right">0.3173</td>
-<td align="right">0.5888</td>
 <td align="right">0.3201</td>
-<td align="right">0.5802</td>
 <td align="right">0.3173</td>
 </tr>
 <tr class="odd">
 <td align="left">Case stock 6+</td>
-<td align="right">0.4309</td>
 <td align="right">0.2259</td>
-<td align="right">0.4247</td>
 <td align="right">0.2280</td>
-<td align="right">0.4309</td>
 <td align="right">0.2259</td>
-<td align="right">0.4247</td>
 <td align="right">0.2280</td>
 </tr>
 <tr class="even">
 <td align="left">Apical FMSY</td>
-<td align="right">0.9350</td>
 <td align="right">0.6849</td>
-<td align="right">0.9214</td>
 <td align="right">0.6722</td>
-<td align="right">0.9350</td>
 <td align="right">0.6849</td>
-<td align="right">0.9214</td>
 <td align="right">0.6722</td>
 </tr>
 </tbody>
@@ -774,36 +734,20 @@ EwE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">compensation_msy_s1_MaxSumCatch</td>
-<td align="right">5.913e+11</td>
+<td align="left">Compensation MSY s1</td>
+<td align="right">609478</td>
 </tr>
 <tr class="even">
-<td align="left">compensation_msy_s1_MaxCatchVec</td>
-<td align="right">6.095e+05</td>
+<td align="left">Stationary MSY s1</td>
+<td align="right">595712</td>
 </tr>
 <tr class="odd">
-<td align="left">stationary_msy_s1_MaxSumCatch</td>
-<td align="right">5.785e+11</td>
+<td align="left">Compensation msy s2</td>
+<td align="right">609485</td>
 </tr>
 <tr class="even">
-<td align="left">stationary_msy_s1_MaxCatchVec</td>
-<td align="right">5.957e+05</td>
-</tr>
-<tr class="odd">
-<td align="left">compensation_msy_s2_MaxSumCatch</td>
-<td align="right">5.914e+11</td>
-</tr>
-<tr class="even">
-<td align="left">compensation_msy_s2_MaxCatchVec</td>
-<td align="right">6.095e+05</td>
-</tr>
-<tr class="odd">
-<td align="left">stationary_msy_s2_MaxSumCatch</td>
-<td align="right">5.785e+11</td>
-</tr>
-<tr class="even">
-<td align="left">stationary_msy_s2_MaxCatchVec</td>
-<td align="right">5.957e+05</td>
+<td align="left">Stationary MSY s2</td>
+<td align="right">595716</td>
 </tr>
 </tbody>
 </table>
@@ -815,36 +759,53 @@ EwE
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">compensation_bmsy_s1_MaxSumCatch</td>
-<td align="right">1.618e+12</td>
+<td align="left">Compensation BMSY s1</td>
+<td align="right">1602509</td>
 </tr>
 <tr class="even">
-<td align="left">compensation_bmsy_s1_MaxCatchVec</td>
-<td align="right">1.603e+06</td>
+<td align="left">Stationary BMSY s1</td>
+<td align="right">1559277</td>
 </tr>
 <tr class="odd">
-<td align="left">stationary_bmsy_s1_MaxSumCatch</td>
-<td align="right">1.575e+12</td>
+<td align="left">Compensation BMSY s2</td>
+<td align="right">1602522</td>
 </tr>
 <tr class="even">
-<td align="left">stationary_bmsy_s1_MaxCatchVec</td>
-<td align="right">1.559e+06</td>
+<td align="left">Stationary BMSY s2</td>
+<td align="right">1590725</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<caption>Table 6. Bratio output from catch over F output</caption>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">compensation_bratio_s1</td>
+<td align="right">0.1496</td>
+</tr>
+<tr class="even">
+<td align="left">stationary_bratio_s1</td>
+<td align="right">0.1538</td>
 </tr>
 <tr class="odd">
-<td align="left">compensation_bmsy_s2_MaxSumCatch</td>
-<td align="right">1.618e+12</td>
+<td align="left">compensation_bratio_s2</td>
+<td align="right">0.8045</td>
 </tr>
 <tr class="even">
-<td align="left">compensation_bmsy_s2_MaxCatchVec</td>
-<td align="right">1.603e+06</td>
+<td align="left">stationary_bratio_s2</td>
+<td align="right">0.8105</td>
 </tr>
 <tr class="odd">
-<td align="left">stationary_bmsy_s2_MaxSumCatch</td>
-<td align="right">1.604e+12</td>
+<td align="left">compensation_bratio_s3</td>
+<td align="right">1.3951</td>
 </tr>
 <tr class="even">
-<td align="left">stationary_bmsy_s2_MaxCatchVec</td>
-<td align="right">1.591e+06</td>
+<td align="left">stationary_bratio_s3</td>
+<td align="right">1.4055</td>
 </tr>
 </tbody>
 </table>
@@ -869,7 +830,7 @@ EwE
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
