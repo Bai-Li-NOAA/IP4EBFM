@@ -5,9 +5,9 @@
 #_User_info_available_at:https://vlab.noaa.gov/group/stock-synthesis
 #_Source_code_at:_https://github.com/nmfs-stock-synthesis/stock-synthesis
 
-StartTime: Mon May 06 13:12:19 2024
-EndTime: Mon May 06 13:12:40 2024
-This run took: 0 hours, 0 minutes, 21 seconds.
+StartTime: Sat May 25 13:41:03 2024
+EndTime: Sat May 25 13:41:12 2024
+This run took: 0 hours, 0 minutes, 9 seconds.
 Data_File: data.ss
 Control_File: control.ss
 
@@ -18,7 +18,7 @@ Starter_Comments
 #C starter file written by R function SS_writestarter
 #C rerun model to get more complete formatting in starter.ss_new
 #C should work with SS version: 3.30
-#C file write time: 2024-05-06 13:12:19.336407
+#C file write time: 2024-05-25 13:41:03.273376
 
 Data_Comments
 #C data file for simple example
@@ -31,7 +31,7 @@ Forecast_Comments
 #C forecast file written by R function SS_writeforecast
 #C rerun model to get more complete formatting in forecast.ss_new
 #C should work with SS version: 3.3
-#C file write time: 2024-05-06 13:12:19.349736
+#C file write time: 2024-05-25 13:41:03.281677
 
 #_KeyWords_of_tables_available_in_report_sso
 #NOTE: table_number_is_order_in_which_tables_are_output

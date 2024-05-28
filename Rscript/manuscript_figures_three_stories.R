@@ -10,6 +10,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     original_indicator_id <- 0
   } else {
     include_model <- c("OM", em_name)
+    original_indicator_id <- 1
   }
 
   model_color <- hue_pal()(4)
@@ -219,11 +220,6 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ],
           mapping = aes(x = Year, y = value), color = "black"
         ) +
-        # geom_point(
-        #   merged_percentage_change[which(merged_percentage_change$Model == "FMSY-EM" &
-        #                                    !(merged_percentage_change$variable == "F_apical")), ],
-        #   mapping = aes(x = Year, y = percentage_change), color = "gray50"
-        # ) +
         geom_line(
           data_subset[which(data_subset$Model == em_name & data_subset$Data_type == "mean"), ],
           mapping = aes(x = Year, y = value), color = "gray50"
@@ -241,13 +237,30 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         #############################################################
       geom_line(
         data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
-                            !(data_subset$Model %in% c("Data-poor EM", "Ensemble model"))), ],
+                            !(data_subset$Model %in% c("Data-poor EM", "Ensemble model")) &
+                            !(data_subset$Data_type %in% c("min", "max"))), ],
         mapping = aes(
           x = Year, y = value,
           color = Model
         ),
         linewidth = 0.7
       ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "min"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
+        ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "max"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
+        ) +
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
                               !(data_subset$Model %in% c("Data-poor EM", "Ensemble model"))), ],
@@ -465,11 +478,28 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         ) +
         geom_line(data_subset[which(data_subset$Year_type == "Projection" &
                                       data_subset$variable == "F_apical" &
-                                      !(data_subset$Model == "Data-moderate EM")), ],
+                                      !(data_subset$Model == "Data-moderate EM") &
+                                      !(data_subset$Data_type %in% c("min", "max"))), ],
                   mapping = aes(
                     x = Year, y = value,
                     color = Model
                   ), size = 0.7
+        ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "min"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
+        ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "max"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
         ) +
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" &
@@ -575,12 +605,29 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
         geom_line(
           data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
-                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model"))), ],
+                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model")) &
+                              !(data_subset$Data_type %in% c("min", "max"))), ],
           mapping = aes(
             x = Year, y = value,
             color = Model
           ),
           linewidth = 0.7
+        ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "min"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
+        ) +
+        geom_line(
+          data_subset[which(data_subset$Data_type == "max"), ],
+          mapping = aes(
+            x = Year, y = value,
+            color = Model
+          ),
+          linetype = 2
         ) +
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
@@ -777,9 +824,9 @@ combine_figures(
   projection_data = data_poor_data,
   em_name = "Data-poor EM",
   scenario = "S2",
-  indicator_id = c(),
+  indicator_id = c("I7"),
   projection_indicator_name = c(
-    "OM", "Data-poor EM", "FMSY-EM"
+    "OM", "Data-poor EM", "FMSY-EM", "Fadj-I7"
   ),
   model_year = model_year,
   projection_year = projection_year,
@@ -814,7 +861,7 @@ combine_figures(
   projection_data = data_moderate_data,
   em_name = "Data-moderate EM",
   scenario = "S1",
-  indicator_id = c(),
+  indicator_id = c("I9"),
   projection_indicator_name = c(
     "OM", "Data-moderate EM", "FMSY-EM"),
   model_year = model_year,
@@ -907,7 +954,7 @@ combine_figures(
   projection_data = data_rich_data,
   em_name = "Data-rich EM",
   scenario = "S2",
-  indicator_id = paste0("I", c(1, 4, 8:9)),
+  indicator_id = paste0("I", c(1, 4, 9)),
   projection_indicator_name = c(
     "OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I4", "Fadj-I8",
     "Fadj-I9"

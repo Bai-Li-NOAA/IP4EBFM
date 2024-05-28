@@ -66,7 +66,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   load(here::here("data", "data_poor", ewe_scenario_name, paste0("dbsra_soi_output3_", terminal_year, scenario_filename, ".RData"))) # data name: soi_ouput3
   temp <- rbind(soi_output3$lm_data_om, soi_output3$lm_data_em)
-  temp$Menhaden_Biomass[which(temp$Menhaden_Biomass < 0)] <- log(1.0001)
+  # temp$Menhaden_Biomass[which(temp$Menhaden_Biomass < 0)] <- log(1.0001)
   if (scenario_id == 1) temp  <-  temp[!((temp$Variable %in% c("AMO", "PDSI"))), ]
   temp  <-  temp[!((temp$Variable %in% data_poor_non_significant_indicator[[scenario_id]]) & (temp$model %in% "EM")), ]
   temp$model[temp$model == "EM"] <- "Data-poor EM"
@@ -350,7 +350,8 @@ ggplot(lm_data, aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
   )
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_linear_regression_more_rows.jpeg")))
 
-ggplot(lm_data, aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
+
+ggplot(lm_data[which(!lm_data$Variable == "IV"), ], aes(x = Index_Value, y = Menhaden_Biomass, color = model)) +
   geom_point() +
   geom_smooth(method = lm) +
   facet_grid(scenario~Variable, scales = "free") +

@@ -119,18 +119,19 @@ for (i in 1:100){
 
 }
 
-cbind(om_fmsy, dbsra_fmsy, jabba_fmsy)
-jabba_figure_path <- here::here("figure", "jabba_figure")
-if (!dir.exists(jabba_figure_path)) dir.create(jabba_figure_path)
-JABBA::jabba_plots(jabba = jabba_output, output.dir = jabba_figure_path)
-
-plot(om_input$year,
-     om_output$biomass.mt,
-     xlab = "Year", ylab = "Biomass (mt)",
-     ylim = range(om_output$biomass.mt, jabba_output$timeseries[, , "B"]),
-     pch = 16
-)
-
-lines(om_input$year, jabba_output$timeseries[, "mu", "B"])
-lines(om_input$year, jabba_output$timeseries[, "lci", "B"], lty = 2)
-lines(om_input$year, jabba_output$timeseries[, "uci", "B"], lty = 2)
+fmsy_comparison <- cbind(om_fmsy, dbsra_fmsy, jabba_fmsy)
+save(fmsy_comparison, file = here::here("data", "fmsy_comparison.RData"))
+# jabba_figure_path <- here::here("figure", "jabba_figure")
+# if (!dir.exists(jabba_figure_path)) dir.create(jabba_figure_path)
+# JABBA::jabba_plots(jabba = jabba_output, output.dir = jabba_figure_path)
+#
+# plot(om_input$year,
+#      om_output$biomass.mt,
+#      xlab = "Year", ylab = "Biomass (mt)",
+#      ylim = range(om_output$biomass.mt, jabba_output$timeseries[, , "B"]),
+#      pch = 16
+# )
+#
+# lines(om_input$year, jabba_output$timeseries[, "mu", "B"])
+# lines(om_input$year, jabba_output$timeseries[, "lci", "B"], lty = 2)
+# lines(om_input$year, jabba_output$timeseries[, "uci", "B"], lty = 2)

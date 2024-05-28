@@ -239,7 +239,19 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
   f_data_reshape$Model <- "Data-poor EM"
   f_data_reshape$Scenario <- paste0("S", scenario_id)
 
-  summary_data <- rbind(summary_data, biomass_data_reshape, landings_data, f_data_reshape)
+  # FMSY
+  fmsy_data <- data.frame(
+    min = unlist(lapply(projection_output3, function(x) min(x$FMSYstore))),
+    max = unlist(lapply(projection_output3, function(x) max(x$FMSYstore))),
+    Year = projection_year,
+    Data_type = "FMSY"
+  )
+  fmsy_data_reshape <- reshape2::melt(fmsy_data, id = c("Year", "Data_type"))
+  colnames(fmsy_data_reshape) <- c("Year", "variable", "Data_type", "value")
+  fmsy_data_reshape$Model <- "Data-poor EM"
+  fmsy_data_reshape$Scenario <- paste0("S", scenario_id)
+
+  summary_data <- rbind(summary_data, biomass_data_reshape, landings_data, f_data_reshape, fmsy_data_reshape)
 
   # Projection years
   indicators <- c("dbsra",
@@ -359,7 +371,20 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
   f_data_reshape$Model <- "Data-moderate EM"
   f_data_reshape$Scenario <- paste0("S", scenario_id)
 
-  summary_data <- rbind(summary_data, biomass_data_reshape, landings_data_reshape, f_data_reshape)
+  # FMSY
+  fmsy_data <- data.frame(
+    min = min(jabba$refpts_posterior$Fmsy),
+    max = max(jabba$refpts_posterior$Fmsy),
+    Year = projection_year,
+    Data_type = "FMSY"
+  )
+  fmsy_data_reshape <- reshape2::melt(fmsy_data, id = c("Year", "Data_type"))
+  colnames(fmsy_data_reshape) <- c("Year", "variable", "Data_type", "value")
+  fmsy_data_reshape$Model <- "Data-moderate EM"
+  fmsy_data_reshape$Scenario <- paste0("S", scenario_id)
+
+  summary_data <- rbind(summary_data, biomass_data_reshape, landings_data_reshape,
+                        f_data_reshape, fmsy_data_reshape)
 
   # Projection years
   indicators <- c("jabba",
@@ -451,6 +476,22 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   summary_data <- rbind(summary_data, time_series_data_reshape[-which(time_series_data_reshape$Data_type == "ewe_data"), ])
 
+  mcmc_dir <- here::here(dirname(here::here()), paste0(ewe_scenario_name, "_mcmc_", terminal_year, scenario_filename))
+  mcmc_output <- r4ss::SSgetMCMC(mcmc_dir)
+
+  # FMSY
+  fmsy_data <- data.frame(
+    min = min(mcmc_output$annF_MSY),
+    max = max(mcmc_output$annF_MSY),
+    Year = projection_year,
+    Data_type = "FMSY"
+  )
+  fmsy_data_reshape <- reshape2::melt(fmsy_data, id = c("Year", "Data_type"))
+  colnames(fmsy_data_reshape) <- c("Year", "variable", "Data_type", "value")
+  fmsy_data_reshape$Model <- "Data-rich EM"
+  fmsy_data_reshape$Scenario <- paste0("S", scenario_id)
+  summary_data <- rbind(summary_data, fmsy_data_reshape)
+
   # Projection years
   indicators <- c("ss3",
                            "amo", "pdsi",
@@ -531,8 +572,8 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
 # Data-poor figures -------------------------------------------------------
 
-data_poor_variable <- intersect(unique(summary_data$variable[which(summary_data$Model == "OM")]),
-                                unique(summary_data$variable[which(summary_data$Model == "Data-poor EM")]))
+data_poor_variable <- c(intersect(unique(summary_data$variable[which(summary_data$Model == "OM")]),
+                                unique(summary_data$variable[which(summary_data$Model == "Data-poor EM")])), "FMSY")
 indicators <- c("dbsra",
                 "amo", "pdsi",
                 "bassb",
@@ -540,10 +581,11 @@ indicators <- c("dbsra",
                 "basscpue", "herringcpue")
 
 data_poor_data <- summary_data[which((summary_data$variable %in% data_poor_variable) & summary_data$Model %in% c("OM", "Data-poor EM", paste0("Data-poor ", indicators))),]
-
-data_poor_data$Model <- factor(data_poor_data$Model, levels = c("OM", "Data-poor EM", "Data-poor dbsra", "Data-poor amo", "Data-poor pdsi", "Data-poor bassb",
+data_poor_data$Model[which(data_poor_data$variable == "FMSY")] <- "FMSY-EM"
+data_poor_data$variable[which(data_poor_data$variable == "FMSY")] <- "F_apical"
+data_poor_data$Model <- factor(data_poor_data$Model, levels = c("OM", "Data-poor EM", "Data-poor dbsra", "FMSY-EM", "Data-poor amo", "Data-poor pdsi", "Data-poor bassb",
                                                                 "Data-poor basscpue", "Data-poor herringcpue", "Data-poor menhadenc", "Data-poor menhadenv"))
-levels(data_poor_data$Model) <- c("OM", "Data-poor EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
+levels(data_poor_data$Model) <- c("OM", "Data-poor EM", "FMSY-EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
                                   "Fadj-I5", "Fadj-I6", "Fadj-I7",
                                   "Fadj-IV")
 
@@ -645,7 +687,7 @@ ggsave(file.path(figure_path, paste0(ewe_scenario_name, "_", terminal_year, scen
 
 data_moderate_variable <- intersect(unique(summary_data$variable[which(summary_data$Model == "OM")]),
                                 unique(summary_data$variable[which(summary_data$Model == "Data-moderate EM")]))
-data_moderate_variable <- c(data_moderate_variable, "F_apical")
+data_moderate_variable <- c(data_moderate_variable, "F_apical", "FMSY")
 
 indicators <- c("jabba",
                 "amo", "pdsi",
@@ -655,9 +697,12 @@ indicators <- c("jabba",
 
 data_moderate_data <- summary_data[which((summary_data$variable %in% data_moderate_variable) & summary_data$Model %in% c("OM", "Data-moderate EM", paste0("Data-moderate ", indicators))),]
 
-data_moderate_data$Model <- factor(data_moderate_data$Model, levels = c("OM", "Data-moderate EM", "Data-moderate jabba", "Data-moderate amo", "Data-moderate pdsi", "Data-moderate bassb",
+data_moderate_data$Model[which(data_moderate_data$variable == "FMSY")] <- "FMSY-EM"
+data_moderate_data$variable[which(data_moderate_data$variable == "FMSY")] <- "F_apical"
+
+data_moderate_data$Model <- factor(data_moderate_data$Model, levels = c("OM", "Data-moderate EM", "Data-moderate jabba", "FMSY-EM", "Data-moderate amo", "Data-moderate pdsi", "Data-moderate bassb",
                                                                 "Data-moderate basscpue", "Data-moderate herringcpue", "Data-moderate menhadenc", "Data-moderate menhadenv", "Data-moderate menhadene", "Data-moderate menhadencpue"))
-levels(data_moderate_data$Model) <- c("OM", "Data-moderate EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
+levels(data_moderate_data$Model) <- c("OM", "Data-moderate EM", "FMSY-EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3",
                                   "Fadj-I5", "Fadj-I6", "Fadj-I7",
                                   "Fadj-IV", "Fadj-I8",
                                   "Fadj-I9")
@@ -718,7 +763,7 @@ ggsave(file.path(figure_path, paste0(ewe_scenario_name, "_", terminal_year, scen
 
 data_rich_variable <- intersect(unique(summary_data$variable[which(summary_data$Model == "OM")]),
                                 unique(summary_data$variable[which(summary_data$Model == "Data-rich EM")]))
-
+data_rich_variable <- c(data_rich_variable, "F_apical", "FMSY")
 indicators <- c("ss3",
                 "amo", "pdsi",
                 "bassb", "meanage",
@@ -726,10 +771,12 @@ indicators <- c("ss3",
                 "basscpue", "herringcpue")
 
 data_rich_data <- summary_data[which((summary_data$variable %in% data_rich_variable) & summary_data$Model %in% c("OM", "Data-rich EM", paste0("Data-rich ", indicators))),]
+data_rich_data$Model[which(data_rich_data$variable == "FMSY")] <- "FMSY-EM"
+data_rich_data$variable[which(data_rich_data$variable == "FMSY")] <- "F_apical"
 
-data_rich_data$Model <- factor(data_rich_data$Model, levels = c("OM", "Data-rich EM", "Data-rich ss3", "Data-rich amo", "Data-rich pdsi", "Data-rich bassb", "Data-rich meanage",
+data_rich_data$Model <- factor(data_rich_data$Model, levels = c("OM", "Data-rich EM", "Data-rich ss3", "FMSY-EM", "Data-rich amo", "Data-rich pdsi", "Data-rich bassb", "Data-rich meanage",
                                                         "Data-rich basscpue", "Data-rich herringcpue", "Data-rich menhadenc", "Data-rich menhadenv", "Data-rich menhadene", "Data-rich menhadencpue"))
-levels(data_rich_data$Model) <- c("OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3", "Fadj-I4",
+levels(data_rich_data$Model) <- c("OM", "Data-rich EM", "FMSY-EM", "FMSY-EM", "Fadj-I1", "Fadj-I2", "Fadj-I3", "Fadj-I4",
                               "Fadj-I5", "Fadj-I6", "Fadj-I7",
                               "Fadj-IV", "Fadj-I8",
                               "Fadj-I9")
