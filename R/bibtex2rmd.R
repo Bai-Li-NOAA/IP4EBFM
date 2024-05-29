@@ -24,7 +24,7 @@ bibtex2rmd <- function(bibfile,
     fileConn <- file.path(outfold, filename)
     write("
 ---
-title: 'Forecasting review bibliography'
+title: 'Literature review bibliography'
 output:
   word_document: default
   html_document: default

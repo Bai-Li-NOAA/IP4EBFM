@@ -116,7 +116,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
   if (!dir.exists(figure_path)) dir.create(figure_path)
 
   # Load OM data
-  biomass <- IFA4EBFM::read_ewe_output(
+  biomass <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "biomass_monthly.csv",
     skip_nrows = 8,
@@ -126,7 +126,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
     figure_colors = NULL
   )
 
-  waa <- IFA4EBFM::read_ewe_output(
+  waa <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "weight_monthly.csv",
     skip_nrows = 8,
@@ -136,7 +136,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
     figure_colors = NULL
   )
 
-  catch <- IFA4EBFM::read_ewe_output(
+  catch <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "catch_monthly.csv",
     skip_nrows = 8,
@@ -274,7 +274,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                               paste0(ewe_scenario_name, "_data_poor_", terminal_year, scenario_filename,"_", indicators[indicators_id]))
     }
 
-    biomass <- IFA4EBFM::read_ewe_output(
+    biomass <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "biomass_monthly.csv",
       skip_nrows = 8,
@@ -284,7 +284,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    waa <- IFA4EBFM::read_ewe_output(
+    waa <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "weight_monthly.csv",
       skip_nrows = 8,
@@ -294,7 +294,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    catch <- IFA4EBFM::read_ewe_output(
+    catch <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "catch_monthly.csv",
       skip_nrows = 8,
@@ -407,7 +407,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                               paste0(ewe_scenario_name, "_data_moderate_", terminal_year, scenario_filename,"_", indicators[indicators_id]))
     }
 
-    biomass <- IFA4EBFM::read_ewe_output(
+    biomass <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "biomass_monthly.csv",
       skip_nrows = 8,
@@ -417,7 +417,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    waa <- IFA4EBFM::read_ewe_output(
+    waa <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "weight_monthly.csv",
       skip_nrows = 8,
@@ -427,7 +427,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    catch <- IFA4EBFM::read_ewe_output(
+    catch <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "catch_monthly.csv",
       skip_nrows = 8,
@@ -513,7 +513,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
                               paste0(ewe_scenario_name, "_data_rich_", terminal_year, scenario_filename,"_", indicators[indicators_id]))
     }
 
-    biomass <- IFA4EBFM::read_ewe_output(
+    biomass <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "biomass_monthly.csv",
       skip_nrows = 8,
@@ -523,7 +523,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    waa <- IFA4EBFM::read_ewe_output(
+    waa <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "weight_monthly.csv",
       skip_nrows = 8,
@@ -533,7 +533,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
       figure_colors = NULL
     )
 
-    catch <- IFA4EBFM::read_ewe_output(
+    catch <- IP4EBFM::read_ewe_output(
       file_path = file_path,
       file_names = "catch_monthly.csv",
       skip_nrows = 8,

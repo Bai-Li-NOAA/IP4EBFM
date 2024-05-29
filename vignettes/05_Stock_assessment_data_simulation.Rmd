@@ -90,7 +90,7 @@ p <- ggplot(data=baa, aes(x=Age, fill=Age, y=Biomass)) +
   print(p)
 ```
 
-## `IFA4EBFM::create_fishery()` is used to simulate fishery data
+## `IP4EBFM::create_fishery()` is used to simulate fishery data
 
 - Input data
   - EwE annual catch-at-age and weight-at-age data
@@ -226,7 +226,7 @@ for (i in 1:2){
 ```
 
 
-## `IFA4EBFM::create_survey()` is used to simulate survey data
+## `IP4EBFM::create_survey()` is used to simulate survey data
 
 - Input data
   - EwE monthly biomass-at-age and weight-at-age data
@@ -280,14 +280,14 @@ survey_time <- list(
 )
 
 # set up survey selectivity
-survey1_sel <- IFA4EBFM::logistic(
+survey1_sel <- IP4EBFM::logistic(
   pattern = "simple_logistic",
   x = ages,
   slope_asc = 2.2,
   location_asc = 3.0
 )
 
-survey2_sel <- IFA4EBFM::logistic(
+survey2_sel <- IP4EBFM::logistic(
   pattern = "double_logistic",
   x = ages,
   slope_asc = 4.3,
@@ -296,7 +296,7 @@ survey2_sel <- IFA4EBFM::logistic(
   location_desc = 2.3
 )
 
-survey3_sel <- IFA4EBFM::logistic(
+survey3_sel <- IP4EBFM::logistic(
   pattern = "double_logistic",
   x = ages,
   slope_asc = 7.0,
@@ -381,7 +381,7 @@ length_CV <- list(
 )
 
 # Create survey
-survey <- IFA4EBFM::create_survey(
+survey <- IP4EBFM::create_survey(
   file_path = file.path(ewe_output_path, "biomass_monthly.csv"),
   skip_nrows = 8,
   species = 4:10,
@@ -544,7 +544,7 @@ for (i in 1:length(survey$obs_lencomp_proportion_bam)){
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 
-survey1_sel <- IFA4EBFM::logistic(
+survey1_sel <- IP4EBFM::logistic(
   pattern = "simple_logistic",
   x = ages,
   slope_asc = 3.0,
@@ -566,7 +566,7 @@ nbin <- length(length_bin)
 bin_width <- 1
 
 # Create survey
-survey <- IFA4EBFM::create_survey(
+survey <- IP4EBFM::create_survey(
   file_path = file.path(ewe_output_path, "biomass_monthly.csv"),
   skip_nrows = 8,
   species = 4:10,
@@ -642,7 +642,7 @@ for (i in 1:length(survey$obs_lencomp_proportion_ss3)){
 
 ```
 
-## `IFA4EBFM::create_biodata()` is used to prepare biological data for a stock assessment
+## `IP4EBFM::create_biodata()` is used to prepare biological data for a stock assessment
 
 ```{r, results='hide', message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 biodata <- create_biodata(nsex=1, narea=1, ages=ages, years=years,

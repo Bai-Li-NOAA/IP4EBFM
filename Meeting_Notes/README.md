@@ -4,8 +4,8 @@ Meeting Notes
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 The folder contains links to meeting agenda, notes, and other materials
-from meetings of the forecasting project (yyyy-mm-topic). The project
-team meets once a month to discuss the forecasting project. The project
+from meetings of the project (yyyy-mm-topic). The project
+team meets once a month to discuss the project. The project
 meeting started June, 2021.
 
 -   [2022-03 meeting agenda and

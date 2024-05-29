@@ -2,7 +2,7 @@
 # Generate QR code ------------------------------------------------
 
 # install.packages("qrcode")
-project_site <- qrcode::qr_code("https://bai-li-noaa.github.io/IFA4EBFM/")
+project_site <- qrcode::qr_code("https://bai-li-noaa.github.io/IP4EBFM/")
 qrcode::generate_svg(project_site, filename = here::here("Presentations", "materials", "project_qr_code.svg"))
 jpeg(filename = here::here("Presentations", "materials", "project_qr_code.jpg"))
 plot(project_site)

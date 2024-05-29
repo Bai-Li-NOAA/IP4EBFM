@@ -1,5 +1,5 @@
 # devtools::load_all()
-library(IFA4EBFM)
+library(IP4EBFM)
 library(rmarkdown)
 library(here)
 

@@ -19,18 +19,18 @@ navbar:
     github:
       text: Source Code
       icon: fab fa-github fa-lg
-      href: https://github.com/Bai-Li-NOAA/IFA4EBFM
+      href: https://github.com/Bai-Li-NOAA/IP4EBFM
 
     issue:
       text: Issues
       icon: fas fa-question-circle fa-lg
-      href: https://github.com/Bai-Li-NOAA/IFA4EBFM/issues
+      href: https://github.com/Bai-Li-NOAA/IP4EBFM/issues
 
     articles:
       text: Vignettes
       icon: fas fa-file-contract fa-lg
       menu:
-      - text: Forecasting review bibliography
+      - text: Literature review bibliography
         href: articles/01_litreview/01_001_Bibliography.html
       - text: Ecosystem models review
         href: articles/02_EcosystemModelsReview.html

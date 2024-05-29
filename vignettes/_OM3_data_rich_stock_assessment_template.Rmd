@@ -1355,7 +1355,7 @@ projection_f <- rbind(
 if (add_fleet_dynamics == TRUE) {
   fishery_sel <- age_selex
 } else {
-  fishery_sel <- IFA4EBFM::logistic(
+  fishery_sel <- IP4EBFM::logistic(
     pattern = "double_logistic",
     x = sa_data$biodata$ages,
     slope_asc = 3.1,
@@ -1470,7 +1470,7 @@ time_series_data <- rbind(sb_data, r_data)
 ```{r}
 # Plot selectivity --------------------------------------------------------
 
-fishery_sel_om <- IFA4EBFM::logistic(
+fishery_sel_om <- IP4EBFM::logistic(
   pattern = "double_logistic",
   x = 0:6,
   slope_asc = 3.1,
@@ -1479,7 +1479,7 @@ fishery_sel_om <- IFA4EBFM::logistic(
   location_desc = 0.01
 ) # CR
 
-survey_sel1_om <- survey_sel2_om <- IFA4EBFM::logistic(
+survey_sel1_om <- survey_sel2_om <- IP4EBFM::logistic(
   pattern = "double_logistic",
   x = 0:6,
   slope_asc = 4.3,
@@ -1552,7 +1552,7 @@ for (i in 1:length(cases)) {
   # file_path <- here::here("data", "ewe", "7ages_ecosim_om", paste0("7ages_ecosim_om3_projection_", terminal_year), cases[i])
   # Load EwE biomass data
 
-  biomass <- IFA4EBFM::read_ewe_output(
+  biomass <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "biomass_monthly.csv",
     skip_nrows = 8,
@@ -1562,7 +1562,7 @@ for (i in 1:length(cases)) {
     figure_colors = NULL
   )
 
-  waa <- IFA4EBFM::read_ewe_output(
+  waa <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "weight_monthly.csv",
     skip_nrows = 8,
@@ -1572,7 +1572,7 @@ for (i in 1:length(cases)) {
     figure_colors = NULL
   )
 
-  catch <- IFA4EBFM::read_ewe_output(
+  catch <- IP4EBFM::read_ewe_output(
     file_path = file_path,
     file_names = "catch_monthly.csv",
     skip_nrows = 8,

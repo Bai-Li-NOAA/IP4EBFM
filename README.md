@@ -1,12 +1,12 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# IFA4EBFM
+# IP4EBFM
 
-## Interdisciplinary Forecasting Approach for Ecosystem-Based Fisheries Management
+## Interdisciplinary Projections for Ecosystem-Based Fisheries Management
 
-IFA4EBFM is a GitHub repository for a fisheries forecasting project. The
-project aims to use an interdisciplinary forecasting approach to achieve
+IP4EBFM is a GitHub repository for a fisheries stock assessment projections project. The
+project aims to use an interdisciplinary projections to achieve
 climate-ready, ecosystem-based, sustainable fisheries management.
 
 ## Repository structure
@@ -19,9 +19,9 @@ The structure of the repository is as follow:
 
 | Folder                                                                                       | Description                            |
 |----------------------------------------------------------------------------------------------|----------------------------------------|
-| [Meeting_Notes](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Meeting_Notes)             | Links to all meeting agenda and notes  |
-| [Project_Plans](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Project_Plans)             | Links to project white paper and tasks |
-| [Presentations](https://github.com/Bai-Li-NOAA/IFA4EBFM/tree/main/Presentations)             | Links to all slides                    |
+| [Meeting_Notes](https://github.com/Bai-Li-NOAA/IP4EBFM/tree/main/Meeting_Notes)             | Links to all meeting agenda and notes  |
+| [Project_Plans](https://github.com/Bai-Li-NOAA/IP4EBFM/tree/main/Project_Plans)             | Links to project white paper and tasks |
+| [Presentations](https://github.com/Bai-Li-NOAA/IP4EBFM/tree/main/Presentations)             | Links to all slides                    |
 | [Data](https://drive.google.com/drive/folders/1qUWzhGxSJ0MdQ1v94_W0U2Qbb1c4aTLK?usp=sharing) | Google Drive folder with data          |
 
 ## Disclaimer

@@ -1120,7 +1120,7 @@ projection_f <- rbind(
     fmort = max(compensation_msy$FMSY)
   )
 )
-fishery_sel <- IFA4EBFM::logistic(
+fishery_sel <- IP4EBFM::logistic(
     pattern = "double_logistic",
     x = sa_data$biodata$ages,
     slope_asc = 3.1,
