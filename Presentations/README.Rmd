@@ -18,7 +18,7 @@ The folder contains links to all presentations (yyyymmdd_topic).
 
 - [20210907_Experimental Design](https://docs.google.com/presentation/d/12xTJWyyk6FdXYqhiu7xNpi2EIX_ODdwC0nv_syksDW0/edit?usp=sharing)
 
-- [20210810_Ecological Forecasting Review](https://docs.google.com/presentation/d/1AQfWc4frusvJlX_ywgw2U2nLDFUwkkE42OJi_ocfxLQ/edit?usp=sharing)
+- [20210810_Ecological Literature Review](https://docs.google.com/presentation/d/1AQfWc4frusvJlX_ywgw2U2nLDFUwkkE42OJi_ocfxLQ/edit?usp=sharing)
 
 - [20210603_Introductory Call](https://docs.google.com/presentation/d/1FvaFvlI3Fst6dvQuSHjnIxXoeJbjc9cxUxTMwsMJXro/edit?usp=sharing)
 

@@ -1,10 +1,10 @@
-Package: IFA4EBFM
+Package: IP4EBFM
 Type: Package
-Title: Interdisciplinary Forecasting Approach for Ecosystem-Based Fisheries Management
+Title: Interdisciplinary Projections for Ecosystem-Based Fisheries Management
 Version: 0.1.0
 Author: TBD
 Maintainer: Bai Li <bai.li@noaa.gov>
-Description: IFA4EBFM aims to use interdisciplinary forecasting approach to achieve climate-ready, ecosystem-based, sustainable fisheries management
+Description: IP4EBFM aims to use interdisciplinary projections to achieve climate-ready, ecosystem-based, sustainable fisheries management
 License: GPL-3
 Encoding: UTF-8
 VignetteBuilder: knitr

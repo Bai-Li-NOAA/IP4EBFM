@@ -16,7 +16,7 @@ file_names <- c(
 )
 
 name_vec <- c("biomass", "catch", "consumptionBiomass", "feedingTime", "mortality", "tl", "weight")
-ewe2ages <- IFA4EBFM::read_ewe_output(
+ewe2ages <- IP4EBFM::read_ewe_output(
   file_path = file.path(ewe2ages_path, "ecosim_output"),
   file_names = file_names,
   skip_nrows = 8,
@@ -53,7 +53,7 @@ ewe7agesAM <- c("X0",
                 "X4",
                 "X5",
                 "X6")
-ewe7ages_BA0 <- IFA4EBFM::read_ewe_output(
+ewe7ages_BA0 <- IP4EBFM::read_ewe_output(
   file_path = file.path(ewe7ages_path, "ecosim_output", "BA0"),
   file_names = file_names,
   skip_nrows = 8,
@@ -87,7 +87,7 @@ ewe7ages_BA0 <- IFA4EBFM::read_ewe_output(
 )
 names(ewe7ages_BA0) <- name_vec
 
-ewe7ages_BAneg <- IFA4EBFM::read_ewe_output(
+ewe7ages_BAneg <- IP4EBFM::read_ewe_output(
   file_path = file.path(ewe7ages_path, "ecosim_output", "BAneg"),
   file_names = file_names,
   skip_nrows = 8,
@@ -121,7 +121,7 @@ ewe7ages_BAneg <- IFA4EBFM::read_ewe_output(
 )
 names(ewe7ages_BAneg) <- name_vec
 
-ewe7ages_BApos <- IFA4EBFM::read_ewe_output(
+ewe7ages_BApos <- IP4EBFM::read_ewe_output(
   file_path = file.path(ewe7ages_path, "ecosim_output", "BApos"),
   file_names = file_names,
   skip_nrows = 8,

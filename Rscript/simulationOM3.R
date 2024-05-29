@@ -76,7 +76,7 @@ age_name <- paste0("AtlanticMenhaden", 0:6)
 
 if (add_fleet_dynamics == FALSE){
   # fishery selectivity
-  fishery_sel <- IFA4EBFM::logistic(
+  fishery_sel <- IP4EBFM::logistic(
     pattern = "double_logistic",
     x = ages,
     slope_asc = 3.1,
@@ -208,7 +208,7 @@ fleet_name <- c(
   "F.herring"
 )
 
-effort_all <- IFA4EBFM::read_ewe_effort(
+effort_all <- IP4EBFM::read_ewe_effort(
   file_path = ewe_output_path,
   file_names = "NWACS AM 7ages-Fishing effort functions grid.csv",
   skip_nrows = 3,
@@ -290,7 +290,7 @@ survey_time <- list(
 )
 
 # set up survey selectivity
-# survey1_sel <- IFA4EBFM::logistic(
+# survey1_sel <- IP4EBFM::logistic(
 #   pattern = "double_logistic",
 #   x = ages,
 #   slope_asc = 2.2,
@@ -299,14 +299,14 @@ survey_time <- list(
 #   location_desc = 3.5
 # )
 #
-# survey1_sel <- IFA4EBFM::logistic(
+# survey1_sel <- IP4EBFM::logistic(
 #   pattern = "simple_logistic",
 #   x = ages,
 #   slope_asc = 2.2,
 #   location_asc = 3.0
 # )
 
-survey1_sel <- IFA4EBFM::logistic(
+survey1_sel <- IP4EBFM::logistic(
     pattern = "double_logistic",
     x = ages,
     slope_asc = 4.3,
@@ -315,7 +315,7 @@ survey1_sel <- IFA4EBFM::logistic(
     location_desc = 2.3
 )
 
-survey2_sel <- IFA4EBFM::logistic(
+survey2_sel <- IP4EBFM::logistic(
     pattern = "double_logistic",
     x = ages,
     slope_asc = 4.3,
@@ -392,7 +392,7 @@ length_CV <- list(
 )
 
 # Create survey
-survey <- IFA4EBFM::create_survey(
+survey <- IP4EBFM::create_survey(
     file_path = file.path(ewe_output_path, "biomass_monthly.csv"),
     skip_nrows = 8,
     species = 4:10,

@@ -73,7 +73,7 @@ for (i in 1:100){
   # Run DBSRA, DBSRA_40 and DBSRA4010
   dbsra <- DLMtool::DBSRA(1, ss_case0, plot = FALSE)
 
-  dbsra_output <- IFA4EBFM::DBSRA_return_FMSY(
+  dbsra_output <- IP4EBFM::DBSRA_return_FMSY(
     x = 1,
     Data = ss_case0,
     depo = NULL, # Optional fixed depletion (single value)

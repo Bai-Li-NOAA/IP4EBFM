@@ -7,7 +7,7 @@ sim_years <- 1985:2017
 #### Atlantic Multidecadal Oscillation (AMO) Index: https://psl.noaa.gov/data/timeseries/AMO/
 
 # unsmoothed data with no lag
-data <- IFA4EBFM::download_amo(
+data <- IP4EBFM::download_amo(
     url = "https://psl.noaa.gov/data/correlation/amon.us.long.data",
     years = sim_years,
     output_dir = file.path(working_dir, "amo_unsmooth_lag0.csv"),
@@ -17,7 +17,7 @@ windows()
 plot(data$scaled_value, xlab = "Time", ylab = "Atlantic Multidecadal Oscillation Index")
 
 # unsmoothed data with lag 1
-data <- IFA4EBFM::download_amo(
+data <- IP4EBFM::download_amo(
     url = "https://psl.noaa.gov/data/correlation/amon.us.long.data",
     years = sim_years - 1,
     output_dir = file.path(working_dir, "amo_unsmooth_lag1.csv"),
@@ -26,7 +26,7 @@ data <- IFA4EBFM::download_amo(
 plot(data$scaled_value, xlab = "Time", ylab = "Atlantic Multidecadal Oscillation Index")
 
 # There are missing data in smoothed data; smoothed data with no lag
-data <- IFA4EBFM::download_amo(
+data <- IP4EBFM::download_amo(
     url = "https://psl.noaa.gov/data/correlation/amon.sm.long.data",
     years = sim_years,
     output_dir = file.path(working_dir, "amo_smooth_lag0.csv"),
@@ -35,7 +35,7 @@ data <- IFA4EBFM::download_amo(
 plot(data$scaled_value, xlab = "Time", ylab = "Atlantic Multidecadal Oscillation Index")
 
 # smoothed data with lag 1
-data <- data <- IFA4EBFM::download_amo(
+data <- data <- IP4EBFM::download_amo(
     url = "https://psl.noaa.gov/data/correlation/amon.sm.long.data",
     years = sim_years - 1,
     output_dir = file.path(working_dir, "amo_smooth_lag1.csv"),
@@ -45,7 +45,7 @@ plot(data$scaled_value, xlab = "Time", ylab = "Atlantic Multidecadal Oscillation
 
 #### Kaplan SST average: https://psl.noaa.gov/data/timeseries/AMO/
 # Kaplan SST average has the same data format compared to AMO data, we can continue using download_amo_data function.
-data <- IFA4EBFM::download_amo(
+data <- IP4EBFM::download_amo(
     url = "https://psl.noaa.gov/data/correlation/amon.us.long.mean.data",
     years = sim_years,
     output_dir = file.path(working_dir, "kaplan_sst.csv"),
@@ -59,7 +59,7 @@ states <- c("VA", "MD", "CT", "RI", "MA")
 states_id <- c(44, 18, 6, 37, 19)
 
 # Precipitation
-data <- IFA4EBFM::download_ncei(
+data <- IP4EBFM::download_ncei(
     years = sim_years,
     states = states,
     states_id = states_id,
@@ -71,7 +71,7 @@ plot(data$raw_value, xlab = "Time", ylab = "Precipitation")
 lines(data$scaled_value)
 
 # Palmer drought severity index
-data <- IFA4EBFM::download_ncei(
+data <- IP4EBFM::download_ncei(
     years = sim_years,
     states = states,
     states_id = states_id,
