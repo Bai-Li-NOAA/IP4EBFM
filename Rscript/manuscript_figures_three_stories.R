@@ -47,33 +47,33 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     theme_bw() +
     theme(
       legend.position = "none",
-      axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-      strip.text = element_text(size = 15),
-      axis.text = element_text(size = 12),
-      axis.title = element_text(size = 15, face = "bold"),
-      legend.text = element_text(size = 15),
+      axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
+      strip.text = element_text(size = 12),
+      axis.text = element_text(size = 10),
+      axis.title = element_text(size = 12, face = "bold"),
+      legend.text = element_text(size = 12),
       legend.title = element_text(size = 15, face = "bold")
     )
 
   # Status of indicators
 
-  data_subset <- soi_data[which(soi_data$model %in% c("OM", em_name) &
+  data_subset <- soi_data[which(soi_data$Model %in% c("OM", em_name) &
     soi_data$scenario == scenario &
     soi_data$projection_year_id == 2013 &
-    soi_data$model %in% include_model &
+    soi_data$Model %in% include_model &
     soi_data$variable %in% indicator_id), ]
 
   s1_soi_data <- data_subset[which(data_subset$variable %in% paste0("I", c(1:3, 5, 6, 7))), ]
 
   soi_figure <- ggplot(
     data_subset,
-    aes(x = year, y = value, color = model)
+    aes(x = year, y = value, color = Model)
   ) +
     geom_point(data_subset[which(data_subset$year == tail(model_year, n = 1)), ],
-      mapping = aes(x = year, y = value, pch = model), size = 2, alpha = 0.5
+      mapping = aes(x = year, y = value, pch = Model), size = 2, alpha = 0.5
     ) +
     scale_colour_manual(values = model_color[c("OM", em_name)]) +
-    geom_line(alpha = 0.5, linewidth = 1, aes(linetype = model)) +
+    geom_line(alpha = 0.5, linewidth = 1, aes(linetype = Model)) +
     geom_hline(yintercept = 0.5, lty = 2) +
     facet_wrap(~ scenario + variable, labeller = labeller(.multi_line = F)) +
     labs(
@@ -83,10 +83,10 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     ) +
     theme_bw() +
     theme(
-      axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+      axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
       legend.position = "bottom",
-      strip.text = element_text(size = 15),
-      axis.text = element_text(size = 12),
+      strip.text = element_text(size = 12),
+      axis.text = element_text(size = 10),
       axis.title = element_text(size = 15, face = "bold"),
       legend.text = element_text(size = 15),
       legend.title = element_text(size = 15, face = "bold")
@@ -111,9 +111,9 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       theme_bw() +
       theme(
         legend.position = "none",
-        axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
-        strip.text = element_text(size = 15),
-        axis.text = element_text(size = 12),
+        axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
+        strip.text = element_text(size = 12),
+        axis.text = element_text(size = 10),
         axis.title = element_text(size = 15, face = "bold"),
         legend.text = element_text(size = 15),
         legend.title = element_text(size = 15, face = "bold")
@@ -121,13 +121,13 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
     soi_figure <- ggplot(
       s1_soi_data,
-      aes(x = year, y = value, color = model)
+      aes(x = year, y = value, color = Model)
     ) +
       geom_point(data_subset[which(data_subset$year == tail(model_year, n = 1)), ],
-                 mapping = aes(x = year, y = value, pch = model), size = 2, alpha = 0.5
+                 mapping = aes(x = year, y = value, pch = Model), size = 2, alpha = 0.5
       ) +
       scale_colour_manual(values = model_color[c("OM", em_name)]) +
-      geom_line(alpha = 0.5, linewidth = 1, aes(linetype = model)) +
+      geom_line(alpha = 0.5, linewidth = 1, aes(linetype = Model)) +
       geom_hline(yintercept = 0.5, lty = 2) +
       facet_wrap(~ scenario + variable, labeller = labeller(.multi_line = F)) +
       labs(
@@ -137,10 +137,10 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       ) +
       theme_bw() +
       theme(
-        axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+        axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
         legend.position = "bottom",
-        strip.text = element_text(size = 15),
-        axis.text = element_text(size = 12),
+        strip.text = element_text(size = 12),
+        axis.text = element_text(size = 10),
         axis.title = element_text(size = 15, face = "bold"),
         legend.text = element_text(size = 15),
         legend.title = element_text(size = 15, face = "bold")
@@ -149,7 +149,11 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
 
   # Bratio
-
+  if (em_name == "Data-rich EM"){
+    bratio_ylabel <- bquote(B[2012]/B[MSY] ~ "or" ~ SB[2012]/SB[MSY])
+  } else {
+    bratio_ylabel <- bquote(B[2012] / B[MSY])
+  }
   data_subset <- bratio_data[which(bratio_data$model %in% c("OM", em_name) &
     bratio_data$scenario == scenario), ]
 
@@ -160,7 +164,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     geom_boxplot(outlier.size = 0.5, color = model_color[em_name]) +
     labs(
       x = "Scenario",
-      y = bquote(B[2012] / B[MSY])
+      y = bratio_ylabel
     ) +
     geom_point(data_subset[data_subset$model == "OM", ],
       mapping = aes(x = scenario, y = bratio), pch = 8,
@@ -168,10 +172,10 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     ) +
     theme_bw() +
     theme(
-      axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+      axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
       legend.position = "bottom",
-      strip.text = element_text(size = 15),
-      axis.text = element_text(size = 12),
+      strip.text = element_text(size = 12),
+      axis.text = element_text(size = 10),
       axis.title = element_text(size = 15, face = "bold"),
       legend.text = element_text(size = 15),
       legend.title = element_text(size = 15, face = "bold")
@@ -217,7 +221,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     if (scale_projection == TRUE) {
       projection_figure <- ggplot() +
         geom_point(
-          data_subset[which(data_subset$Model == "OM" & !(data_subset$Year %in% projection_year)), ],
+          data_subset[which(data_subset$Model == "OM" &
+                              !(data_subset$Year %in% projection_year)), ],
           mapping = aes(x = Year, y = value), color = "black"
         ) +
         geom_line(
@@ -251,7 +256,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
             x = Year, y = value,
             color = Model
           ),
-          linetype = 2
+          linetype = "longdash"
         ) +
         geom_line(
           data_subset[which(data_subset$Data_type == "max"), ],
@@ -259,11 +264,12 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
             x = Year, y = value,
             color = Model
           ),
-          linetype = 2
+          linetype = "longdash"
         ) +
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
-                              !(data_subset$Model %in% c("Data-poor EM", "Ensemble model"))), ],
+                              !(data_subset$Model %in% c("Data-poor EM", "Ensemble model")) &
+                              !(data_subset$Data_type %in% c("min", "max"))), ],
           mapping = aes(
             x = Year, y = value,
             color = Model, shape = Model
@@ -304,20 +310,20 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           Scenario ~ variable + Year_type,
           scales = "free", ncol = 4, labeller = labeller(.multi_line = F)
         ) +
-        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
-        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_colour_manual("Adjusted F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Adjusted F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
-          color = "Augmented F",
-          shape = "Augmented F",
+          color = "Adjusted F",
+          shape = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -347,16 +353,16 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           scales = "free", ncol = 4, labeller = labeller(.multi_line = F)
         ) +
         labs(
-          color = "Augmented F",
+          color = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -395,16 +401,16 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           scales = "free", ncol = 4, labeller = labeller(.multi_line = F)
         ) +
         labs(
-          color = "Augmented F",
+          color = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -433,16 +439,16 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           scales = "free", ncol = 4, labeller = labeller(.multi_line = F)
         ) +
         labs(
-          color = "Augmented F",
+          color = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -455,6 +461,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       data_subset$variable <- factor(data_subset$variable,
                                      levels = c("Recruitment", "Biomass", "SB",
                                                 "Landings", "F_average", "F_apical"))
+      # data_subset[which(data_subset$variable == "F_average" &
+      #                     data_subset$Model == "Data-moderate EM"), "variable"] <- "F_apical"
       projection_figure <- ggplot() +
         geom_point(data_subset[which(data_subset$Model == "OM" &
                                        !(data_subset$Year %in% projection_year) &
@@ -504,7 +512,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" &
                               data_subset$variable == "F_apical" &
-                              !(data_subset$Model == "Data-moderate EM")), ],
+                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model")) &
+                        !(data_subset$Data_type %in% c("min", "max"))), ],
           mapping = aes(
             x = Year, y = value,
             color = Model, shape = Model
@@ -540,20 +549,20 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
           mapping = aes(x = Year, y = percentage_change), color = "gray50"
         ) +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
-        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
-        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_colour_manual("Adjusted F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Adjusted F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
-          color = "Augmented F",
-          shape = "Augmented F",
+          color = "Adjusted F",
+          shape = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -569,16 +578,16 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ensemble mean"), ], mapping = aes(x = Year, y = value), color = "gray50") +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
         labs(
-          color = "Augmented F",
+          color = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -631,7 +640,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         ) +
         geom_point(
           data_subset[which(data_subset$Year_type == "Projection" & data_subset$variable == "F_apical" &
-                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model"))), ],
+                              !(data_subset$Model %in% c("Data-rich EM", "Ensemble model")) &
+                              !(data_subset$Data_type %in% c("min", "max"))), ],
           mapping = aes(
             x = Year, y = value,
             color = Model, shape = Model
@@ -665,20 +675,20 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
                                                    !(merged_percentage_change$variable == "F_apical")), ],
                   mapping = aes(x = Year, y = percentage_change), color = "gray50") +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
-        scale_colour_manual("Augmented F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
-        scale_shape_manual("Augmented F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_colour_manual("Adjusted F", values = indicator_color[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
+        scale_shape_manual("Adjusted F", values = indicator_shape[c("OM", "FMSY-EM", paste0("Fadj-", indicator_id))]) +
         labs(
-          color = "Augmented F",
-          shape = "Augmented F",
+          color = "Adjusted F",
+          shape = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -694,16 +704,16 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
         geom_line(linetype = 2, data_subset[which(data_subset$Data_type == "ensemble mean"), ], mapping = aes(x = Year, y = value), color = "gray50") +
         facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
         labs(
-          color = "Augmented F",
+          color = "Adjusted F",
           x = "Year",
           y = "Value"
         ) +
         theme_bw() +
         theme(
-          axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+          axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
           legend.position = "bottom",
-          strip.text = element_text(size = 15),
-          axis.text = element_text(size = 12),
+          strip.text = element_text(size = 12),
+          axis.text = element_text(size = 10),
           axis.title = element_text(size = 15, face = "bold"),
           legend.text = element_text(size = 15),
           legend.title = element_text(size = 15, face = "bold")
@@ -716,47 +726,15 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
   # Combine figures
   # With lm_figure
-  if (length(indicator_id) == 0) {
-
-  }
-  ggpubr::ggarrange(
-    ggpubr::ggarrange(
-      lm_figure,
-      soi_figure,
-      ncol = 2,
-      labels = c("A)", "B)")
-    ),
+  if (original_indicator_id == 0){
     ggpubr::ggarrange(
       bratio_figure,
       projection_figure,
       ncol = 2,
       widths = c(0.5, 1.5),
-      labels = c("C)", "D)")
-    ),
-    nrow = 2,
-    heights = c(0.5, 0.5)
-  )
-  ggsave(paste0(figure_path, "_with_lm.jpeg"))
-
-  # Without lm_figure
-  ggpubr::ggarrange(
-    ggpubr::ggarrange(
-      soi_figure,
-      bratio_figure,
-      ncol = 2,
-      widths = c(1.5, 0.5),
-      labels = c("A", "B")
-    ),
-    projection_figure,
-    heights = c(0.5, 0.5),
-    labels = c("", "C"),
-    nrow = 2
-  )
-  ggsave(paste0(figure_path, "_without_lm.jpeg"))
-
-
-  if (em_name == "Data-poor EM") {
-    # With lm_figure
+      labels = c("A)", "B)")
+    )
+  } else {
     ggpubr::ggarrange(
       ggpubr::ggarrange(
         lm_figure,
@@ -766,7 +744,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       ),
       ggpubr::ggarrange(
         bratio_figure,
-        projection_withoutci_figure,
+        projection_figure,
         ncol = 2,
         widths = c(0.5, 1.5),
         labels = c("C)", "D)")
@@ -774,23 +752,41 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       nrow = 2,
       heights = c(0.5, 0.5)
     )
-    ggsave(paste0(figure_path, "_with_lm_without_ci.jpeg"))
+  }
+  ggsave(paste0(figure_path, "_with_lm.jpeg"))
 
-    # Without lm_figure
-    ggpubr::ggarrange(
+  if (em_name == "Data-poor EM") {
+
+    if (original_indicator_id == 0){
       ggpubr::ggarrange(
-        soi_figure,
         bratio_figure,
+        projection_withoutci_figure,
         ncol = 2,
-        widths = c(1.5, 0.5),
-        labels = c("A", "B")
-      ),
-      projection_withoutci_figure,
-      heights = c(0.5, 0.5),
-      labels = c("", "C"),
-      nrow = 2
-    )
-    ggsave(paste0(figure_path, "_without_lm_without_ci.jpeg"))
+        widths = c(0.5, 1.5),
+        labels = c("A)", "B)")
+      )
+    } else {
+      # With lm_figure
+      ggpubr::ggarrange(
+        ggpubr::ggarrange(
+          lm_figure,
+          soi_figure,
+          ncol = 2,
+          labels = c("A)", "B)")
+        ),
+        ggpubr::ggarrange(
+          bratio_figure,
+          projection_withoutci_figure,
+          ncol = 2,
+          widths = c(0.5, 1.5),
+          labels = c("C)", "D)")
+        ),
+        nrow = 2,
+        heights = c(0.5, 0.5)
+      )
+
+    }
+    ggsave(paste0(figure_path, "_with_lm_without_ci.jpeg"))
   }
 }
 
@@ -863,7 +859,7 @@ combine_figures(
   scenario = "S1",
   indicator_id = c("I9"),
   projection_indicator_name = c(
-    "OM", "Data-moderate EM", "FMSY-EM"),
+    "OM", "Data-moderate EM", "FMSY-EM", "Fadj-I9"),
   model_year = model_year,
   projection_year = projection_year,
   figure_path = file.path(figure_path, paste0(terminal_year, scenario_filename, "_data_moderate_S1_combined")),
@@ -956,7 +952,7 @@ combine_figures(
   scenario = "S2",
   indicator_id = paste0("I", c(1, 4, 9)),
   projection_indicator_name = c(
-    "OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I4", "Fadj-I8",
+    "OM", "Data-rich EM", "FMSY-EM", "Fadj-I1", "Fadj-I4",
     "Fadj-I9"
   ),
   model_year = model_year,

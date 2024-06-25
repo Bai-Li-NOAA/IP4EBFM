@@ -142,7 +142,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   load(here::here("data", "data_poor", ewe_scenario_name, paste0("dbsra_soi_output3_", terminal_year, scenario_filename, ".RData"))) # data name: soi_ouput3
   temp <- soi_output3$soi_data_melt
-  temp$model <- "Data-poor EM"
+  temp$Model <- "Data-poor EM"
   temp$scenario <- paste0("S", scenario_id)
   temp  <-  temp[!((temp$variable %in% data_poor_non_significant_indicator[[scenario_id]])), ]
   if (scenario_id == 1){
@@ -172,7 +172,7 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   load(here::here("data", "data_moderate", ewe_scenario_name, paste0("jabba_output_", terminal_year, scenario_filename, ".RData"))) # data name: output
   temp <- output$soi_data_melt
-  temp$model <- "Data-moderate EM"
+  temp$Model <- "Data-moderate EM"
   temp$scenario <- paste0("S", scenario_id)
   temp  <-  temp[!((temp$variable %in% data_moderate_non_significant_indicator[[scenario_id]])), ]
   soi_data <- rbind(soi_data, temp)
@@ -180,9 +180,9 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
 
   # Load data-rich RData
   data_rich_non_significant_indicator <- list(
-    c("amo", "pdsi", "menhadenV"),
-    c("menhadenV"),
-    c("menhadenV")
+    c("amo", "pdsi"),
+    c(),
+    c()
   )
   # data_rich_non_significant_indicator <- list(
   #   c("amo", "pdsi", "bassB", "menhadenC",
@@ -200,12 +200,12 @@ for (scenario_id in seq_along(add_environmental_effects_vec)){
   )
 
   soi_data_melt_om$projection_year_id <- rep(rep(projection_year, each = length(model_year)), times = ncol(output$soi_data_om) - 2)
-  soi_data_melt_om$model <- "OM"
+  soi_data_melt_om$Model <- "OM"
   soi_data_melt_om$scenario <- paste0("S", scenario_id)
   if (scenario_id == 1) soi_data_melt_om  <-  soi_data_melt_om[!((soi_data_melt_om$variable %in% c("amo", "pdsi"))), ]
 
   temp <- output$soi_data_melt
-  temp$model <- "Data-rich EM"
+  temp$Model <- "Data-rich EM"
   temp$scenario <- paste0("S", scenario_id)
   temp  <-  temp[!((temp$variable %in% data_rich_non_significant_indicator[[scenario_id]])), ]
   soi_data <- rbind(soi_data, temp, soi_data_melt_om)
@@ -384,12 +384,12 @@ soi_data$variable <- factor(soi_data$variable, levels = c("amo", "pdsi", "bassB"
 #                                "Prey 1 CPUE")
 levels(soi_data$variable) <- paste0("I", c(1:7, "V", 8:9))
 
-soi_data$model <- factor(soi_data$model, levels = c("OM",
+soi_data$Model <- factor(soi_data$Model, levels = c("OM",
                                                     "Data-poor EM",
                                                     "Data-moderate EM",
                                                     "Data-rich EM"))
 
-ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = model)) +
+ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = Model)) +
   geom_line(alpha = 0.8, size=1) +
   # geom_line(size=1) +
   facet_wrap(~scenario+variable, ncol = 5) +
@@ -409,10 +409,10 @@ ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value,
   )
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_more_rows.jpeg")))
 
-ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = model)) +
-  geom_line(alpha = 0.8, size=1, aes(linetype = model)) +
+ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = Model)) +
+  geom_line(alpha = 0.8, size=1, aes(linetype = Model)) +
   # geom_line(size=1) +
-  geom_point(aes(shape = model)) +
+  geom_point(aes(shape = Model)) +
   facet_grid(variable~scenario) +
   # scale_shape_manual(values = soi_data[soi_data$projection_year_id == 2013, "model"]) +
   # facet_grid(scenario~variable) +
@@ -452,7 +452,7 @@ ggplot(bratio_data, aes(x = scenario, y = bratio, color = model)) +
   geom_hline(yintercept = 0.5, lty=2) +
   labs(
     x = "Scenario",
-    y = bquote(B[2012]/B[MSY])
+    y = bquote(B[2012]/B[MSY] ~ "or" ~ SB[2012]/SB[MSY])
   ) +
   theme_bw()+
   theme(
@@ -477,7 +477,7 @@ ggplot() +
   geom_hline(yintercept = 0.5, lty=2) +
   labs(
     x = "Scenario",
-    y = bquote(B[2012]/B[MSY])
+    y = bquote(B[2012]/B[MSY] ~ "or" ~ SB[2012]/SB[MSY])
   ) +
   geom_point(bratio_data[bratio_data$model %in% "OM", ],
              mapping = aes(x = scenario, y = bratio, color = model),
@@ -511,7 +511,7 @@ ggplot() +
   geom_hline(yintercept = 0.5, lty=2) +
   labs(
     x = "Model",
-    y = bquote(B[2012]/B[MSY])
+    y = bquote(B[2012]/B[MSY] ~ "or" ~ SB[2012]/SB[MSY])
   ) +
   theme_bw()+
   theme(
