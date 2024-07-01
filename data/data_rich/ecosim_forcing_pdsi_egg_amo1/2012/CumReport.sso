@@ -1,19 +1,19 @@
 1 -logL: 1070.16 SSB(Vir_Start_End): 1.18616e+06 997432 425927
 1 Files: data.ss control.ss
-1 N_iter: 626 runtime(sec): 6 starttime: Thu Jun 20 11:28:26 2024
+1 N_iter: 626 runtime(sec): 7 starttime: Mon Jul 01 11:16:11 2024
 1#V3.30.19.01;_safe;_compile_date:_Apr 15 2022;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.3
 1 F_Method: 3 Retro_YR: 2012 Forecast_Type: 2 MSY_Type: 2
 1 Comment S_1 #C starter file written by R function SS_writestarter
 1 Comment S_2 #C rerun model to get more complete formatting in starter.ss_new
 1 Comment S_3 #C should work with SS version: 3.30
-1 Comment S_4 #C file write time: 2024-06-20 11:28:25.585107
+1 Comment S_4 #C file write time: 2024-07-01 11:16:11.175835
 1 Comment D_1 #C data file for simple example
 1 Comment C_1 #C growth parameters are estimated
 1 Comment C_2 #C spawner-recruitment bias adjustment Not tuned For optimality
 1 Comment F_1 #C forecast file written by R function SS_writeforecast
 1 Comment F_2 #C rerun model to get more complete formatting in forecast.ss_new
 1 Comment F_3 #C should work with SS version: 3.3
-1 Comment F_4 #C file write time: 2024-06-20 11:28:25.592164
+1 Comment F_4 #C file write time: 2024-07-01 11:16:11.18287
 1 Like_Emph Total 1 
 1 Like_Value Total 1070.16
 1 Like_Emph Indices All  0 1 1
@@ -54,20 +54,20 @@
 
 2 -logL: 1108.9 SSB(Vir_Start_End): 1.0321e+06 867040 409386
 2 Files: data.ss control.ss
-2 N_iter: 523 runtime(sec): 6 starttime: Thu Jun 20 11:28:34 2024
+2 N_iter: 523 runtime(sec): 6 starttime: Mon Jul 01 11:16:19 2024
 2#V3.30.19.01;_safe;_compile_date:_Apr 15 2022;_Stock_Synthesis_by_Richard_Methot_(NOAA)_using_ADMB_12.3
 2 F_Method: 3 Retro_YR: 2012 Forecast_Type: 2 MSY_Type: 2
 2 Comment S_1 #C starter file written by R function SS_writestarter
 2 Comment S_2 #C rerun model to get more complete formatting in starter.ss_new
 2 Comment S_3 #C should work with SS version: 3.30
-2 Comment S_4 #C file write time: 2024-06-20 11:28:33.950728
+2 Comment S_4 #C file write time: 2024-07-01 11:16:19.406697
 2 Comment D_1 #C data file for simple example
 2 Comment C_1 #C growth parameters are estimated
 2 Comment C_2 #C spawner-recruitment bias adjustment Not tuned For optimality
 2 Comment F_1 #C forecast file written by R function SS_writeforecast
 2 Comment F_2 #C rerun model to get more complete formatting in forecast.ss_new
 2 Comment F_3 #C should work with SS version: 3.3
-2 Comment F_4 #C file write time: 2024-06-20 11:28:33.956544
+2 Comment F_4 #C file write time: 2024-07-01 11:16:19.413895
 2 Like_Emph Total 1 
 2 Like_Value Total 1108.9
 2 Like_Emph Indices All  0 1 1

@@ -377,7 +377,7 @@ save(bratio_oneiter, file = here::here("data", "data_rich", ewe_scenario_name, p
 
 ```{r}
 # MCMC run
-run_mcmc <- TRUE
+run_mcmc <- FALSE
 mcmc_dir <- here::here(dirname(here::here()), paste0(ewe_scenario_name, "_mcmc_", terminal_year, scenario_filename))
 if (!dir.exists(mcmc_dir)) dir.create(mcmc_dir)
 
