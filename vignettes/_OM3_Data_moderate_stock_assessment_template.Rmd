@@ -7,6 +7,7 @@ output: html_document
 ```{r, results='hide', echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
 # Load simulated input data ---------------------------------------------
 source(here::here("Rscript", "simulationOM3.R")) # OM reference points
+maturity_matrix <- sa_data$biodata$maturity_matrix
 
 functional_groups <- c(
   "StripedBass0",
@@ -63,7 +64,8 @@ compensation_msy <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages,
+  maturity_vec = maturity_matrix[1,]
 )
 
 stationary_msy <- read_ewe_reference_points_vec(
@@ -75,7 +77,8 @@ stationary_msy <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages,
+  maturity_vec = maturity_matrix[1,]
 )
 
 if (add_environmental_effects == TRUE){

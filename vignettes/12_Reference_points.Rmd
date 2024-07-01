@@ -37,6 +37,17 @@ library(tidyr)
 # Output comparison
 ## Run model to get compensation FMSY vs stationary FMSY
 ```{r compensation-vs-stationary-fmsy, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=10}
+# load sa_data to get maturity data
+scenario_filename <- "_lowCV"
+terminal_year <- 2012
+fishery_CV_input <- 0.05
+survey_CV_input <- 0.1
+add_environmental_effects <- FALSE
+add_fleet_dynamics <- FALSE
+source(here::here("Rscript", "simulationOM3.R"))
+maturity_matrix <- sa_data$biodata$maturity_matrix
+
+# load reference points
 functional_groups <- c(
   "StripedBass0",
   "StripedBass2_5",
@@ -225,7 +236,8 @@ for (i in seq_along(maxF_file_path)) {
     functional_groups = functional_groups,
     key_functional_group = "AtlanticMenhaden",
     ages = ages,
-    plot = FALSE
+    plot = FALSE,
+    maturity_vec = maturity_matrix[1,]
   )
 }
 
@@ -251,7 +263,8 @@ for (i in seq_along(maxF_file_path)) {
     functional_groups = functional_groups,
     key_functional_group = "AtlanticMenhaden",
     ages = ages,
-    plot = FALSE
+    plot = FALSE,
+    maturity_vec = maturity_matrix[1,]
   )
 }
 
@@ -272,7 +285,8 @@ for (i in seq_along(maxF_file_path)) {
     functional_groups = functional_groups,
     key_functional_group = "AtlanticMenhaden",
     ages = ages,
-    plot = FALSE
+    plot = FALSE,
+    maturity_vec = maturity_matrix[1,]
   )
 }
 
@@ -288,7 +302,8 @@ for (i in seq_along(maxF_file_path)) {
     functional_groups = functional_groups,
     key_functional_group = "AtlanticMenhaden",
     ages = ages,
-    plot = FALSE
+    plot = FALSE,
+    maturity_vec = maturity_matrix[1,]
   )
 }
 
@@ -379,7 +394,8 @@ compensation_msy_s1_MaxSumCatch <- read_ewe_reference_points(
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
   ages = ages,
-  plot = TRUE
+  plot = TRUE,
+  maturity_vec = maturity_matrix[1,]
 )
 compensation_fmsy_s1_MaxSumCatch <- compensation_msy_s1_MaxSumCatch$FMSY * compensation_fmsy_s1[[1]]$Fbase
 
@@ -392,7 +408,8 @@ compensation_msy_s1_MaxCatchVec <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages, 
+  maturity_vec = maturity_matrix[1,]
 )
 compensation_fmsy_s1_CatchVec <- compensation_msy_s1_MaxCatchVec$FMSY * compensation_fmsy_s1[[1]]$Fbase
 
@@ -406,7 +423,8 @@ stationary_msy_s1_MaxSumCatch <- read_ewe_reference_points(
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
   ages = ages,
-  plot = TRUE
+  plot = TRUE, 
+  maturity_vec = maturity_matrix[1,]
 )
 stationary_fmsy_s1_MaxSumCatch <- stationary_msy_s1_MaxSumCatch$FMSY * stationary_fmsy_s1[[1]]$Fbase
 
@@ -419,7 +437,8 @@ stationary_msy_s1_MaxCatchVec <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages, 
+  maturity_vec = maturity_matrix[1,]
 )
 stationary_fmsy_s1_CatchVec <- stationary_msy_s1_MaxCatchVec$FMSY * stationary_fmsy_s1[[1]]$Fbase
 
@@ -434,7 +453,8 @@ compensation_msy_s2_MaxSumCatch <- read_ewe_reference_points(
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
   ages = ages,
-  plot = TRUE
+  plot = TRUE, 
+  maturity_vec = maturity_matrix[1,]
 )
 compensation_fmsy_s2_MaxSumCatch <- compensation_msy_s2_MaxSumCatch$FMSY * compensation_fmsy_s2[[1]]$Fbase
 
@@ -447,7 +467,8 @@ compensation_msy_s2_MaxCatchVec <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages, 
+  maturity_vec = maturity_matrix[1,]
 )
 compensation_fmsy_s2_CatchVec <- compensation_msy_s2_MaxCatchVec$FMSY * compensation_fmsy_s2[[1]]$Fbase
 
@@ -461,7 +482,8 @@ stationary_msy_s2_MaxSumCatch <- read_ewe_reference_points(
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
   ages = ages,
-  plot = TRUE
+  plot = TRUE, 
+  maturity_vec = maturity_matrix[1,]
 )
 stationary_fmsy_s2_MaxSumCatch <- stationary_msy_s2_MaxSumCatch$FMSY * stationary_fmsy_s2[[1]]$Fbase
 
@@ -474,7 +496,8 @@ stationary_msy_s2_MaxCatchVec <- read_ewe_reference_points_vec(
   reference_points_scenario = "compensation",
   functional_groups = functional_groups,
   key_functional_group = "AtlanticMenhaden",
-  ages = ages
+  ages = ages, 
+  maturity_vec = maturity_matrix[1,]
 )
 stationary_fmsy_s2_CatchVec <- stationary_msy_s2_MaxCatchVec$FMSY * stationary_fmsy_s2[[1]]$Fbase
 
@@ -537,11 +560,24 @@ names(bmsy_table) <- c(
   # "stationary_bmsy_s2_MaxSumCatch",
   "Stationary BMSY s2"
 )
-knitr::kable(bmsy_table,
-  caption = "Table 5. BMSY output from catch over F output"
+
+sbmsy_table <- c(
+  sum(compensation_msy_s1_MaxCatchVec$SBMSY) * 1000000,
+  sum(stationary_msy_s1_MaxCatchVec$SBMSY) * 1000000,
+  sum(compensation_msy_s2_MaxCatchVec$SBMSY) * 1000000,
+  sum(stationary_msy_s2_MaxCatchVec$SBMSY) * 1000000
+)
+names(sbmsy_table) <- c(
+  "Compensation SBMSY s1",
+  "Stationary SBMSY s1",
+  "Compensation SBMSY s2",
+  "Stationary SBMSY s2"
+)
+knitr::kable(sbmsy_table,
+  caption = "Table 6. SBMSY output from catch over F output"
 )
 
-# Bratio
+# Bratio and SBratio
 biomass_s1 <- read_ewe_output(
   file_path = here::here(
     "data", "ewe", "7ages_ecosim_om",
@@ -557,7 +593,9 @@ biomass_s1 <- read_ewe_output(
 
 model_year <- 1985:2012
 time_id <- seq(1, nrow(biomass_s1[[1]]), by = 12)[1:(length(model_year))]
+
 biomass_ewe_s1 <- apply(biomass_s1[[1]][, age_name], 1, sum) * 1000000
+sb_ewe_s1 <- apply(as.matrix(biomass_s1[[1]][, age_name]) %*% diag(maturity_matrix[1, ]), 1, sum) * 1000000
 
 biomass_s2 <- read_ewe_output(
   file_path = here::here(
@@ -572,8 +610,8 @@ biomass_s2 <- read_ewe_output(
   figure_colors = NULL
 )
 
-time_id <- seq(1, nrow(biomass_s2[[1]]), by = 12)[1:(length(model_year))]
 biomass_ewe_s2 <- apply(biomass_s2[[1]][, age_name], 1, sum) * 1000000
+sb_ewe_s2 <- apply(as.matrix(biomass_s2[[1]][, age_name]) %*% diag(maturity_matrix[1, ]), 1, sum) * 1000000
 
 biomass_s3 <- read_ewe_output(
   file_path = here::here(
@@ -588,8 +626,8 @@ biomass_s3 <- read_ewe_output(
   figure_colors = NULL
 )
 
-time_id <- seq(1, nrow(biomass_s3[[1]]), by = 12)[1:(length(model_year))]
 biomass_ewe_s3 <- apply(biomass_s3[[1]][, age_name], 1, sum) * 1000000
+sb_ewe_s3 <- apply(as.matrix(biomass_s3[[1]][, age_name]) %*% diag(maturity_matrix[1, ]), 1, sum) * 1000000
 
 bratio_table <- c(
   # biomass_ewe_s1[tail(time_id, n=1)] / (compensation_msy_s1_MaxSumCatch$BMSY *1000000),
@@ -620,13 +658,36 @@ names(bratio_table) <- c(
   "stationary_bratio_s3"
 )
 knitr::kable(bratio_table,
-  caption = "Table 6. Bratio output from catch over F output"
+  caption = "Table 7. Bratio output from catch over F output"
 )
+
+sbratio_table <- c(
+  sb_ewe_s1[tail(time_id, n = 1)] / (sum(compensation_msy_s1_MaxCatchVec$SBMSY) * 1000000),
+  sb_ewe_s1[tail(time_id, n = 1)] / (sum(stationary_msy_s1_MaxCatchVec$SBMSY) * 1000000),
+  sb_ewe_s2[tail(time_id, n = 1)] / (sum(compensation_msy_s2_MaxCatchVec$SBMSY) * 1000000),
+  sb_ewe_s2[tail(time_id, n = 1)] / (sum(stationary_msy_s2_MaxCatchVec$SBMSY) * 1000000),
+  sb_ewe_s3[tail(time_id, n = 1)] / (sum(compensation_msy_s2_MaxCatchVec$SBMSY) * 1000000),
+  sb_ewe_s3[tail(time_id, n = 1)] / (sum(stationary_msy_s2_MaxCatchVec$SBMSY) * 1000000)
+)
+names(sbratio_table) <- c(
+  "compensation_sbratio_s1",
+  "stationary_sbratio_s1",
+  "compensation_sbratio_s2",
+  "stationary_sbratio_s2",
+  "compensation_sbratio_s3",
+  "stationary_sbratio_s3"
+)
+knitr::kable(sbratio_table,
+  caption = "Table 8. SBratio output from catch over F output"
+)
+
+
 reference_points <- list(
   fmsy=fmsy_table,
   bmsy=bmsy_table,
   msy=msy_table,
-  bratio=bratio_table
+  bratio=bratio_table, 
+  sbratio=sbratio_table
 )
 save(reference_points, file = here::here("data", "ewe", "ewe_reference_points.RData"))
 ```

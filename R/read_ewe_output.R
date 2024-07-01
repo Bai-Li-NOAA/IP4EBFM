@@ -136,7 +136,8 @@ read_ewe_reference_points <- function(file_path,
                                       key_functional_group,
                                       ages,
                                       reference_points_scenario,
-                                      plot = FALSE) {
+                                      plot = FALSE,
+                                      maturity_vec) {
 
   msy_fleet <- read_ewe_output(
     file_path = file_path,
@@ -154,7 +155,9 @@ read_ewe_reference_points <- function(file_path,
   FMSY <- msy_fleet[[1]]$FM[which.max(catch_sum)]
   biomass_sum <- apply(msy_fleet[[2]][, paste0(key_functional_group, ages)], 1, sum) * 1000000
   BMSY <- biomass_sum[which.max(catch_sum)]
-  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY)
+  sb_sum <- apply(as.matrix(msy_fleet[[2]][, paste0(key_functional_group, ages)]) %*% diag(maturity_vec), 1, sum) * 1000000
+  SBMSY <- sb_sum[which.max(catch_sum)]
+  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY, SBMSY = SBMSY)
 
   if (plot == TRUE) {
     pdf(file = file.path(file_path, paste0(reference_points_scenario, "_yield_over_F.pdf")), onefile = T)
@@ -220,7 +223,8 @@ read_ewe_reference_points_vec <- function(file_path,
                                           functional_groups,
                                           key_functional_group,
                                           ages,
-                                          reference_points_scenario) {
+                                          reference_points_scenario,
+                                          maturity_vec) {
   msy_fleet <- read_ewe_output(
     file_path = file_path,
     file_names = file_names,
@@ -232,14 +236,18 @@ read_ewe_reference_points_vec <- function(file_path,
     figure_colors = NULL
   )
 
-  catch_max_id <- MSY <- FMSY <- BMSY <- c()
+  catch_max_id <- MSY <- FMSY <- BMSY <- SBMSY <- c()
   catch_max <- apply(msy_fleet[[1]][, paste0(key_functional_group, ages)], 2, max)
   for (i in seq_along(catch_max)) {
     catch_max_id[i] <- which(msy_fleet[[1]][, age_name[i]] == catch_max[i])
     MSY[i] <- msy_fleet[[1]][catch_max_id[i], age_name[i]]
     FMSY[i] <- msy_fleet[[1]]$FM[catch_max_id[i]]
     BMSY[i] <- msy_fleet[[2]][catch_max_id[i], age_name[i]]
+    sb <- as.matrix(msy_fleet[[2]][, paste0(key_functional_group, ages)]) %*% diag(maturity_vec)
+    sb <- as.data.frame(sb)
+    colnames(sb) <- age_name
+    SBMSY[i] <- sb[catch_max_id[i], age_name[i]]
   }
-  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY)
+  MSY_data <- list(MSY = MSY, FMSY = FMSY, BMSY = BMSY, SBMSY = SBMSY)
   return(MSY_data)
 }
