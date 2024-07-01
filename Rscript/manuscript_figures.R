@@ -409,8 +409,8 @@ ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value,
   )
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_more_rows.jpeg")))
 
-ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value, color = Model)) +
-  geom_line(alpha = 0.8, size=1, aes(linetype = Model)) +
+ggplot(soi_data[soi_data$projection_year_id == 2013 & !(soi_data$variable %in% "IV"), ], aes(x = year, y = value, color = Model)) +
+  geom_line(alpha = 0.8, size=0.8, aes(linetype = Model)) +
   # geom_line(size=1) +
   geom_point(aes(shape = Model)) +
   facet_grid(variable~scenario) +
@@ -422,12 +422,12 @@ ggplot(soi_data[soi_data$projection_year_id == 2013, ], aes(x = year, y = value,
   ) +
   theme_bw()+
   theme(
-    axis.text.x = element_text(angle = 45, vjust = 0.5, hjust = 1),
+    axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
     legend.position = "bottom",
-    strip.text = element_text(size=15),
-    axis.text=element_text(size=12),
-    axis.title=element_text(size=15,face="bold"),
-    legend.text=element_text(size=15),
+    strip.text = element_text(size=12),
+    axis.text=element_text(size=8),
+    axis.title=element_text(size=12,face="bold"),
+    legend.text=element_text(size=12),
     legend.title=element_text(size=15,face="bold")
   )
 ggsave(file.path(figure_path, paste0(terminal_year, scenario_filename, "_soi_less_rows.jpeg")))
