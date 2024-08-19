@@ -8,7 +8,8 @@ DBSRA_return_FMSY <- function(x, Data, reps = 100, depo=NULL, hcr=NULL) {
   C_hist <- Data@Cat[x, ]
   TAC <- rep(NA, reps)
   Btrend <- matrix(NA, nrow=reps, ncol=length(C_hist))
-  Bt_Kstore <- FMSY_Mstore <- BMSY_K_Mstore <- FMSYstore <- rep(NA, reps)
+  # Bt_Kstore <- FMSY_Mstore <- BMSY_K_Mstore <- FMSYstore <- rep(NA, reps)
+  Bt_Kstore <- FMSY_Mstore <- BMSY_K_Mstore <- FMSYstore <- MSYstore <- rep(NA, reps)
   DBSRAcount <- 1
   if (is.null(depo)) {
     if (is.na(Data@Dep[x]) | is.na(Data@CV_Dep[x])) {
@@ -69,6 +70,7 @@ DBSRA_return_FMSY <- function(x, Data, reps = 100, depo=NULL, hcr=NULL) {
     FMSYc <- Mdb * FMSY_M
     UMSYc <- (FMSYc/(FMSYc + Mdb)) * (1 - exp(-(FMSYc + Mdb)))
     MSYc <- Kc * BMSY_K * UMSYc
+    MSYstore[DBSRAcount] <- Kc * BMSY_K * UMSYc
     TAC[DBSRAcount] <- UMSYc * Kc * Bt_K
     FMSYstore[DBSRAcount] <- UMSYc
 
@@ -82,6 +84,6 @@ DBSRA_return_FMSY <- function(x, Data, reps = 100, depo=NULL, hcr=NULL) {
 
   }  # end of reps
   list(TAC=TAC, Btrend=Btrend, C_hist=C_hist, Bt_Kstore=Bt_Kstore, FMSY_Mstore=FMSY_Mstore,
-       BMSY_K_Mstore=BMSY_K_Mstore, hcr=hcr, FMSYstore=FMSYstore)
+       BMSY_K_Mstore=BMSY_K_Mstore, hcr=hcr, FMSYstore=FMSYstore, MSYstore = MSYstore)
 
 }
