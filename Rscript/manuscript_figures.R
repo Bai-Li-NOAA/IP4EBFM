@@ -1881,33 +1881,92 @@ df_summary <- df_combined %>%
   ) %>%
   ungroup()
 
+df_plot <- df_summary %>%
+  mutate(x_val = as.numeric(as.character(Bratio_level)))
+
+# --- A. Line Segments ---
+line_left   <- filter(df_plot, x_val <= 0.4)
+line_mid    <- filter(df_plot, x_val >= 0.5 & x_val <= 1.0)
+line_right  <- filter(df_plot, x_val >= 1.1)
+line_step05 <- filter(df_plot, x_val >= 0.4 & x_val <= 0.5)
+line_step11 <- filter(df_plot, x_val >= 1.0 & x_val <= 1.1)
+
+# --- B. Ribbon Segments ---
+ribbon_left  <- filter(df_plot, x_val <= 0.4)
+ribbon_mid   <- filter(df_plot, x_val >= 0.5 & x_val <= 1.0)
+ribbon_right <- filter(df_plot, x_val >= 1.1)
+
+# Transition 0.4 -> 0.5 (Horizontal then Vertical)
+# Duplicate the 0.4 row but position it at x = 0.5 so it stays flat at y = 0
+ribbon_step05 <- df_plot %>%
+  filter(x_val == 0.4 | x_val == 0.5) %>%
+  group_by(SOI_level) %>%
+  group_modify(~ {
+    row_04 <- .x %>% filter(x_val == 0.4)
+    row_05 <- .x %>% filter(x_val == 0.5)
+    row_04_at_05 <- row_04 %>% mutate(x_val = 0.5)
+    bind_rows(row_04, row_04_at_05, row_05)
+  }) %>%
+  ungroup()
+
+# Transition 1.0 -> 1.1 (Vertical then Horizontal)
+# Duplicate the 1.1 row but position it at x = 1.0 so it jumps up immediately
+ribbon_step11 <- df_plot %>%
+  filter(x_val == 1.0 | x_val == 1.1) %>%
+  group_by(SOI_level) %>%
+  group_modify(~ {
+    row_10 <- .x %>% filter(x_val == 1.0)
+    row_11 <- .x %>% filter(x_val == 1.1)
+    row_11_at_10 <- row_11 %>% mutate(x_val = 1.0)
+    bind_rows(row_10, row_11_at_10, row_11)
+  }) %>%
+  ungroup()
+
+
+# ==============================================================================
+# STEP 2: PLOT CONCEPTUAL FIGURE 2 WITH MIXED GEOMETRIES
+# ==============================================================================
+
 ggplot() +
+  # Threshold Reference Lines
   geom_vline(xintercept = 0.5, linetype = "dashed", size = 0.8) +
-  geom_vline(xintercept = 1, linetype = "dashed", size = 0.8) +
+  geom_vline(xintercept = 1.0, linetype = "dashed", size = 0.8) +
 
-  # Plot Fadj lines with ribbons (Q1 and Q3 as boundaries)
-  geom_ribbon(data = df_summary, aes(x = as.numeric(Bratio_level), ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
-  geom_line(data = df_summary, aes(x = as.numeric(Bratio_level), y = Fadj_median, color = SOI_level), size = 1) +
+  # --- 1. PLOT STEP-WISE UNCERTAINTY RIBBONS ---
+  # Continuous Ribbons
+  geom_ribbon(data = ribbon_left, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
+  geom_ribbon(data = ribbon_mid,  aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
+  geom_ribbon(data = ribbon_right,aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
+  
+  # Step-wise Transition Ribbons (Method A - Duplicated boundary coordinates)
+  geom_ribbon(data = ribbon_step05, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
+  geom_ribbon(data = ribbon_step11, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
 
-  # Plot FMSY as a boxplot
+  # --- 2. PLOT STEP-WISE MEDIAN LINES ---
+  # Continuous Lines
+  geom_line(data = line_left,  aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
+  geom_line(data = line_mid,   aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
+  geom_line(data = line_right, aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
+  
+  # Step-wise Transitions (geom_step used strictly at the threshold boundaries)
+  geom_step(data = line_step05, aes(x = x_val, y = Fadj_median, color = SOI_level), direction = "hv", size = 1) +
+  geom_step(data = line_step11, aes(x = x_val, y = Fadj_median, color = SOI_level), direction = "vh", size = 1) +
+
+  # --- 3. PLOT FMSY BOXPLOTS ---
   geom_boxplot(
     data = FMSY[[1]], aes(x = 0.3, y = FMSY, fill = "FMSY"),
-    color = "black", width = 0.05, show.legend = TRUE,
-    outlier.size = 0.01
+    color = "black", width = 0.05, show.legend = TRUE, outlier.size = 0.01
   ) +
-
   geom_boxplot(
     data = FMSY[[2]], aes(x = 0.75, y = FMSY, fill = "FMSY"),
-    color = "black", width = 0.05, show.legend = TRUE,
-    outlier.size = 0.01
+    color = "black", width = 0.05, show.legend = TRUE, outlier.size = 0.01
   ) +
-
   geom_boxplot(
     data = FMSY[[3]], aes(x = 1.25, y = FMSY, fill = "FMSY"),
-    color = "black", width = 0.05, show.legend = TRUE,
-    outlier.size = 0.01
+    color = "black", width = 0.05, show.legend = TRUE, outlier.size = 0.01
   ) +
 
+  # --- 4. SCALES, LEGENDS, AND THEMES ---
   labs(title = "", x = "Bratio or SBratio", y = bquote(F[adj])) +
 
   scale_color_manual(
@@ -1937,7 +1996,6 @@ ggplot() +
   theme_bw() +
   theme(
     legend.position = "bottom",
-    # axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1),
     axis.text = element_text(size = 8),
     axis.title = element_text(size = 9, face = "bold"),
     legend.text = element_text(size = 9),
@@ -1953,4 +2011,3 @@ ggsave(file.path(figure_path, "Fadj_conceptual_ribbon.jpeg"),
        width = 6, height = 4, dpi = 1000, units = "in", device = 'jpeg')
 ggsave(file.path(figure_path, "Fadj_conceptual_ribbon.pdf"),
        width = 6, height = 4, dpi = 1000, units = "in", device = 'pdf')
-
