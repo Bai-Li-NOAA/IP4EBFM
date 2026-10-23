@@ -1,3 +1,5 @@
+install.packages("pak")
+pak::pkg_install("r4ss/r4ss@a5283fc6dbfe46c8d795d0b2995a0c1bdff1a615")
 devtools::load_all()
 library(ggplot2)
 library(dplyr)
@@ -1014,9 +1016,15 @@ lm_data$Variable <- factor(lm_data$Variable, levels = c("AMO", "PDSI", "Biomass 
 # levels(lm_data$Variable) <- paste0("I", seq_along(levels(lm_data$Variable)))
 levels(lm_data$Variable) <- paste0("I", c(1:7, "V", 8:9))
 
-lm_data$model <- factor(lm_data$model, levels = c("OM", "Data-poor EM",
-                                                  "Data-moderate EM",
-                                                  "Data-rich EM"))
+lm_data$model <- factor(
+  lm_data$model,
+  levels = c(
+    "OM", "Data-poor EM", "Data-moderate EM","Data-rich EM"
+  ),
+  labels = c(
+    "OM", "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 
 ggplot(lm_data[which(!lm_data$Variable == "IV"), ],
        aes(x = Index_Value, y = Menhaden_Biomass, color = model),
@@ -1054,10 +1062,15 @@ soi_data$variable <- factor(soi_data$variable, levels = c("amo", "pdsi", "bassB"
 #                                "Prey 1 CPUE")
 levels(soi_data$variable) <- paste0("I", c(1:7, "V", 8:9))
 
-soi_data$Model <- factor(soi_data$Model, levels = c("OM",
-                                                    "Data-poor EM",
-                                                    "Data-moderate EM",
-                                                    "Data-rich EM"))
+soi_data$Model <- factor(
+  soi_data$Model,
+  levels = c(
+    "OM", "Data-poor EM", "Data-moderate EM", "Data-rich EM"
+  ),
+  labels = c(
+    "OM", "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 
 ggplot(soi_data[soi_data$projection_year_id == 2013 & !(soi_data$variable %in% "IV"), ], aes(x = year, y = value, color = Model)) +
   geom_line(alpha = 0.8, size=0.4, aes(linetype = Model)) +
@@ -1087,11 +1100,18 @@ bratio_data <- rbind(bratio_data,
                      c("S1", "OM", reference_points$bratio["compensation_bratio_s1"]),
                      c("S2", "OM", reference_points$bratio["compensation_bratio_s2"]),
                      c("S3", "OM", reference_points$bratio["compensation_bratio_s3"]))
-bratio_data$model <- factor(bratio_data$model, levels = c(
-  "OM",
-  "Data-poor EM",
-  "Data-moderate EM",
-  "Data-rich EM"))
+bratio_data$model <- factor(
+  bratio_data$model,
+  levels = c(
+    "OM",
+    "Data-poor EM",
+    "Data-moderate EM",
+    "Data-rich EM"
+  ),
+  labels = c(
+    "OM", "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 bratio_data$bratio <- as.numeric(bratio_data$bratio)
 
 ggplot(bratio_data, aes(x = scenario, y = bratio, color = model)) +
@@ -1122,11 +1142,18 @@ msy_data <- rbind(msy_data,
                   c("S1", "OM", reference_points$msy["Compensation MSY s1"]),
                   c("S2", "OM", reference_points$msy["Compensation msy s2"]),
                   c("S3", "OM", reference_points$msy["Compensation msy s2"]))
-msy_data$model <- factor(msy_data$model, levels = c(
-  "OM",
-  "Data-poor EM",
-  "Data-moderate EM",
-  "Data-rich EM"))
+msy_data$model <- factor(
+  msy_data$model,
+  levels = c(
+    "OM",
+    "Data-poor EM",
+    "Data-moderate EM",
+    "Data-rich EM"
+  ),
+  labels = c(
+    "OM", "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 msy_data$msy <- as.numeric(msy_data$msy)
 
 ggplot(msy_data, aes(x = scenario, y = msy, color = model)) +
@@ -1180,10 +1207,17 @@ fmsy_data$variable <- factor(fmsy_data$variable, levels = c("Default F", "amo", 
 
 levels(fmsy_data$variable) <- c("EM FMSY", paste0("Fadj-I", c(1:7, "V", 8:9)))
 
-fmsy_data$model <- factor(fmsy_data$model, levels = c(
-                                                    "Data-poor EM",
-                                                    "Data-moderate EM",
-                                                    "Data-rich EM"))
+fmsy_data$model <- factor(
+  fmsy_data$model,
+  levels = c(
+    "Data-poor EM",
+    "Data-moderate EM",
+    "Data-rich EM"
+  ),
+  labels = c(
+    "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 
 # boxplot
 temp_data <- fmsy_data[!(fmsy_data$variable == "Fadj-IV"),]
@@ -1218,10 +1252,17 @@ medianf_data$variable <- factor(medianf_data$variable, levels = c("Default F", "
                                                             "menhadenV",
                                                             "menhadenE", "menhadenCPUE"))
 levels(medianf_data$variable) <- c("EM FMSY", paste0("Fadj-I", c(1:7, "V", 8:9)))
-medianf_data$model <- factor(medianf_data$model, levels = c(
-  "Data-poor EM",
-  "Data-moderate EM",
-  "Data-rich EM"))
+medianf_data$model <- factor(
+  medianf_data$model,
+  levels = c(
+    "Data-poor EM",
+    "Data-moderate EM",
+    "Data-rich EM"
+  ),
+  labels = c(
+    "Data-limited EM", "Data-moderate EM", "Data-rich EM"
+  )
+)
 
 ggplot(medianf_data, aes(x = projection_year_id, y = value, color = variable)) +
   geom_line(size=0.5) +
@@ -1264,7 +1305,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
   model_color <- hue_pal()(4)
   names(model_color) <- c(
-    "OM", "Data-poor EM",
+    "OM", "Data-limited EM",
     "Data-moderate EM",
     "Data-rich EM"
   )
@@ -1403,9 +1444,14 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
                                  levels = c("Recruitment", "Biomass", "SB",
                                             "Landings", "F_average", "F_apical"))
 
+  model_temp_name <- ifelse(
+    em_name == "Data-limited EM",
+    "Data-poor EM",
+    em_name
+  )
   f_projection_data <- data_subset[which(data_subset$Year_type == "Projection" &
                                            data_subset$variable == "F_apical" &
-                                           !(data_subset$Model %in% c(em_name)) &
+                                           !(data_subset$Model %in% c(model_temp_name)) &
                                            !(data_subset$Data_type %in% c("min", "max"))), ]
 
 
@@ -1624,7 +1670,7 @@ combine_figures(
   soi_data = soi_data,
   bratio_data = bratio_data,
   projection_data = data_poor_data,
-  em_name = "Data-poor EM",
+  em_name = "Data-limited EM",
   scenario = "S1",
   indicator_id = c("I5"),
   projection_indicator_name = c(
@@ -1642,7 +1688,7 @@ combine_figures(
   soi_data = soi_data,
   bratio_data = bratio_data,
   projection_data = data_poor_data,
-  em_name = "Data-poor EM",
+  em_name = "Data-limited EM",
   scenario = "S2",
   indicator_id = c("I7"),
   projection_indicator_name = c(
@@ -1660,7 +1706,7 @@ combine_figures(
   soi_data = soi_data,
   bratio_data = bratio_data,
   projection_data = data_poor_data,
-  em_name = "Data-poor EM",
+  em_name = "Data-limited EM",
   scenario = "S3",
   indicator_id = c(),
   projection_indicator_name = c(
@@ -1937,7 +1983,7 @@ ggplot() +
   geom_ribbon(data = ribbon_left, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
   geom_ribbon(data = ribbon_mid,  aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
   geom_ribbon(data = ribbon_right,aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
-  
+
   # Step-wise Transition Ribbons (Method A - Duplicated boundary coordinates)
   geom_ribbon(data = ribbon_step05, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
   geom_ribbon(data = ribbon_step11, aes(x = x_val, ymin = Q1, ymax = Q3, fill = SOI_level), alpha = 0.2) +
@@ -1947,7 +1993,7 @@ ggplot() +
   geom_line(data = line_left,  aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
   geom_line(data = line_mid,   aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
   geom_line(data = line_right, aes(x = x_val, y = Fadj_median, color = SOI_level), size = 1) +
-  
+
   # Step-wise Transitions (geom_step used strictly at the threshold boundaries)
   geom_step(data = line_step05, aes(x = x_val, y = Fadj_median, color = SOI_level), direction = "hv", size = 1) +
   geom_step(data = line_step11, aes(x = x_val, y = Fadj_median, color = SOI_level), direction = "vh", size = 1) +
