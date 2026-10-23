@@ -1313,7 +1313,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
   indicator_color <- hue_pal()(12)
   names(indicator_color) <- c("OM", "FMSY-EM", paste0("Fadj-I", 1:9), "Ensemble")
 
-  indicator_shape <- 0:11
+  indicator_shape <- 1:12
   names(indicator_shape) <- c("OM", "FMSY-EM", paste0("Fadj-I", 1:9), "Ensemble")
   # Linear regression analysis figures
   data_subset <- lm_data[which(lm_data$model %in% c("OM", em_name) &
@@ -1369,9 +1369,10 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     size = 0.2
   ) +
     geom_point(data_subset[which(data_subset$year == tail(model_year, n = 1)), ],
-               mapping = aes(x = year, y = value, pch = Model), size = 0.2, alpha = 0.5
+               mapping = aes(x = year, y = value, pch = Model), size = 2, alpha = 0.5
     ) +
     scale_colour_manual(values = model_color[c("OM", em_name)]) +
+    scale_shape_manual(values = c("OM" = 1, "Data-limited EM" = 2)) +
     geom_line(alpha = 0.5, linewidth = 1, aes(linetype = Model)) +
     geom_hline(yintercept = 0.5, lty = 2) +
     facet_wrap(~ scenario + variable, labeller = labeller(.multi_line = F)) +
@@ -1416,8 +1417,8 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       y = bratio_ylabel
     ) +
     geom_point(data_subset[data_subset$model == "OM", ],
-               mapping = aes(x = scenario, y = bratio), pch = 8,
-               color = model_color["OM"], size = 5
+               mapping = aes(x = scenario, y = bratio), pch = 1,
+               color = model_color["OM"], size = 2
     ) +
     theme_bw() +
     theme(
@@ -1564,7 +1565,132 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     ensemble_projection <- c()
   }
 
+  if(em_name == "Data-moderate EM" & scenario == "S2"){
+    ensemble_file_path <- here::here(
+      "data", "ewe", "7ages_ecosim_om_projections",
+      "ensemble_ecosim_forcing_pdsi_egg_amo1_data_moderate_2012_lowCV"
+    )
+    ensemble_biomass <- IP4EBFM::read_ewe_output(
+      file_path = ensemble_file_path,
+      file_names = "biomass_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    ensemble_catch <- IP4EBFM::read_ewe_output(
+      file_path = file_path,
+      file_names = "catch_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    projection_time_id <- tail(seq(1, nrow(ensemble_biomass[[1]]), by = 12), n = 5)
+    maturity_vec <- c(0, 0.1, 0.5, 0.9, 1, 1, 1)
+
+    ensemble_projection$value[ensemble_projection$variable == "Landings"] <-
+      apply(catch[[1]][, age_name], 1, sum)[projection_time_id] * 1000000
+    ensemble_projection$value[ensemble_projection$variable == "Biomass"] <-
+      apply(ensemble_biomass[[1]][, age_name], 1, sum)[projection_time_id]*1000000
+  }
+  if(em_name == "Data-rich EM" & scenario == "S1"){
+    ensemble_file_path <- here::here(
+      "data", "ewe", "7ages_ecosim_om_projections",
+      "ensemble_ecosim_base_run_data_rich_2012_lowCV"
+    )
+    ensemble_biomass <- IP4EBFM::read_ewe_output(
+      file_path = ensemble_file_path,
+      file_names = "biomass_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    ensemble_waa <- IP4EBFM::read_ewe_output(
+      file_path = ensemble_file_path,
+      file_names = "weight_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    ensemble_catch <- IP4EBFM::read_ewe_output(
+      file_path = file_path,
+      file_names = "catch_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    projection_time_id <- tail(seq(1, nrow(ensemble_biomass[[1]]), by = 12), n = 5)
+    maturity_vec <- c(0, 0.1, 0.5, 0.9, 1, 1, 1)
+
+    ensemble_projection$value[ensemble_projection$variable == "Recruitment"] <-
+      (ensemble_biomass[[1]][, "AtlanticMenhaden0"] *1000000 / ensemble_waa[[1]][, "AtlanticMenhaden0"])[projection_time_id] / 1000
+    ensemble_projection$value[ensemble_projection$variable == "Landings"] <-
+      apply(catch[[1]][, age_name], 1, sum)[projection_time_id] * 1000000
+    ensemble_projection$value[ensemble_projection$variable == "SB"] <-
+      apply(as.matrix(ensemble_biomass[[1]][, age_name]) %*% diag(maturity_vec), 1, sum)[projection_time_id]*1000000
+  }
+  if(em_name == "Data-rich EM" & scenario == "S2"){
+    ensemble_file_path <- here::here(
+      "data", "ewe", "7ages_ecosim_om_projections",
+      "ensemble_ecosim_forcing_pdsi_egg_amo1_data_rich_2012_lowCV"
+    )
+    ensemble_biomass <- IP4EBFM::read_ewe_output(
+      file_path = ensemble_file_path,
+      file_names = "biomass_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    ensemble_waa <- IP4EBFM::read_ewe_output(
+      file_path = ensemble_file_path,
+      file_names = "weight_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    ensemble_catch <- IP4EBFM::read_ewe_output(
+      file_path = file_path,
+      file_names = "catch_monthly.csv",
+      skip_nrows = 8,
+      plot = FALSE,
+      figure_titles = NULL,
+      functional_groups = functional_groups,
+      figure_colors = NULL
+    )
+
+    projection_time_id <- tail(seq(1, nrow(ensemble_biomass[[1]]), by = 12), n = 5)
+    maturity_vec <- c(0, 0.1, 0.5, 0.9, 1, 1, 1)
+
+    ensemble_projection$value[ensemble_projection$variable == "Recruitment"] <-
+      (ensemble_biomass[[1]][, "AtlanticMenhaden0"] *1000000 / ensemble_waa[[1]][, "AtlanticMenhaden0"])[projection_time_id] / 1000
+    ensemble_projection$value[ensemble_projection$variable == "Landings"] <-
+      apply(catch[[1]][, age_name], 1, sum)[projection_time_id] * 1000000
+    ensemble_projection$value[ensemble_projection$variable == "SB"] <-
+      apply(as.matrix(ensemble_biomass[[1]][, age_name]) %*% diag(maturity_vec), 1, sum)[projection_time_id]*1000000
+  }
+
   data_subset <- rbind(data_subset, ensemble_projection)
+  data_subset <- data_subset[-which(data_subset$variable == "Landings"),]
 
   percentage_change <- data_subset[which(data_subset$Year_type == "Projection"), ]
   percentage_change <- percentage_change %>%
@@ -1573,6 +1699,9 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
   projection_figure_data <- data_subset[which(!(data_subset$variable == "F_apical")), ]
 
+  yrange <- range(percentage_change[which(!(percentage_change$Model == em_name) &
+                                            !(percentage_change$variable == "F_apical") &
+                                            !(percentage_change$Model %in% paste0("Fadj-", indicator_id))), "percentage_change"])*1.5
   projection_figure <- ggplot() +
     geom_line(
       percentage_change[which(!(percentage_change$Model == em_name) &
@@ -1594,9 +1723,23 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       )
     ) +
     facet_wrap(Scenario ~ variable + Year_type, scales = "free", ncol = 4, labeller = labeller(.multi_line = F)) +
-    scale_colour_manual("",
-                        values = indicator_color[c("OM", "FMSY-EM", "Ensemble")]
-    ) +
+    # scale_colour_manual("",
+    #                     values = c(
+    #                       "OM" = model_color["OM"],
+    #                       "FMSY-EM" = model_color[em_name],
+    #                       "Ensemble" = indicator_color["Ensemble"]
+    #                     )
+    # ) +
+    # scale_shape_manual("",
+    #                    values = c(
+    #                       "OM" = model_color["OM"],
+    #                       "FMSY-EM" = model_color[em_name],
+  #                       "Ensemble" = indicator_color["Ensemble"]
+  #                     )
+  # ) +
+  scale_colour_manual("",
+                      values = indicator_color[c("OM", "FMSY-EM", "Ensemble")]
+  ) +
     scale_shape_manual("",
                        values = indicator_shape[c("OM", "FMSY-EM", "Ensemble")]
     ) +
@@ -1606,6 +1749,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
       x = "Year",
       y = "Percentage (%)"
     ) +
+    ylim(yrange) +
     theme_bw() +
     theme(
       axis.text.x = element_text(angle = 20, vjust = 1, hjust = 1),
@@ -1621,14 +1765,19 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
 
   ggsave(paste0(figure_path, "_projections.pdf"),
          width = 5, height = 3, dpi = 1000, units = "in", device='pdf')
+  ggdatasaver::save_plot_data(
+    projection_figure,
+    name = paste0(em_name, "_", scenario),
+    dir = here::here("figure", "figure_data")
+  )
   # Combine figures
   # Without lm_figure
   if (original_indicator_id == 0){
     ggpubr::ggarrange(
       bratio_figure,
-      f_projection_figure,
-      ncol = 2,
-      widths = c(0.4, 0.6),
+      projection_figure,
+      ncol = 1,
+      widths = c(1, 1),
       labels = c("A)", "B)"),
       font.label = list(size = 8)
     )
@@ -1636,16 +1785,19 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
     ggpubr::ggarrange(
       ggpubr::ggarrange(
         soi_figure,
-        ncol = 1,
-        labels = c("A)"),
-        font.label = list(size = 8)
+        bratio_figure,
+        widths = c(0.7, 0.3),
+        ncol = 2,
+        labels = c("A)", "B)"),
+        font.label = list(size = 8),
+        common.legend = TRUE,
+        legend = "bottom"
       ),
       ggpubr::ggarrange(
-        bratio_figure,
-        f_projection_figure,
-        ncol = 2,
-        widths = c(0.4, 0.6),
-        labels = c("B)", "C)"),
+        projection_figure,
+        ncol = 1,
+        # widths = c(0.4, 0.6),
+        labels = c("C)"),
         font.label = list(size = 8)
       ),
       nrow = 2,
@@ -1658,6 +1810,7 @@ combine_figures <- function(lm_data, soi_data, bratio_data, projection_data,
          width = 5, height = 5, dpi = 1000, units = "in", device='pdf')
 
 }
+
 
 figure_path <- here::here("figure", "manuscript_figures")
 if (!dir.exists(figure_path)) dir.create(figure_path)
